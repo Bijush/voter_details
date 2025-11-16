@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let nameIndex = []; // auto-suggestion এর জন্য নামের ইনডেক্স
 
   // master.json লোড
-  fetch("data/master.json")
+  fetch("master.json")
     .then((res) => res.json())
     .then((data) => {
       voterData = data;
