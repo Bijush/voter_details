@@ -4,16 +4,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const suggestionsDiv = document.getElementById("suggestions");
 
   let voterData = {};
-  let nameIndex = []; // auto-suggestion এর জন্য নামের ইনডেক্স
+  let nameIndex = [];
 
-  // master.json লোড
-  fetch("data/master.json")
+  // ---- master.json load ----
+  fetch("master.json")
     .then((res) => res.json())
     .then((data) => {
       voterData = data;
       console.log("JSON Loaded Successfully!");
 
-      // নামের ইনডেক্স বানানো (suggestion এর জন্য)
+      // Name index for auto suggestion
       Object.keys(voterData).forEach((houseKey) => {
         voterData[houseKey].forEach((person) => {
           nameIndex.push({
@@ -23,6 +23,9 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         });
       });
+
+      // JSON লোড হয়ে গেলে → Home Page এ Full list দেখাও
+      showFullList();
     })
     .catch((err) => {
       console.error("Error loading JSON:", err);
@@ -30,11 +33,131 @@ document.addEventListener("DOMContentLoaded", () => {
         "<p style='color:red;'>Failed to load voter data.</p>";
     });
 
-  // রেজাল্ট দেখানোর কমন ফাংশন
+  // ---- Full Home Page List ----
+  function showFullList() {
+    resultsDiv.innerHTML = "<h2>All House – Full Voter List</h2>";
+
+    Object.keys(voterData).forEach((houseKey) => {
+      const houseTitle = document.createElement("h3");
+      houseTitle.textContent = `🏠 ${houseKey}`;
+      houseTitle.className = "group-title";
+      resultsDiv.appendChild(houseTitle);
+
+      voterData[houseKey].forEach((p) => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+          <h3>${p.name} <span class="pill">Serial ${p.serial}</span></h3>
+          <p><strong>Age:</strong> ${p.age ?? "—"}</p>
+          <p><strong>Gender:</strong> ${p.gender ?? "—"}</p>
+          <p><strong>Father:</strong> ${p.father ?? "—"}</p>
+          <p><strong>Husband:</strong> ${p.husband ?? "—"}</p>
+          <p><strong>BYP:</strong> ${p.byp ?? "—"}</p>
+        `;
+
+        resultsDiv.appendChild(card);
+      });
+    });
+  }
+
+  // ---- Normal Search + Auto Suggest ----
+  searchInput.addEventListener("input", () => {
+    const raw = searchInput.value.trim();
+    const query = raw.toLowerCase();
+
+    resultsDiv.innerHTML = "";
+    suggestionsDiv.innerHTML = "";
+    suggestionsDiv.style.display = "none";
+
+    if (!query) {
+      showFullList(); // search box empty → আবার full list দেখাও
+      return;
+    }
+
+    // ------ Auto suggestion ------
+    const suggestList = nameIndex
+      .filter((p) => p.searchName.includes(query))
+      .slice(0, 10);
+
+    if (suggestList.length > 0) {
+      suggestionsDiv.style.display = "block";
+      suggestionsDiv.innerHTML = "";
+
+      suggestList.forEach((s) => {
+        const item = document.createElement("div");
+        item.className = "suggestion-item";
+        item.textContent = `${s.name} (${s.house}, Serial ${s.serial})`;
+
+        item.addEventListener("click", () => {
+          searchInput.value = s.name;
+          suggestionsDiv.style.display = "none";
+          renderMatches([s]);
+        });
+
+        suggestionsDiv.appendChild(item);
+      });
+    }
+
+    // ---- House Number Only → Full Group ----
+    if (/^\d+$/.test(raw)) {
+      const houseNum = "house_" + raw;
+
+      const groupKeys = Object.keys(voterData).filter((key) =>
+        key.startsWith(houseNum)
+      );
+
+      if (groupKeys.length > 0) {
+        resultsDiv.innerHTML = `<h2>House No: ${raw} – Full Group</h2>`;
+
+        groupKeys.forEach((hKey) => {
+          const groupName = hKey.replace("house_", "");
+          resultsDiv.innerHTML += `<h3>Group: ${groupName}</h3>`;
+
+          voterData[hKey].forEach((p) => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+              <h3>${p.name}</h3>
+              <p><strong>Serial:</strong> ${p.serial}</p>
+              <p><strong>Age:</strong> ${p.age}</p>
+              <p><strong>Gender:</strong> ${p.gender}</p>
+              <p><strong>Father:</strong> ${p.father ?? "—"}</p>
+              <p><strong>Husband:</strong> ${p.husband ?? "—"}</p>
+              <p><strong>BYP:</strong> ${p.byp}</p>
+            `;
+            resultsDiv.appendChild(card);
+          });
+        });
+
+        return;
+      }
+    }
+
+    // ----- General Search -----
+    let matches = [];
+    Object.keys(voterData).forEach((houseKey) => {
+      voterData[houseKey].forEach((person) => {
+        if (
+          (person.name && person.name.toLowerCase().includes(query)) ||
+          (person.father && person.father.toLowerCase().includes(query)) ||
+          (person.husband && person.husband.toLowerCase().includes(query)) ||
+          houseKey.toLowerCase().includes(query) ||
+          String(person.serial).includes(query)
+        ) {
+          matches.push({ house: houseKey, ...person });
+        }
+      });
+    });
+
+    renderMatches(matches);
+  });
+
+  // Show matched search result
   function renderMatches(matches) {
     resultsDiv.innerHTML = "";
 
-    if (!matches || matches.length === 0) {
+    if (matches.length === 0) {
       resultsDiv.innerHTML = "<p>No results found.</p>";
       return;
     }
@@ -57,152 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // বাড়ী নম্বর দিয়ে পুরো গ্রুপ দেখানোর ফাংশন
-  function renderHouseGroup(houseNumber) {
-    const prefix = "house_" + houseNumber.toString();
-    const matchingHouseKeys = Object.keys(voterData).filter((key) =>
-      key.toLowerCase().startsWith(prefix.toLowerCase())
-    );
-
-    if (matchingHouseKeys.length === 0) {
-      return false; // কোনো হাউস পাওয়া যায়নি
-    }
-
-    resultsDiv.innerHTML = "";
-    const title = document.createElement("div");
-    title.className = "house-header";
-    title.textContent = `House No: ${houseNumber} - Full Group`;
-    resultsDiv.appendChild(title);
-
-    matchingHouseKeys.forEach((houseKey) => {
-      const suffix = houseKey.slice(6); // "house_" বাদ
-      const label = document.createElement("div");
-      label.className = "group-label";
-      const niceLabel = suffix
-        ? `Sub-group: ${houseNumber}${suffix.replace(/^_/, "").toUpperCase()}`
-        : `Main group: ${houseNumber}`;
-      label.textContent = niceLabel;
-      resultsDiv.appendChild(label);
-
-      voterData[houseKey].forEach((person) => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-          <h3>${person.name} <span class="pill">Serial ${person.serial}</span></h3>
-          <p><strong>Age:</strong> ${person.age ?? "—"}</p>
-          <p><strong>Gender:</strong> ${person.gender ?? "—"}</p>
-          <p><strong>Father:</strong> ${person.father ?? "—"}</p>
-          <p><strong>Husband:</strong> ${person.husband ?? "—"}</p>
-          <p><strong>BYP:</strong> ${person.byp ?? "—"}</p>
-        `;
-        resultsDiv.appendChild(card);
-      });
-    });
-
-    return true;
-  }
-
-  // ইনপুটে change হ্যান্ডলার
-  searchInput.addEventListener("input", () => {
-    const raw = searchInput.value.trim();
-    const query = raw.toLowerCase();
-
-    resultsDiv.innerHTML = "";
-    suggestionsDiv.innerHTML = "";
-    suggestionsDiv.style.display = "none";
-
-    if (!query) return;
-
-    // ১) আগে auto-suggestion বানাই (নামের জন্য)
-    const suggestList = nameIndex
-      .filter((p) => p.searchName.includes(query))
-      .slice(0, 10);
-
-    if (suggestList.length > 0) {
-      suggestionsDiv.style.display = "block";
-      suggestionsDiv.innerHTML = "";
-
-      suggestList.forEach((s) => {
-        const item = document.createElement("div");
-        item.className = "suggestion-item";
-        item.textContent = `${s.name} (${s.house}, Serial ${s.serial})`;
-        item.addEventListener("click", () => {
-          // suggestion ক্লিক করলে – ইনপুটে নাম বসিয়ে, suggestion hide করে, শুধু ওই voter show
-          searchInput.value = s.name;
-          suggestionsDiv.innerHTML = "";
-          suggestionsDiv.style.display = "none";
-          renderMatches([s]);
-        });
-        suggestionsDiv.appendChild(item);
-      });
-    }
-
-    // ২) যদি শুধু বাড়ীর নম্বর লেখা হয় (যেমন "26"), তাহলে পুরো গ্রুপ দেখাই
-    // যদি শুধু বাড়ী নম্বর দেওয়া হয় → পুরো গ্রুপ দেখাও
-if (/^\d+$/.test(raw)) {
-    const houseNum = "house_" + raw;
-
-    // যেসব key এই house number দিয়ে শুরু
-    const groupKeys = Object.keys(voterData).filter(key =>
-        key.toLowerCase().startsWith(houseNum.toLowerCase())
-    );
-
-    if (groupKeys.length > 0) {
-        resultsDiv.innerHTML = `<h2>House No: ${raw} – Full Group</h2>`;
-
-        groupKeys.forEach(hKey => {
-            const sub = hKey.replace(houseNum, "") || "";
-            const groupName = sub ? `${raw}${sub.toUpperCase()}` : raw;
-
-            resultsDiv.innerHTML += `<h3>Group: ${groupName}</h3>`;
-
-            voterData[hKey].forEach(p => {
-                const card = document.createElement("div");
-                card.className = "card";
-                card.innerHTML = `
-                    <h3>${p.name}</h3>
-                    <p><strong>Serial:</strong> ${p.serial}</p>
-                    <p><strong>Age:</strong> ${p.age}</p>
-                    <p><strong>Gender:</strong> ${p.gender}</p>
-                    <p><strong>Father:</strong> ${p.father ?? "—"}</p>
-                    <p><strong>Husband:</strong> ${p.husband ?? "—"}</p>
-                    <p><strong>BYP:</strong> ${p.byp}</p>
-                `;
-                resultsDiv.appendChild(card);
-            });
-        });
-
-        return; // full group shown, no further search
-    }
-}
-
-    // ৩) general search (নাম, father, husband, serial, house key সব মিলিয়ে)
-    let matches = [];
-
-    Object.keys(voterData).forEach((houseKey) => {
-      voterData[houseKey].forEach((person) => {
-        const inName =
-          person.name && person.name.toLowerCase().includes(query);
-        const inFather =
-          person.father && person.father.toLowerCase().includes(query);
-        const inHusband =
-          person.husband && person.husband.toLowerCase().includes(query);
-        const inHouse = houseKey.toLowerCase().includes(query);
-        const inSerial = String(person.serial).includes(query);
-
-        if (inName || inFather || inHusband || inHouse || inSerial) {
-          matches.push({
-            house: houseKey,
-            ...person,
-          });
-        }
-      });
-    });
-
-    renderMatches(matches);
-  });
-
-  // ইনপুটের বাইরে ক্লিক করলে suggestion লুকিয়ে দাও
+  // Click outside → hide suggestions
   document.addEventListener("click", (e) => {
     if (!e.target.closest(".search-wrapper")) {
       suggestionsDiv.style.display = "none";
