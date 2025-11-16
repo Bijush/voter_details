@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let nameIndex = []; // auto-suggestion এর জন্য নামের ইনডেক্স
 
   // master.json লোড
-  fetch("master.json")
+  fetch("data/master.json")
     .then((res) => res.json())
     .then((data) => {
       voterData = data;
@@ -138,11 +138,43 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ২) যদি শুধু বাড়ীর নম্বর লেখা হয় (যেমন "26"), তাহলে পুরো গ্রুপ দেখাই
-    const onlyDigits = raw.replace(/\s+/g, "");
-    if (/^\d+$/.test(onlyDigits)) {
-      const done = renderHouseGroup(parseInt(onlyDigits, 10));
-      if (done) return; // হাউস গ্রুপ দেখানো হয়ে গেছে, আর কিছু করার দরকার নেই
+    // যদি শুধু বাড়ী নম্বর দেওয়া হয় → পুরো গ্রুপ দেখাও
+if (/^\d+$/.test(raw)) {
+    const houseNum = "house_" + raw;
+
+    // যেসব key এই house number দিয়ে শুরু
+    const groupKeys = Object.keys(voterData).filter(key =>
+        key.toLowerCase().startsWith(houseNum.toLowerCase())
+    );
+
+    if (groupKeys.length > 0) {
+        resultsDiv.innerHTML = `<h2>House No: ${raw} – Full Group</h2>`;
+
+        groupKeys.forEach(hKey => {
+            const sub = hKey.replace(houseNum, "") || "";
+            const groupName = sub ? `${raw}${sub.toUpperCase()}` : raw;
+
+            resultsDiv.innerHTML += `<h3>Group: ${groupName}</h3>`;
+
+            voterData[hKey].forEach(p => {
+                const card = document.createElement("div");
+                card.className = "card";
+                card.innerHTML = `
+                    <h3>${p.name}</h3>
+                    <p><strong>Serial:</strong> ${p.serial}</p>
+                    <p><strong>Age:</strong> ${p.age}</p>
+                    <p><strong>Gender:</strong> ${p.gender}</p>
+                    <p><strong>Father:</strong> ${p.father ?? "—"}</p>
+                    <p><strong>Husband:</strong> ${p.husband ?? "—"}</p>
+                    <p><strong>BYP:</strong> ${p.byp}</p>
+                `;
+                resultsDiv.appendChild(card);
+            });
+        });
+
+        return; // full group shown, no further search
     }
+}
 
     // ৩) general search (নাম, father, husband, serial, house key সব মিলিয়ে)
     let matches = [];
