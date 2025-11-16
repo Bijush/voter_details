@@ -3,16 +3,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const resultsDiv = document.getElementById("results");
     const suggestionsDiv = document.getElementById("suggestions");
 
-    const genderFilter = document.getElementById("filterGender");
-    const ageFilter = document.getElementById("filterAge");
-    const houseFilter = document.getElementById("filterHouse");
-    const sortFilter = document.getElementById("filterSort");
+    const genderFilter = document.getElementById("genderFilter");
+    const ageFilter = document.getElementById("ageFilter");
+    const houseFilter = document.getElementById("houseFilter");
+    const sortFilter = document.getElementById("sortFilter");
 
     let voterData = {};
-    let flatList = []; // All voters in single array (for filters)
-    let nameIndex = []; // For suggestions
+    let flatList = [];
+    let nameIndex = [];
 
-    // ⬇️ Load master.json from data folder
+    // master.json loads from: data/master.json
     fetch("data/master.json")
         .then((res) => res.json())
         .then((data) => {
@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("JSON Loaded Successfully!");
 
             flatList = [];
+
             Object.keys(voterData).forEach((houseKey) => {
                 voterData[houseKey].forEach((person) => {
                     flatList.push({ house: houseKey, ...person });
@@ -31,12 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
                 });
 
-                // Fill House Dropdown
+                // populate house dropdown
                 const option = document.createElement("option");
                 option.value = houseKey;
                 option.textContent = houseKey.replace("house_", "");
                 houseFilter.appendChild(option);
             });
+
+            // ⭐ Show all voters on page load
+            render(flatList);
         })
         .catch((err) => {
             console.error("Error loading JSON:", err);
@@ -44,19 +48,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 "<p style='color:red;'>Failed to load voter data.</p>";
         });
 
-    // ⬇️ Helper for printing cards
-    function render(matches) {
+    // ------------------ RENDER FUNCTION ------------------
+    function render(list) {
         resultsDiv.innerHTML = "";
 
-        if (!matches || matches.length === 0) {
+        if (list.length === 0) {
             resultsDiv.innerHTML = "<p>No results found.</p>";
             return;
         }
 
-        matches.forEach((p) => {
+        list.forEach((p) => {
             const card = document.createElement("div");
             card.className = "card";
-
             card.innerHTML = `
                 <h3>${p.name} <span class="pill">Serial ${p.serial}</span></h3>
                 <p><strong>House:</strong> ${p.house}</p>
@@ -70,140 +73,93 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ⬇️ House Group (Full Group View)
-    function showHouseGroup(houseNumber) {
-        const prefix = "house_" + houseNumber;
+    // ------------------ APPLY FILTERS ------------------
+    function applyFilters(baseList) {
+        let filtered = [...baseList];
 
-        const groups = Object.keys(voterData).filter((key) =>
-            key.toLowerCase().startsWith(prefix.toLowerCase())
-        );
-
-        if (groups.length === 0) return false;
-
-        resultsDiv.innerHTML = `<h2>House No: ${houseNumber} – Full Group</h2>`;
-
-        groups.forEach((hKey) => {
-            const sub = hKey.replace(prefix, "") || "";
-            const groupName = sub ? `${houseNumber}${sub.toUpperCase()}` : houseNumber;
-
-            resultsDiv.innerHTML += `<h3>Group: ${groupName}</h3>`;
-
-            voterData[hKey].forEach((p) => {
-                const block = document.createElement("div");
-                block.className = "card";
-                block.innerHTML = `
-                    <h3>${p.name}</h3>
-                    <p><strong>Serial:</strong> ${p.serial}</p>
-                    <p><strong>Age:</strong> ${p.age}</p>
-                    <p><strong>Gender:</strong> ${p.gender}</p>
-                    <p><strong>Father:</strong> ${p.father ?? "—"}</p>
-                    <p><strong>Husband:</strong> ${p.husband ?? "—"}</p>
-                    <p><strong>BYP:</strong> ${p.byp}</p>
-                `;
-                resultsDiv.appendChild(block);
-            });
-        });
-
-        return true;
-    }
-
-    // ⬇️ Apply Filters
-    function applyFilters(list) {
-        let filtered = [...list];
-
-        // Gender filter
-        if (genderFilter.value) {
+        // GENDER filter
+        if (genderFilter.value !== "all") {
             filtered = filtered.filter((p) => p.gender === genderFilter.value);
         }
 
-        // Age filter
-        if (ageFilter.value) {
+        // AGE filter
+        if (ageFilter.value !== "all") {
             let [min, max] = ageFilter.value.split("-").map(Number);
-            filtered = filtered.filter((p) => Number(p.age) >= min && Number(p.age) <= max);
+            filtered = filtered.filter((p) => p.age >= min && p.age <= max);
         }
 
-        // House filter
-        if (houseFilter.value) {
+        // HOUSE filter
+        if (houseFilter.value !== "all") {
             filtered = filtered.filter((p) => p.house === houseFilter.value);
         }
 
-        // Sort filter
+        // SORT
         if (sortFilter.value === "name") {
             filtered.sort((a, b) => a.name.localeCompare(b.name));
         }
-        if (sortFilter.value === "serial") {
-            filtered.sort((a, b) => a.serial - b.serial);
-        }
         if (sortFilter.value === "age") {
             filtered.sort((a, b) => (a.age || 0) - (b.age || 0));
+        }
+        if (sortFilter.value === "serial") {
+            filtered.sort((a, b) => a.serial - b.serial);
         }
 
         return filtered;
     }
 
-    // Re-Filter when any filter changed
-    [genderFilter, ageFilter, houseFilter, sortFilter].forEach((el) => {
-        el.addEventListener("change", () => {
-            let result = applyFilters(flatList);
-            render(result);
-        });
-    });
-
-    // ⬇️ Search Input
+    // ------------------ SEARCH INPUT LOGIC ------------------
     searchInput.addEventListener("input", () => {
-        const text = searchInput.value.trim();
-        const q = text.toLowerCase();
-
-        resultsDiv.innerHTML = "";
+        const raw = searchInput.value.trim();
+        const query = raw.toLowerCase();
         suggestionsDiv.innerHTML = "";
         suggestionsDiv.style.display = "none";
 
-        if (!q) return;
-
-        // Only numbers → show house group
-        if (/^\d+$/.test(text)) {
-            if (showHouseGroup(text)) return;
+        if (!query) {
+            render(applyFilters(flatList));
+            return;
         }
 
-        // Auto Suggestion
-        const suggestions = nameIndex
-            .filter((n) => n.searchName.includes(q))
+        // --- Auto Suggestion ---
+        const suggestList = nameIndex
+            .filter((p) => p.searchName.includes(query))
             .slice(0, 10);
 
-        if (suggestions.length > 0) {
+        if (suggestList.length > 0) {
             suggestionsDiv.style.display = "block";
-            suggestionsDiv.innerHTML = "";
 
-            suggestions.forEach((s) => {
-                const div = document.createElement("div");
-                div.className = "suggestion-item";
-                div.textContent = `${s.name} (${s.house}, Serial ${s.serial})`;
+            suggestList.forEach((s) => {
+                const item = document.createElement("div");
+                item.className = "suggestion-item";
+                item.textContent = `${s.name} (${s.house}, Serial ${s.serial})`;
 
-                div.addEventListener("click", () => {
+                item.addEventListener("click", () => {
                     searchInput.value = s.name;
-                    suggestionsDiv.innerHTML = "";
                     suggestionsDiv.style.display = "none";
                     render([s]);
                 });
 
-                suggestionsDiv.appendChild(div);
+                suggestionsDiv.appendChild(item);
             });
         }
 
-        // Full Search
-        let result = flatList.filter((p) =>
-            p.name.toLowerCase().includes(q) ||
-            p.house.toLowerCase().includes(q) ||
-            String(p.serial).includes(q) ||
-            (p.father || "").toLowerCase().includes(q) ||
-            (p.husband || "").toLowerCase().includes(q)
+        // --- General Search ---
+        let matches = flatList.filter((p) =>
+            p.name.toLowerCase().includes(query) ||
+            p.house.toLowerCase().includes(query) ||
+            String(p.serial).includes(query)
         );
 
-        result = applyFilters(result);
-        render(result);
+        render(applyFilters(matches));
     });
 
-    // Hide suggestions on outside click
+    // ------------------ FILTER CHANGE EVENT ------------------
+    [genderFilter, ageFilter, houseFilter, sortFilter].forEach((f) => {
+        f.addEventListener("change", () => {
+            render(applyFilters(flatList));
+        });
+    });
+
+    // Hide suggestion on outside click
     document.addEventListener("click", (e) => {
         if (!e.target.closest(".search-wrapper")) {
             suggestionsDiv.style.display = "none";
