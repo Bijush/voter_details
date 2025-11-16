@@ -1,54 +1,68 @@
-let jsonData = {};
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById("search");
+    const resultsDiv = document.getElementById("results");
 
-fetch("master.json")
-    .then(res => res.json())
-    .then(data => {
-        jsonData = data;
-        console.log("JSON Loaded");
-    });
+    let voterData = {};
 
-function searchVoter() {
-    let q = document.getElementById("searchBox").value.trim();
-
-    let resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = "";
-
-    if (q === "") return;
-
-    q = q.toLowerCase();
-
-    // NAME SEARCH
-    for (let house in jsonData) {
-        jsonData[house].forEach(voter => {
-            if (voter.name.toLowerCase().includes(q)) {
-                resultsDiv.innerHTML += renderResult(voter, house);
-            }
+    // Load master.json
+    fetch("master.json")
+        .then((res) => res.json())
+        .then((data) => {
+            voterData = data;
+            console.log("JSON Loaded Successfully!");
+        })
+        .catch((err) => {
+            console.error("Error loading JSON:", err);
+            resultsDiv.innerHTML = "<p style='color:red;'>Failed to load voter data.</p>";
         });
-    }
 
-    // HOUSE NUMBER SEARCH (supports 24, 24K, 24KH, 3KH etc)
-    let houseSearch = "house_" + q;
+    // Search Function
+    searchInput.addEventListener("input", () => {
+        const query = searchInput.value.trim().toLowerCase();
+        resultsDiv.innerHTML = "";
 
-    for (let house in jsonData) {
-        if (house.toLowerCase().startsWith(houseSearch)) {
-            resultsDiv.innerHTML += `<div class="result house"><b>House: ${house.replace("house_", "")}</b></div>`;
-            jsonData[house].forEach(voter => {
-                resultsDiv.innerHTML += renderResult(voter, house);
+        if (!query) return;
+
+        let matches = [];
+
+        Object.keys(voterData).forEach((houseKey) => {
+            voterData[houseKey].forEach((person) => {
+                if (
+                    person.name.toLowerCase().includes(query) ||
+                    (person.father && person.father.toLowerCase().includes(query)) ||
+                    (person.husband && person.husband.toLowerCase().includes(query)) ||
+                    houseKey.toLowerCase().includes(query) ||
+                    String(person.serial).includes(query)
+                ) {
+                    matches.push({
+                        house: houseKey,
+                        ...person
+                    });
+                }
             });
-        }
-    }
-}
+        });
 
-function renderResult(v, house) {
-    return `
-        <div class="result">
-            <b>${v.serial}. ${v.name}</b><br>
-            Father: ${v.father ?? "-"}<br>
-            Husband: ${v.husband ?? "-"}<br>
-            Age: ${v.age ?? "-"}<br>
-            Gender: ${v.gender}<br>
-            BYP: ${v.byp}<br>
-            <small>House: ${house.replace("house_","")}</small>
-        </div>
-    `;
-}
+        if (matches.length === 0) {
+            resultsDiv.innerHTML = "<p>No results found.</p>";
+            return;
+        }
+
+        // Show results
+        matches.forEach((m) => {
+            const card = document.createElement("div");
+            card.className = "card";
+
+            card.innerHTML = `
+                <h3>${m.name}</h3>
+                <p><strong>House:</strong> ${m.house}</p>
+                <p><strong>Serial:</strong> ${m.serial}</p>
+                <p><strong>Age:</strong> ${m.age}</p>
+                <p><strong>Gender:</strong> ${m.gender}</p>
+                <p><strong>Father:</strong> ${m.father ?? "—"}</p>
+                <p><strong>Husband:</strong> ${m.husband ?? "—"}</p>
+                <p><strong>BYP:</strong> ${m.byp}</p>
+            `;
+            resultsDiv.appendChild(card);
+        });
+    });
+});
