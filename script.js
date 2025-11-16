@@ -1,38 +1,82 @@
-let voters = [];
+// Load JSON and flatten grouped structure
+async function loadVoters() {
+    try {
+        const response = await fetch("master.json");
+        const data = await response.json();
 
-// Load JSON file
-fetch("master.json")
-    .then(res => res.json())
-    .then(data => voters = data)
-    .catch(err => console.log("Error loading JSON", err));
+        let voters = [];
 
-function searchVoter() {
-    let query = document.getElementById("searchBox").value.trim().toLowerCase();
-    let resultsDiv = document.getElementById("results");
+        // Loop through each house group
+        for (const house_key in data) {
+            if (Array.isArray(data[house_key])) {
+                const houseNumber = house_key.replace("house_", "");
+                
+                data[house_key].forEach(person => {
+                    voters.push({
+                        serial: person.serial || null,
+                        name: person.name || "",
+                        house: houseNumber,
+                        father: person.father || null,
+                        husband: person.husband || null,
+                        mother: person.mother || null,
+                        age: person.age || "",
+                        gender: person.gender || "",
+                        epic: person.byp || ""
+                    });
+                });
+            }
+        }
 
-    if (query.length === 0) {
-        resultsDiv.innerHTML = "";
+        return voters;
+
+    } catch (error) {
+        console.error("Error loading JSON:", error);
+        return [];
+    }
+}
+
+
+// Search function
+async function searchVoter() {
+    const query = document.getElementById("searchInput").value.trim().toLowerCase();
+    const resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = "Searching...";
+
+    const voters = await loadVoters();
+
+    if (!query) {
+        resultsDiv.innerHTML = "<p>Please enter name, EPIC, or house number.</p>";
         return;
     }
 
-    let results = voters.filter(v =>
-        v.name.toLowerCase().includes(query) ||
-        v.house.toLowerCase().includes(query)
+    const results = voters.filter(voter =>
+        (voter.name && voter.name.toLowerCase().includes(query)) ||
+        (voter.epic && voter.epic.toLowerCase() === query) ||
+        (voter.house && voter.house.toLowerCase() === query)
     );
 
     if (results.length === 0) {
-        resultsDiv.innerHTML = "<p>No results found</p>";
+        resultsDiv.innerHTML = "<p>No matching voter found.</p>";
         return;
     }
 
-    resultsDiv.innerHTML = results
-        .map(v => `
-            <div class="result ${v.type === 'house' ? 'house' : ''}">
-                <b>${v.serial}. ${v.name}</b><br>
-                House: ${v.house}<br>
-                ${v.relation_type}: ${v.relation_name}<br>
-                Age: ${v.age}, Gender: ${v.gender}<br>
-                EPIC: ${v.epic}
-            </div>
-        `).join("");
+    let html = "";
+
+    results.forEach(voter => {
+        html += `
+        <div class="card">
+            <h3>${voter.name}</h3>
+            <p><strong>House:</strong> ${voter.house}</p>
+            <p><strong>Serial:</strong> ${voter.serial}</p>
+            ${voter.father ? `<p><strong>Father:</strong> ${voter.father}</p>` : ""}
+            ${voter.husband ? `<p><strong>Husband:</strong> ${voter.husband}</p>` : ""}
+            ${voter.mother ? `<p><strong>Mother:</strong> ${voter.mother}</p>` : ""}
+            <p><strong>Age:</strong> ${voter.age}</p>
+            <p><strong>Gender:</strong> ${voter.gender}</p>
+            <p><strong>EPIC:</strong> ${voter.epic}</p>
+        </div>
+        `;
+    });
+
+    resultsDiv.innerHTML = html;
 }
