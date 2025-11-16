@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let voterData = {};
 
     // Load master.json
-    fetch("master.json")
+    fetch("data/master.json")
         .then((res) => res.json())
         .then((data) => {
             voterData = data;
