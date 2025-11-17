@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let nameIndex = [];
 
   // Load JSON
-  fetch("data/master.json")
+  fetch("data/master_beng.json")
     .then((res) => res.json())
     .then((data) => {
       voterData = data;
