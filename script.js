@@ -44,14 +44,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderResults(list) {
     resultsDiv.innerHTML = "";
+
     if (!list.length) {
-      resultsDiv.innerHTML = "<p>No results found.</p>";
+      resultsDiv.innerHTML = `<p>No results found.</p>`;
       return;
     }
 
     list.forEach(p => {
       const card = document.createElement("div");
       card.className = "card";
+
       card.innerHTML = `
         <h3>${p.name} <span class="pill">Serial ${p.serial}</span></h3>
         <p><strong>House:</strong> ${p.house}</p>
@@ -61,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <p><strong>Husband:</strong> ${p.husband ?? "-"}</p>
         <p><strong>BYP:</strong> ${p.byp}</p>
       `;
+
       resultsDiv.appendChild(card);
     });
   }
