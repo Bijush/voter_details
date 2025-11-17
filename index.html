@@ -1,61 +1,65 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Select Polling Station</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body {
-      font-family: system-ui, Arial, sans-serif;
-      margin: 0;
-      background: #f5f5f7;
-    }
-    .container {
-      max-width: 800px;
-      margin: 24px auto;
-      padding: 16px;
-      text-align: center;
-    }
-    h1 { font-size: 26px; }
-    .ps-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 20px;
-    }
-    .ps-btn {
-      background: #007bff;
-      padding: 14px;
-      border-radius: 10px;
-      color: #fff;
-      font-size: 18px;
-      text-decoration: none;
-      display: block;
-      transition: 0.2s;
-    }
-    .ps-btn:hover {
-      background: #0059c9;
-    }
-  </style>
+<meta charset="utf-8">
+<title>Polling Stations</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+    font-family: system-ui, sans-serif;
+    margin: 0;
+    background: #f6f6f7;
+}
+.container {
+    max-width: 800px;
+    margin: 24px auto;
+    padding: 16px;
+}
+h1 {
+    text-align: center;
+}
+.ps-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+}
+.ps-btn {
+    background: #fff;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 20px;
+    border: 2px solid #ddd;
+    text-decoration: none;
+    color: #000;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+}
+.ps-btn:hover {
+    background: #e9f2ff;
+    border-color: #0077ff;
+}
+</style>
 </head>
-
 <body>
-  <div class="container">
+
+<div class="container">
     <h1>Select Polling Station</h1>
 
-    <div class="ps-grid">
-      <a class="ps-btn" href="ps.html?ps=80">PS 80</a>
-      <a class="ps-btn" href="ps.html?ps=81">PS 81</a>
-      <a class="ps-btn" href="ps.html?ps=82">PS 82</a>
-      <a class="ps-btn" href="ps.html?ps=83">PS 83</a>
-      <a class="ps-btn" href="ps.html?ps=84">PS 84</a>
-      <a class="ps-btn" href="ps.html?ps=85">PS 85</a>
-      <a class="ps-btn" href="ps.html?ps=86">PS 86</a>
-      <a class="ps-btn" href="ps.html?ps=87">PS 87</a>
-      <a class="ps-btn" href="ps.html?ps=88">PS 88</a>
-      <a class="ps-btn" href="ps.html?ps=89">PS 89</a>
-      <a class="ps-btn" href="ps.html?ps=90">PS 90</a>
+    <div class="ps-list">
+      <a href="ps80.html" class="ps-btn">PS 80</a>
+      <a href="ps81.html" class="ps-btn">PS 81</a>
+      <a href="ps82.html" class="ps-btn">PS 82</a>
+      <a href="ps83.html" class="ps-btn">PS 83</a>
+      <a href="ps84.html" class="ps-btn">PS 84</a>
+      <a href="ps85.html" class="ps-btn">PS 85</a>
+      <a href="ps86.html" class="ps-btn">PS 86</a>
+      <a href="ps87.html" class="ps-btn">PS 87</a>
+      <a href="ps88.html" class="ps-btn">PS 88</a>
+      <a href="ps89.html" class="ps-btn">PS 89</a>
+      <a href="ps90.html" class="ps-btn">PS 90</a>
     </div>
-  </div>
+</div>
+
 </body>
 </html>
