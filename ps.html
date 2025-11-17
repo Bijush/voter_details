@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Polling Station Voter List</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      background: #f5f5f7;
+    }
+    .container {
+      max-width: 800px;
+      margin: 24px auto;
+      padding: 16px;
+    }
+    .card-main {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px 18px 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    }
+    h1 { text-align: center; margin: 0; }
+
+    /* SEARCH BOX */
+    .search-wrapper { position: relative; margin-top: 12px; }
+    #search {
+      width: 100%; padding: 14px 12px;
+      border-radius: 10px; border: 2px solid #ddd;
+      font-size: 16px; outline: none;
+    }
+
+    /* AUTO-SUGGEST */
+    #suggestions {
+      position: absolute; top: 100%; left: 0; right: 0;
+      background: #fff; border: 1px solid #ddd; border-top: none;
+      max-height: 200px; overflow-y: auto;
+      display: none; z-index: 50;
+    }
+    .suggestion-item {
+      padding: 8px 10px; cursor: pointer;
+      border-bottom: 1px solid #eee;
+    }
+
+    /* FILTER BAR */
+    .filter-bar {
+      display: flex; gap: 10px; flex-wrap: wrap;
+      margin-top: 15px;
+    }
+    .filter-bar select {
+      padding: 8px; border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    #results { margin-top: 16px; }
+
+    .card {
+      background: #fff; border-radius: 10px;
+      padding: 10px 12px; margin-bottom: 10px;
+      border: 1px solid #ddd;
+    }
+    .card h3 { margin: 0 0 6px; }
+    .pill {
+      padding: 2px 8px; background: #eef2ff;
+      border-radius: 100px; font-size: 12px;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+  <div class="card-main">
+
+    <h1 id="title">Loading…</h1>
+
+    <!-- SEARCH BOX -->
+    <div class="search-wrapper">
+      <input id="search" type="text" placeholder="Search by Name / House Number…" autocomplete="off" />
+      <div id="suggestions"></div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <select id="filterGender">
+        <option value="">Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+
+      <select id="filterAge">
+        <option value="">Age</option>
+        <option value="18-25">18–25</option>
+        <option value="26-40">26–40</option>
+        <option value="41-60">41–60</option>
+        <option value="61-200">60+</option>
+      </select>
+
+      <select id="filterHouse">
+        <option value="">House</option>
+      </select>
+
+      <select id="filterSort">
+        <option value="">Sort</option>
+        <option value="name">Name (A→Z)</option>
+        <option value="serial">Serial (Low→High)</option>
+        <option value="age">Age (Low→High)</option>
+      </select>
+    </div>
+
+    <div id="results"></div>
+  </div>
+</div>
+
+<script>
+const ps = new URLSearchParams(window.location.search).get("ps");
+document.getElementById("title").textContent = "Polling Station " + ps;
+
+let psData = [];  
+let fullList = []; 
+let nameIndex = [];
+
+fetch("data/master.json")
+  .then(res => res.json())
+  .then(data => {
+
+    // LOAD ALL VOTERS OF THIS PS (house_X under this PS)
+    Object.keys(data).forEach(k => {
+        data[k].forEach(p => {
+            if (String(p.ps) === String(ps)) {
+                psData.push(p);
+            }
+        });
+    });
+
+    fullList = [...psData];
+
+    buildHouseFilter();
+    buildNameIndex();
+    renderList(psData);
+  });
+
+function buildNameIndex() {
+  psData.forEach(p => {
+      nameIndex.push({
+          searchName: p.name.toLowerCase(),
+          ...p
+      });
+  });
+}
+
+function buildHouseFilter() {
+  const houseSet = [...new Set(psData.map(p => p.house))];
+  const dropdown = document.getElementById("filterHouse");
+
+  houseSet.forEach(h => {
+    const opt = document.createElement("option");
+    opt.value = h;
+    opt.textContent = h;
+    dropdown.appendChild(opt);
+  });
+}
+
+function renderList(list) {
+  const div = document.getElementById("results");
+  div.innerHTML = "";
+
+  list.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      <h3>${p.name} <span class="pill">Serial ${p.serial}</span></h3>
+      <p><strong>House:</strong> ${p.house}</p>
+      <p><strong>Age:</strong> ${p.age}</p>
+      <p><strong>Gender:</strong> ${p.gender}</p>
+      <p><strong>Father:</strong> ${p.father ?? "-"}</p>
+      <p><strong>Husband:</strong> ${p.husband ?? "-"}</p>
+      <p><strong>BYP:</strong> ${p.byp}</p>
+    `;
+    div.appendChild(card);
+  });
+}
+
+document.getElementById("search").addEventListener("input", () => {
+  const q = search.value.toLowerCase().trim();
+  const sug = document.getElementById("suggestions");
+
+  if (!q) {
+    sug.style.display = "none";
+    renderList(fullList);
+    return;
+  }
+
+  const match = nameIndex.filter(n => n.searchName.includes(q)).slice(0, 10);
+
+  sug.innerHTML = "";
+  sug.style.display = match.length ? "block" : "none";
+
+  match.forEach(m => {
+    const item = document.createElement("div");
+    item.className = "suggestion-item";
+    item.textContent = `${m.name} (House ${m.house})`;
+    item.onclick = () => {
+      search.value = m.name;
+      sug.style.display = "none";
+      renderList([m]);
+    };
+    sug.appendChild(item);
+  });
+
+});
+
+// FILTER HANDLERS
+document.querySelectorAll(".filter-bar select").forEach(sel => {
+  sel.addEventListener("change", applyFilters);
+});
+
+function applyFilters() {
+  let list = [...fullList];
+
+  const g = filterGender.value;
+  const a = filterAge.value;
+  const h = filterHouse.value;
+  const s = filterSort.value;
+
+  if (g) list = list.filter(p => p.gender === g);
+
+  if (a) {
+    let [min, max] = a.split("-").map(Number);
+    list = list.filter(p => p.age >= min && p.age <= max);
+  }
+
+  if (h) list = list.filter(p => p.house === h);
+
+  if (s === "name") list.sort((a,b)=>a.name.localeCompare(b.name));
+  if (s === "serial") list.sort((a,b)=>a.serial - b.serial);
+  if (s === "age") list.sort((a,b)=>a.age - b.age);
+
+  renderList(list);
+}
+</script>
+
+</body>
+</html>
