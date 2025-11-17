@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+
   const searchInput = document.getElementById("search");
   const resultsDiv = document.getElementById("results");
   const suggestionsDiv = document.getElementById("suggestions");
@@ -6,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let voterData = {};
   let allPeople = [];
 
+  // Automatically loads ps87.json OR master.json
   const JSON_FILE = window.PS_JSON || "data/master.json";
 
   fetch(JSON_FILE)
@@ -16,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(data => {
       voterData = data;
 
+      // Flat array for searching + filters
       Object.keys(voterData).forEach(house => {
         voterData[house].forEach(p => {
           allPeople.push({ house, ...p });
@@ -30,6 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     });
 
+  // -------------------------------
+  // House Dropdown
+  // -------------------------------
   function fillHouseDropdown() {
     const houseSelect = document.getElementById("filterHouse");
     const houses = Object.keys(voterData).sort();
@@ -42,6 +48,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // -------------------------------
+  // Render People
+  // -------------------------------
   function renderResults(list) {
     resultsDiv.innerHTML = "";
 
@@ -68,25 +77,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // -------------------------------
+  // Apply Filters
+  // -------------------------------
   function applyFilters() {
     let filtered = [...allPeople];
 
-    const g = document.getElementById("filterGender").value;
-    const a = document.getElementById("filterAge").value;
-    const h = document.getElementById("filterHouse").value;
-    const s = document.getElementById("filterSort").value;
+    const gender = document.getElementById("filterGender").value;
+    const age = document.getElementById("filterAge").value;
+    const house = document.getElementById("filterHouse").value;
+    const sort = document.getElementById("filterSort").value;
 
-    if (g) filtered = filtered.filter(p => p.gender === g);
-    if (h) filtered = filtered.filter(p => p.house === h);
+    if (gender) filtered = filtered.filter(p => p.gender === gender);
+    if (house) filtered = filtered.filter(p => p.house === house);
 
-    if (a) {
-      const [min, max] = a.split("-").map(Number);
+    if (age) {
+      const [min, max] = age.split("-").map(Number);
       filtered = filtered.filter(p => p.age >= min && p.age <= max);
     }
 
-    if (s === "name") filtered.sort((a, b) => a.name.localeCompare(b.name));
-    if (s === "serial") filtered.sort((a, b) => a.serial - b.serial);
-    if (s === "age") filtered.sort((a, b) => a.age - b.age);
+    if (sort === "name")
+      filtered.sort((a, b) => a.name.localeCompare(b.name));
+
+    if (sort === "serial")
+      filtered.sort((a, b) => a.serial - b.serial);
+
+    if (sort === "age")
+      filtered.sort((a, b) => a.age - b.age);
 
     renderResults(filtered);
   }
@@ -96,11 +113,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("filterHouse").onchange = applyFilters;
   document.getElementById("filterSort").onchange = applyFilters;
 
+  // -------------------------------
+  // Search
+  // -------------------------------
   searchInput.addEventListener("input", () => {
     const q = searchInput.value.toLowerCase();
-
-    suggestionsDiv.innerHTML = "";
-    suggestionsDiv.style.display = "none";
 
     if (!q) {
       renderResults(allPeople);
@@ -115,4 +132,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
     renderResults(matches);
   });
+
 });
