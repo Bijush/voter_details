@@ -26,11 +26,13 @@ h1 { text-align: center; margin: 0; }
 
 <h1>Polling Station 87</h1>
 
+<!-- SEARCH BOX -->
 <div class="search-wrapper">
 <input id="search" type="text" placeholder="Search by Name / House Number…" autocomplete="off">
 <div id="suggestions"></div>
 </div>
 
+<!-- FILTER BAR -->
 <div class="filter-bar">
 <select id="filterGender">
  <option value="">Gender</option>
@@ -62,6 +64,11 @@ h1 { text-align: center; margin: 0; }
 
 </div>
 </div>
+
+<!-- IMPORTANT: Load PS 87 JSON -->
+<script>
+  window.PS_JSON = "data/ps87.json";
+</script>
 
 <script src="script.js"></script>
 </body>
