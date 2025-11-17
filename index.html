@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="bn">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Voter List Search</title>
+  <title>Select Polling Station</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
-      font-family: system-ui, sans-serif;
+      font-family: system-ui, Arial, sans-serif;
       margin: 0;
       background: #f5f5f7;
     }
@@ -14,111 +14,48 @@
       max-width: 800px;
       margin: 24px auto;
       padding: 16px;
+      text-align: center;
     }
-    .card-main {
-      background: #fff;
-      border-radius: 12px;
-      padding: 20px 18px 16px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    h1 { font-size: 26px; }
+    .ps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 20px;
     }
-    h1 {
-      margin: 0; text-align: center;
+    .ps-btn {
+      background: #007bff;
+      padding: 14px;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 18px;
+      text-decoration: none;
+      display: block;
+      transition: 0.2s;
     }
-
-    /* Search */
-    .search-wrapper { position: relative; margin-top: 12px; }
-    #search {
-      width: 100%; padding: 14px 12px;
-      border-radius: 10px; border: 2px solid #ddd;
-      font-size: 16px; outline: none;
-    }
-
-    /* Suggestion */
-    #suggestions {
-      position: absolute; background: #fff;
-      left: 0; right: 0; top: 100%;
-      border: 1px solid #ddd; border-top: none;
-      max-height: 200px; overflow-y: auto;
-      display: none; z-index: 50;
-    }
-    .suggestion-item {
-      padding: 8px 10px; font-size: 14px;
-      border-bottom: 1px solid #eee; cursor: pointer;
-    }
-
-    /* FILTER BAR */
-    .filter-bar {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 15px;
-    }
-    .filter-bar select {
-      padding: 8px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-    }
-
-    #results { margin-top: 15px; }
-
-    .card {
-      background: #fff; border-radius: 10px;
-      padding: 10px 12px; margin-bottom: 10px;
-      border: 1px solid #ddd;
-    }
-    .card h3 { margin: 0 0 6px; }
-    .pill {
-      padding: 2px 8px; background: #eef2ff;
-      border-radius: 100px; font-size: 12px;
+    .ps-btn:hover {
+      background: #0059c9;
     }
   </style>
 </head>
+
 <body>
   <div class="container">
-    <div class="card-main">
+    <h1>Select Polling Station</h1>
 
-      <h1>Voter List Search</h1>
-
-      <!-- SEARCH BOX -->
-      <div class="search-wrapper">
-        <input id="search" type="text" placeholder="Search by Name / House Number…" autocomplete="off" />
-        <div id="suggestions"></div>
-      </div>
-
-      <!-- FILTER BAR -->
-      <div class="filter-bar">
-        <select id="filterGender">
-          <option value="">Gender</option>
-          <option value="পুরুষ">পুরুষ (Male)</option>
-          <option value="মহিলা">মহিলা (Female)</option>
-        </select>
-
-        <select id="filterAge">
-          <option value="">Age</option>
-          <option value="18-25">18–25</option>
-          <option value="26-40">26–40</option>
-          <option value="41-60">41–60</option>
-          <option value="60-200">60+</option>
-        </select>
-
-        <select id="filterHouse">
-          <option value="">House</option>
-        </select>
-
-        <select id="filterSort">
-          <option value="">Sort</option>
-          <option value="name">Name (A→Z)</option>
-          <option value="serial">Serial (Low→High)</option>
-          <option value="age">Age (Low→High)</option>
-        </select>
-      </div>
-
-      <div id="results"></div>
+    <div class="ps-grid">
+      <a class="ps-btn" href="ps.html?ps=80">PS 80</a>
+      <a class="ps-btn" href="ps.html?ps=81">PS 81</a>
+      <a class="ps-btn" href="ps.html?ps=82">PS 82</a>
+      <a class="ps-btn" href="ps.html?ps=83">PS 83</a>
+      <a class="ps-btn" href="ps.html?ps=84">PS 84</a>
+      <a class="ps-btn" href="ps.html?ps=85">PS 85</a>
+      <a class="ps-btn" href="ps.html?ps=86">PS 86</a>
+      <a class="ps-btn" href="ps.html?ps=87">PS 87</a>
+      <a class="ps-btn" href="ps.html?ps=88">PS 88</a>
+      <a class="ps-btn" href="ps.html?ps=89">PS 89</a>
+      <a class="ps-btn" href="ps.html?ps=90">PS 90</a>
     </div>
   </div>
-
-  <script src="script.js"></script>
-
 </body>
 </html>
