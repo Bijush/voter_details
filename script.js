@@ -17,9 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
     .then(data => {
       voterData = data;
 
-      Object.keys(voterData).forEach(h => {
-        voterData[h].forEach(p => {
-          allPeople.push({ house: h, ...p });
+      Object.keys(voterData).forEach(house => {
+        voterData[house].forEach(p => {
+          allPeople.push({ house, ...p });
         });
       });
 
