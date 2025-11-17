@@ -1,87 +1,115 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Polling Station 87</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.getElementById("search");
+  const resultsDiv = document.getElementById("results");
+  const suggestionsDiv = document.getElementById("suggestions");
 
-<style>
-body { font-family: system-ui, sans-serif; margin: 0; background: #f5f5f7; }
-.container { max-width: 800px; margin: 24px auto; padding: 16px; }
-.card-main { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.06); }
+  let voterData = {};
+  let allPeople = [];
 
-h1 { text-align: center; margin: 0; }
+  const JSON_FILE = window.PS_JSON || "data/master.json";
 
-.search-wrapper { position: relative; margin-top: 12px; }
-#search { width: 100%; padding: 14px; font-size: 16px; border-radius: 10px; border: 2px solid #ccc; }
+  fetch(JSON_FILE)
+    .then(res => {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    })
+    .then(data => {
+      voterData = data;
 
-#suggestions {
-  position: absolute; left:0; right:0; top:100%;
-  background:#fff; border:1px solid #ddd; border-top:none;
-  display:none; max-height:200px; overflow-y:auto; z-index:50;
-}
-.suggestion-item { padding:8px; border-bottom:1px solid #eee; cursor:pointer; }
+      Object.keys(voterData).forEach(house => {
+        voterData[house].forEach(p => {
+          allPeople.push({ house, ...p });
+        });
+      });
 
-.filter-bar { display:flex; gap:10px; margin-top:15px; flex-wrap:wrap; }
-.filter-bar select { padding:8px; border-radius:8px; border:1px solid #ccc; font-size:14px; }
+      fillHouseDropdown();
+      renderResults(allPeople);
+    })
+    .catch(err => {
+      resultsDiv.innerHTML = `<p style="color:red;">Failed to load voter list.</p>`;
+      console.error(err);
+    });
 
-.card { background:#fff; border-radius:10px; padding:10px 12px; border:1px solid #ddd; margin-bottom:10px; }
-.pill { background:#eef2ff; padding:2px 8px; border-radius:50px; font-size:11px; }
-</style>
-</head>
+  function fillHouseDropdown() {
+    const houseSelect = document.getElementById("filterHouse");
+    const houses = Object.keys(voterData).sort();
 
-<body>
-<div class="container">
-<div class="card-main">
+    houses.forEach(h => {
+      const op = document.createElement("option");
+      op.value = h;
+      op.textContent = h;
+      houseSelect.appendChild(op);
+    });
+  }
 
-<h1>Polling Station 87</h1>
+  function renderResults(list) {
+    resultsDiv.innerHTML = "";
+    if (!list.length) {
+      resultsDiv.innerHTML = "<p>No results found.</p>";
+      return;
+    }
 
-<!-- SEARCH BOX -->
-<div class="search-wrapper">
-<input id="search" type="text" placeholder="Search by Name / House Number…" autocomplete="off">
-<div id="suggestions"></div>
-</div>
+    list.forEach(p => {
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <h3>${p.name} <span class="pill">Serial ${p.serial}</span></h3>
+        <p><strong>House:</strong> ${p.house}</p>
+        <p><strong>Age:</strong> ${p.age}</p>
+        <p><strong>Gender:</strong> ${p.gender}</p>
+        <p><strong>Father:</strong> ${p.father ?? "-"}</p>
+        <p><strong>Husband:</strong> ${p.husband ?? "-"}</p>
+        <p><strong>BYP:</strong> ${p.byp}</p>
+      `;
+      resultsDiv.appendChild(card);
+    });
+  }
 
-<!-- FILTER BAR -->
-<div class="filter-bar">
+  function applyFilters() {
+    let filtered = [...allPeople];
 
-<select id="filterGender">
- <option value="">Gender</option>
- <option value="Male">Male</option>
- <option value="Female">Female</option>
-</select>
+    const g = document.getElementById("filterGender").value;
+    const a = document.getElementById("filterAge").value;
+    const h = document.getElementById("filterHouse").value;
+    const s = document.getElementById("filterSort").value;
 
-<select id="filterAge">
- <option value="">Age</option>
- <option value="18-25">18–25</option>
- <option value="26-40">26–40</option>
- <option value="41-60">41–60</option>
- <option value="60-200">60+</option>
-</select>
+    if (g) filtered = filtered.filter(p => p.gender === g);
+    if (h) filtered = filtered.filter(p => p.house === h);
 
-<select id="filterHouse">
- <option value="">House</option>
-</select>
+    if (a) {
+      const [min, max] = a.split("-").map(Number);
+      filtered = filtered.filter(p => p.age >= min && p.age <= max);
+    }
 
-<select id="filterSort">
- <option value="">Sort</option>
- <option value="name">Name (A–Z)</option>
- <option value="serial">Serial</option>
- <option value="age">Age</option>
-</select>
+    if (s === "name") filtered.sort((a, b) => a.name.localeCompare(b.name));
+    if (s === "serial") filtered.sort((a, b) => a.serial - b.serial);
+    if (s === "age") filtered.sort((a, b) => a.age - b.age);
 
-</div>
+    renderResults(filtered);
+  }
 
-<div id="results"></div>
+  document.getElementById("filterGender").onchange = applyFilters;
+  document.getElementById("filterAge").onchange = applyFilters;
+  document.getElementById("filterHouse").onchange = applyFilters;
+  document.getElementById("filterSort").onchange = applyFilters;
 
-</div>
-</div>
+  searchInput.addEventListener("input", () => {
+    const q = searchInput.value.toLowerCase();
 
-<!-- CORRECT FULL PATH FOR GITHUB PAGES -->
-<script>
-  window.PS_JSON = "https://bijush.github.io/voter_details/data/ps87.json";
-</script>
+    suggestionsDiv.innerHTML = "";
+    suggestionsDiv.style.display = "none";
 
-<script src="script.js"></script>
-</body>
-</html>
+    if (!q) {
+      renderResults(allPeople);
+      return;
+    }
+
+    const matches = allPeople.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      p.house.toLowerCase().includes(q) ||
+      String(p.serial).includes(q)
+    );
+
+    renderResults(matches);
+  });
+});
