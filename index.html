@@ -79,7 +79,13 @@ document.getElementById("psSelect").addEventListener("change", function () {
     const page = this.value;
 
     if (page) {
-        document.getElementById("psFrame").src = page;
+        const frame = document.getElementById("psFrame");
+        frame.src = page;
+
+        // Scroll to top when new PS loads
+        setTimeout(() => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }, 300);
     }
 });
 </script>
