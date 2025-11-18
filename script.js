@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
 
   const searchInput = document.getElementById("search");
@@ -34,11 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // PROCESS DATA
   function processData() {
     allPeople = [];
-
     Object.keys(voterData).forEach(h => {
-      voterData[h].forEach(p => {
-        allPeople.push({ house: h, ...p });
-      });
+      voterData[h].forEach(p => allPeople.push({ house: h, ...p }));
     });
 
     fillHouseDropdown();
@@ -47,30 +43,25 @@ document.addEventListener("DOMContentLoaded", () => {
     renderResults(allPeople);
   }
 
-  // DUPLICATE BYP DETECTOR
+  // DUPLICATE BYP DETECTION
   function findDuplicateBYP() {
     const map = {};
     allPeople.forEach(p => map[p.byp] = (map[p.byp] || 0) + 1);
-    duplicateBYPs = new Set(
-      Object.keys(map).filter(b => map[b] > 1 && b.trim() !== "")
-    );
+    duplicateBYPs = new Set(Object.keys(map).filter(b => map[b] > 1));
   }
 
-  // SORT HOUSE NUMERICALLY
+  // HOUSE SORTING
   function sortHouseASC(a, b) {
     return parseInt(a.replace("house_", "")) - parseInt(b.replace("house_", ""));
   }
 
-  // COLOR PER HOUSE
+  // AUTO COLORS
   function generateColors() {
     const houses = [...new Set(allPeople.map(p => p.house))].sort(sortHouseASC);
-    houses.forEach((h, i) => {
-      const hue = (i * 47) % 360;
-      colors[h] = `hsla(${hue}, 80%, 92%, 1)`;
-    });
+    houses.forEach((h, i) => colors[h] = `hsla(${(i * 47) % 360}, 80%, 92%, 1)`);
   }
 
-  // FILL HOUSE DROPDOWN
+  // DROPDOWN
   function fillHouseDropdown() {
     const houses = Object.keys(voterData).sort(sortHouseASC);
     houses.forEach(h => {
@@ -81,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // FAMILY GROUPING
+  // GROUP BY FAMILY
   function groupFamily(peopleList) {
     const groups = {};
     peopleList.forEach(p => {
@@ -92,15 +83,14 @@ document.addEventListener("DOMContentLoaded", () => {
     return groups;
   }
 
-  // GET ONE HEAD PER HOUSE (lowest serial)
+  // GET HOUSE HEAD (lowest serial)
   function getHouseHead(housePeople) {
-    return housePeople.reduce((min, p) =>
-      p.serial < min.serial ? p : min
-    );
+    return housePeople.reduce((min, p) => p.serial < min.serial ? p : min);
   }
 
   // RENDER RESULTS
   function renderResults(list) {
+
     resultsDiv.innerHTML = "";
 
     if (!list.length) {
@@ -114,49 +104,36 @@ document.addEventListener("DOMContentLoaded", () => {
       groupedByHouse[p.house].push(p);
     });
 
-    Object.keys(groupedByHouse)
-      .sort(sortHouseASC)
-      .forEach(h => {
+    Object.keys(groupedByHouse).sort(sortHouseASC).forEach(h => {
 
-        const housePeople = groupedByHouse[h];
-        const houseHead = getHouseHead(housePeople); // ✔ ONE HEAD PER HOUSE
+      const housePeople = groupedByHouse[h];
+      const houseHead = getHouseHead(housePeople);
+      const houseNumber = h.replace("house_", "");
 
-        const houseSection = document.createElement("div");
-        houseSection.className = "house-section";
-        houseSection.style.background = colors[h];
+      const houseSection = document.createElement("div");
+      houseSection.className = "house-section";
+      houseSection.style.background = colors[h];
 
-        const houseNumber = h.replace("house_", "");
+      houseSection.innerHTML = `
+        <div class="house-title" style="display:flex;justify-content:space-between;">
+          <span>House: ${houseNumber}</span>
+          <span>${housePeople.length} voters</span>
+        </div>
+      `;
 
-        houseSection.innerHTML = `
-          <div class="house-title" style="display:flex;justify-content:space-between;">
-            <span>House: ${houseNumber}</span>
-            <span>${housePeople.length} voters</span>
-          </div>
-        `;
+      const familyGroups = groupFamily(housePeople);
 
-        // FAMILY GROUPS
-        const familyGroups = groupFamily(housePeople);
+      Object.keys(familyGroups).forEach(family => {
 
-        Object.keys(familyGroups).forEach(family => {
+        const familyWrap = document.createElement("div");
+        const familyContent = document.createElement("div");
+        familyContent.className = "family-content";
+        familyContent.style.marginTop = "8px";
 
-          const familyWrap = document.createElement("div");
-          familyWrap.className = "family-wrap";
-
-          const familyHeader = document.createElement("div");
-          familyHeader.className = "family-header";
-          familyHeader.style.cssText =
-            "padding:8px;background:#fff2;border-radius:8px;margin-top:8px;cursor:pointer;font-weight:600;display:flex;justify-content:space-between;align-items:center;";
-
-          familyHeader.innerHTML = `
-            <span>👨‍👩‍👧 ${family}</span>
-            <span class="arrow">▼</span>
-          `;
-
-          const familyContent = document.createElement("div");
-          familyContent.className = "family-content";
-          familyContent.style.marginTop = "8px";
-
-          familyGroups[family].forEach(p => {
+        // FIRST: Render HEAD card alone with arrow
+        familyGroups[family]
+          .sort((a, b) => a.serial - b.serial)
+          .forEach(p => {
 
             const card = document.createElement("div");
             card.className = "card";
@@ -166,20 +143,23 @@ document.addEventListener("DOMContentLoaded", () => {
               ? `<span class="dup-badge" style="background:#f97316;color:white;padding:2px 6px;border-radius:6px;font-size:10px;">DUPLICATE BYP</span>`
               : "";
 
-            // ✔ HEAD ONLY IF p IS HOUSE HEAD
-            const headBadge =
-              p.serial === houseHead.serial
-                ? `<span class="pill" style="background:#2563eb;color:white;">HEAD</span>`
-                : "";
+            const isHead = p.serial === houseHead.serial;
+
+            const headBadge = isHead
+              ? `<span class="pill" style="background:#2563eb;color:white;">HEAD</span>`
+              : "";
+
+            const arrow = isHead
+              ? `<span class="toggle-arrow" style="font-size:18px;cursor:pointer;">▼</span>`
+              : "";
 
             card.innerHTML = `
-              <h3>${p.name}
-                <span class="pill">#${p.serial}</span>
-                ${headBadge}
-                ${duplicateBadge}
+              <h3 style="display:flex;justify-content:space-between;">
+                <span>
+                  ${p.name} <span class="pill">#${p.serial}</span> ${headBadge} ${duplicateBadge}
+                </span>
+                ${arrow}
               </h3>
-
-              <p><strong>House:</strong> ${houseNumber}</p>
               <p><strong>Age:</strong> ${p.age}</p>
               <p><strong>Gender:</strong> ${p.gender}</p>
               <p><strong>Father:</strong> ${p.father || "-"}</p>
@@ -191,26 +171,34 @@ document.addEventListener("DOMContentLoaded", () => {
               card.style.border = "2px solid #f97316";
             }
 
-            familyContent.appendChild(card);
+            // If HEAD → collapse/expand control
+            if (isHead) {
+              card.addEventListener("click", () => {
+                familyContent.classList.toggle("hidden");
+
+                const arrowEl = card.querySelector(".toggle-arrow");
+                arrowEl.textContent = familyContent.classList.contains("hidden") ? "►" : "▼";
+
+                familyContent.style.display =
+                  familyContent.classList.contains("hidden") ? "none" : "block";
+              });
+            }
+
+            // Append HEAD card first
+            if (isHead) {
+              familyWrap.appendChild(card);
+            } else {
+              // Other members go inside familyContent
+              familyContent.appendChild(card);
+            }
           });
 
-          // COLLAPSE TOGGLE
-          familyHeader.addEventListener("click", () => {
-            familyContent.classList.toggle("hidden");
-            familyContent.style.display =
-              familyContent.classList.contains("hidden") ? "none" : "block";
-
-            familyHeader.querySelector(".arrow").textContent =
-              familyContent.classList.contains("hidden") ? "►" : "▼";
-          });
-
-          familyWrap.appendChild(familyHeader);
-          familyWrap.appendChild(familyContent);
-          houseSection.appendChild(familyWrap);
-        });
-
-        resultsDiv.appendChild(houseSection);
+        familyWrap.appendChild(familyContent);
+        houseSection.appendChild(familyWrap);
       });
+
+      resultsDiv.appendChild(houseSection);
+    });
   }
 
   // FILTERS
@@ -220,7 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const g = filterGender.value;
     const a = filterAge.value;
     const h = filterHouse.value;
-    const s = filterSort.value;
     const initial = filterInitial.value;
 
     if (g) filtered = filtered.filter(p => p.gender === g);
