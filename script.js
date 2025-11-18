@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
 
   const searchInput = document.getElementById("search");
@@ -18,9 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const JSON_FILE = window.PS_JSON || "data/master.json";
 
-  // ---------------------------
-  // LOAD JSON DATA
-  // ---------------------------
+  // LOAD DATA
   fetch(JSON_FILE)
     .then(res => res.json())
     .then(data => {
@@ -32,10 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     });
 
-
-  // ---------------------------
   // PROCESS DATA
-  // ---------------------------
   function processData() {
     allPeople = [];
 
@@ -51,52 +47,32 @@ document.addEventListener("DOMContentLoaded", () => {
     renderResults(allPeople);
   }
 
-
-  // ---------------------------
   // DUPLICATE BYP DETECTOR
-  // ---------------------------
   function findDuplicateBYP() {
     const map = {};
-
-    allPeople.forEach(p => {
-      map[p.byp] = (map[p.byp] || 0) + 1;
-    });
-
+    allPeople.forEach(p => map[p.byp] = (map[p.byp] || 0) + 1);
     duplicateBYPs = new Set(
       Object.keys(map).filter(b => map[b] > 1 && b.trim() !== "")
     );
   }
 
+  // SORT HOUSE NUMERICALLY
+  function sortHouseASC(a, b) {
+    return parseInt(a.replace("house_", "")) - parseInt(b.replace("house_", ""));
+  }
 
-  // ---------------------------
-  // AUTO HOUSE COLORS
-  // ---------------------------
+  // COLOR PER HOUSE
   function generateColors() {
     const houses = [...new Set(allPeople.map(p => p.house))].sort(sortHouseASC);
-
     houses.forEach((h, i) => {
       const hue = (i * 47) % 360;
       colors[h] = `hsla(${hue}, 80%, 92%, 1)`;
     });
   }
 
-
-  // ---------------------------
-  // NUMERIC SORT HELPER
-  // ---------------------------
-  function sortHouseASC(a, b) {
-    const n1 = parseInt(a.replace("house_", ""));
-    const n2 = parseInt(b.replace("house_", ""));
-    return n1 - n2;
-  }
-
-
-  // ---------------------------
-  // HOUSE DROPDOWN
-  // ---------------------------
+  // FILL HOUSE DROPDOWN
   function fillHouseDropdown() {
     const houses = Object.keys(voterData).sort(sortHouseASC);
-
     houses.forEach(h => {
       const op = document.createElement("option");
       op.value = h;
@@ -105,26 +81,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-
-  // ---------------------------
-  // GROUP BY FAMILY
-  // ---------------------------
+  // FAMILY GROUPING
   function groupFamily(peopleList) {
     const groups = {};
-
     peopleList.forEach(p => {
       let key = p.father || p.husband || "Unknown Family";
       if (!groups[key]) groups[key] = [];
       groups[key].push(p);
     });
-
     return groups;
   }
 
+  // GET ONE HEAD PER HOUSE (lowest serial)
+  function getHouseHead(housePeople) {
+    return housePeople.reduce((min, p) =>
+      p.serial < min.serial ? p : min
+    );
+  }
 
-  // ---------------------------
   // RENDER RESULTS
-  // ---------------------------
   function renderResults(list) {
     resultsDiv.innerHTML = "";
 
@@ -143,6 +118,9 @@ document.addEventListener("DOMContentLoaded", () => {
       .sort(sortHouseASC)
       .forEach(h => {
 
+        const housePeople = groupedByHouse[h];
+        const houseHead = getHouseHead(housePeople); // ✔ ONE HEAD PER HOUSE
+
         const houseSection = document.createElement("div");
         houseSection.className = "house-section";
         houseSection.style.background = colors[h];
@@ -152,12 +130,12 @@ document.addEventListener("DOMContentLoaded", () => {
         houseSection.innerHTML = `
           <div class="house-title" style="display:flex;justify-content:space-between;">
             <span>House: ${houseNumber}</span>
-            <span>${groupedByHouse[h].length} voters</span>
+            <span>${housePeople.length} voters</span>
           </div>
         `;
 
-        // FAMILY TREE
-        const familyGroups = groupFamily(groupedByHouse[h]);
+        // FAMILY GROUPS
+        const familyGroups = groupFamily(housePeople);
 
         Object.keys(familyGroups).forEach(family => {
 
@@ -178,9 +156,8 @@ document.addEventListener("DOMContentLoaded", () => {
           familyContent.className = "family-content";
           familyContent.style.marginTop = "8px";
 
-          const headOfFamily = familyGroups[family][0]?.name;
-
           familyGroups[family].forEach(p => {
+
             const card = document.createElement("div");
             card.className = "card";
             card.style.marginBottom = "10px";
@@ -189,8 +166,9 @@ document.addEventListener("DOMContentLoaded", () => {
               ? `<span class="dup-badge" style="background:#f97316;color:white;padding:2px 6px;border-radius:6px;font-size:10px;">DUPLICATE BYP</span>`
               : "";
 
+            // ✔ HEAD ONLY IF p IS HOUSE HEAD
             const headBadge =
-              p.name === headOfFamily
+              p.serial === houseHead.serial
                 ? `<span class="pill" style="background:#2563eb;color:white;">HEAD</span>`
                 : "";
 
@@ -219,7 +197,6 @@ document.addEventListener("DOMContentLoaded", () => {
           // COLLAPSE TOGGLE
           familyHeader.addEventListener("click", () => {
             familyContent.classList.toggle("hidden");
-
             familyContent.style.display =
               familyContent.classList.contains("hidden") ? "none" : "block";
 
@@ -236,10 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-
-  // ---------------------------
   // FILTERS
-  // ---------------------------
   function applyFilters() {
     let filtered = [...allPeople];
 
@@ -264,13 +238,6 @@ document.addEventListener("DOMContentLoaded", () => {
           : filtered.filter(p => p.name.startsWith(initial));
     }
 
-    if (s === "name") filtered.sort((a, b) => a.name.localeCompare(b.name));
-    if (s === "serial") filtered.sort((a, b) => a.serial - b.serial);
-    if (s === "age") filtered.sort((a, b) => a.age - b.age);
-    if (s === "house") filtered.sort(sortHouseASC);
-    if (s === "byp") filtered.sort((a, b) => a.byp.localeCompare(b.byp));
-    if (s === "nameLength") filtered.sort((a, b) => a.name.length - b.name.length);
-
     renderResults(filtered);
   }
 
@@ -280,10 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
   filterSort.onchange = applyFilters;
   filterInitial.onchange = applyFilters;
 
-
-  // ---------------------------
   // SEARCH
-  // ---------------------------
   searchInput.addEventListener("input", () => {
     const q = searchInput.value.toLowerCase();
 
@@ -299,10 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderResults(matches);
   });
 
-
-  // ---------------------------
   // BACK TO TOP
-  // ---------------------------
   window.addEventListener("scroll", () => {
     backToTop.style.display = window.scrollY > 200 ? "block" : "none";
   });
