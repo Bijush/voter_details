@@ -56,11 +56,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // DUPLICATE BYP DETECTOR
   // ---------------------------
   function findDuplicateBYP() {
-    let map = {};
+    const map = {};
 
     allPeople.forEach(p => {
-      if (!map[p.byp]) map[p.byp] = 0;
-      map[p.byp]++;
+      map[p.byp] = (map[p.byp] || 0) + 1;
     });
 
     duplicateBYPs = new Set(
@@ -73,7 +72,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // AUTO HOUSE COLORS
   // ---------------------------
   function generateColors() {
-    const houses = [...new Set(allPeople.map(p => p.house))];
+    const houses = [...new Set(allPeople.map(p => p.house))].sort(sortHouseASC);
+
     houses.forEach((h, i) => {
       const hue = (i * 47) % 360;
       colors[h] = `hsla(${hue}, 80%, 92%, 1)`;
@@ -82,14 +82,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   // ---------------------------
+  // NUMERIC SORT HELPER
+  // ---------------------------
+  function sortHouseASC(a, b) {
+    const n1 = parseInt(a.replace("house_", ""));
+    const n2 = parseInt(b.replace("house_", ""));
+    return n1 - n2;
+  }
+
+
+  // ---------------------------
   // HOUSE DROPDOWN
   // ---------------------------
   function fillHouseDropdown() {
-    const houses = Object.keys(voterData).sort();
+    const houses = Object.keys(voterData).sort(sortHouseASC);
+
     houses.forEach(h => {
       const op = document.createElement("option");
       op.value = h;
-      op.textContent = h.replace("house_", "House ");
+      op.textContent = "House " + h.replace("house_", "");
       filterHouse.appendChild(op);
     });
   }
@@ -128,87 +139,101 @@ document.addEventListener("DOMContentLoaded", () => {
       groupedByHouse[p.house].push(p);
     });
 
-    Object.keys(groupedByHouse).forEach(h => {
+    Object.keys(groupedByHouse)
+      .sort(sortHouseASC)
+      .forEach(h => {
 
-      const houseSection = document.createElement("div");
-      houseSection.className = "house-section";
-      houseSection.style.background = colors[h];
+        const houseSection = document.createElement("div");
+        houseSection.className = "house-section";
+        houseSection.style.background = colors[h];
 
-      houseSection.innerHTML = `
-        <div class="house-title">
-          <span>House: ${h.replace("house_", "")}</span>
-          <span>${groupedByHouse[h].length} voters</span>
-        </div>
-      `;
+        const houseNumber = h.replace("house_", "");
 
-      // FAMILY TREE
-      const familyGroups = groupFamily(groupedByHouse[h]);
-
-      Object.keys(familyGroups).forEach(family => {
-
-        const familyWrap = document.createElement("div");
-        familyWrap.className = "family-wrap";
-
-        const familyHeader = document.createElement("div");
-        familyHeader.className = "family-header";
-        familyHeader.innerHTML = `
-          👨‍👩‍👧 <strong>${family}</strong>
-          <span class="arrow">▼</span>
+        houseSection.innerHTML = `
+          <div class="house-title" style="display:flex;justify-content:space-between;">
+            <span>House: ${houseNumber}</span>
+            <span>${groupedByHouse[h].length} voters</span>
+          </div>
         `;
 
-        const familyContent = document.createElement("div");
-        familyContent.className = "family-content";
+        // FAMILY TREE
+        const familyGroups = groupFamily(groupedByHouse[h]);
 
-        const headOfFamily = familyGroups[family][0]?.name;
+        Object.keys(familyGroups).forEach(family => {
 
-        familyGroups[family].forEach(p => {
-          const card = document.createElement("div");
-          card.className = "card";
+          const familyWrap = document.createElement("div");
+          familyWrap.className = "family-wrap";
 
-          const duplicateBadge = duplicateBYPs.has(p.byp)
-            ? `<span class="dup-badge">DUPLICATE BYP</span>`
-            : "";
+          const familyHeader = document.createElement("div");
+          familyHeader.className = "family-header";
+          familyHeader.style.cssText =
+            "padding:8px;background:#fff2;border-radius:8px;margin-top:8px;cursor:pointer;font-weight:600;display:flex;justify-content:space-between;align-items:center;";
 
-          const headBadge =
-            p.name === headOfFamily
-              ? `<span class="pill" style="background:#2563eb;color:white;">HEAD</span>`
-              : "";
-
-          card.innerHTML = `
-            <h3>${p.name}
-              <span class="pill">#${p.serial}</span>
-              ${headBadge}
-              ${duplicateBadge}
-            </h3>
-            <p><strong>House:</strong> ${p.house.replace("house_", "")}</p>
-            <p><strong>Age:</strong> ${p.age}</p>
-            <p><strong>Gender:</strong> ${p.gender}</p>
-            <p><strong>Father:</strong> ${p.father || "-"}</p>
-            <p><strong>Husband:</strong> ${p.husband || "-"}</p>
-            <p><strong>BYP:</strong> ${p.byp}</p>
+          familyHeader.innerHTML = `
+            <span>👨‍👩‍👧 ${family}</span>
+            <span class="arrow">▼</span>
           `;
 
-          if (duplicateBYPs.has(p.byp)) {
-            card.style.border = "2px solid #f97316";
-          }
+          const familyContent = document.createElement("div");
+          familyContent.className = "family-content";
+          familyContent.style.marginTop = "8px";
 
-          familyContent.appendChild(card);
+          const headOfFamily = familyGroups[family][0]?.name;
+
+          familyGroups[family].forEach(p => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.style.marginBottom = "10px";
+
+            const duplicateBadge = duplicateBYPs.has(p.byp)
+              ? `<span class="dup-badge" style="background:#f97316;color:white;padding:2px 6px;border-radius:6px;font-size:10px;">DUPLICATE BYP</span>`
+              : "";
+
+            const headBadge =
+              p.name === headOfFamily
+                ? `<span class="pill" style="background:#2563eb;color:white;">HEAD</span>`
+                : "";
+
+            card.innerHTML = `
+              <h3>${p.name}
+                <span class="pill">#${p.serial}</span>
+                ${headBadge}
+                ${duplicateBadge}
+              </h3>
+
+              <p><strong>House:</strong> ${houseNumber}</p>
+              <p><strong>Age:</strong> ${p.age}</p>
+              <p><strong>Gender:</strong> ${p.gender}</p>
+              <p><strong>Father:</strong> ${p.father || "-"}</p>
+              <p><strong>Husband:</strong> ${p.husband || "-"}</p>
+              <p><strong>BYP:</strong> ${p.byp}</p>
+            `;
+
+            if (duplicateBYPs.has(p.byp)) {
+              card.style.border = "2px solid #f97316";
+            }
+
+            familyContent.appendChild(card);
+          });
+
+          // COLLAPSE TOGGLE
+          familyHeader.addEventListener("click", () => {
+            familyContent.classList.toggle("hidden");
+
+            familyContent.style.display =
+              familyContent.classList.contains("hidden") ? "none" : "block";
+
+            familyHeader.querySelector(".arrow").textContent =
+              familyContent.classList.contains("hidden") ? "►" : "▼";
+          });
+
+          familyWrap.appendChild(familyHeader);
+          familyWrap.appendChild(familyContent);
+          houseSection.appendChild(familyWrap);
         });
 
-        // COLLAPSE
-        familyHeader.addEventListener("click", () => {
-          familyContent.classList.toggle("hidden");
-          familyHeader.querySelector(".arrow").textContent =
-            familyContent.classList.contains("hidden") ? "►" : "▼";
-        });
-
-        familyWrap.appendChild(familyHeader);
-        familyWrap.appendChild(familyContent);
-        houseSection.appendChild(familyWrap);
+        resultsDiv.appendChild(houseSection);
       });
-
-      resultsDiv.appendChild(houseSection);
-    });
   }
 
 
@@ -242,7 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (s === "name") filtered.sort((a, b) => a.name.localeCompare(b.name));
     if (s === "serial") filtered.sort((a, b) => a.serial - b.serial);
     if (s === "age") filtered.sort((a, b) => a.age - b.age);
-    if (s === "house") filtered.sort((a, b) => a.house.localeCompare(b.house));
+    if (s === "house") filtered.sort(sortHouseASC);
     if (s === "byp") filtered.sort((a, b) => a.byp.localeCompare(b.byp));
     if (s === "nameLength") filtered.sort((a, b) => a.name.length - b.name.length);
 
