@@ -1,508 +1,236 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const searchInput     = document.getElementById("search");
-  const resultsDiv      = document.getElementById("results");
-  const suggestionsDiv  = document.getElementById("suggestions");
-  const genderSel       = document.getElementById("filterGender");
-  const ageSel          = document.getElementById("filterAge");
-  const houseSel        = document.getElementById("filterHouse");
-  const sortSel         = document.getElementById("filterSort");
-  const bypInput        = document.getElementById("filterBYP");
-  const fhInput         = document.getElementById("filterFH");
-  const initialSel      = document.getElementById("filterInitial");
-  const ageMinInput     = document.getElementById("ageMin");
-  const ageMaxInput     = document.getElementById("ageMax");
-  const serialMinInput  = document.getElementById("serialMin");
-  const serialMaxInput  = document.getElementById("serialMax");
-  const viewModeSel     = document.getElementById("viewMode");
-  const psSelector      = document.getElementById("psSelector");
-  const darkToggle      = document.getElementById("darkToggle");
-  const houseJumpDiv    = document.getElementById("houseJump");
-  const backToTopBtn    = document.getElementById("backToTop");
-  const btnClear        = document.getElementById("btnClear");
-  const btnExportCSV    = document.getElementById("btnExportCSV");
-  const btnPrint        = document.getElementById("btnPrint");
 
-  let voterData = {};      // original loaded object { house_x: [..] }
-  let allPeople = [];      // flat array [{house, name, serial, ...}, ...]
-  let currentList = [];    // last rendered list
-  let duplicateBYP = new Set();
-  let colorMap = {};       // house -> color
-  const houseColors = [
-    "#fef3c7", "#e0f2fe", "#f1f5f9", "#fce7f3",
-    "#dcfce7", "#ede9fe", "#fee2e2", "#f5f5f4"
-  ];
+  // Elements
+  const searchInput = document.getElementById("search");
+  const resultsDiv = document.getElementById("results");
+  const suggestionsDiv = document.getElementById("suggestions");
+
+  const filterGender = document.getElementById("filterGender");
+  const filterAge = document.getElementById("filterAge");
+  const filterHouse = document.getElementById("filterHouse");
+  const filterSort = document.getElementById("filterSort");
+  const filterBYP = document.getElementById("filterBYP");
+  const filterInitial = document.getElementById("filterInitial");
+  const viewMode = document.getElementById("viewMode");
+
+  const psSelector = document.getElementById("psSelector");
+  const houseJump = document.getElementById("houseJump");
+  const backToTop = document.getElementById("backToTop");
+
+  let voterData = {};
+  let allPeople = [];
+  let colors = {};
 
   const JSON_FILE = window.PS_JSON || "data/master.json";
 
-  // ---- LOAD DATA ----
+  // Load data
   fetch(JSON_FILE)
     .then(res => {
       if (!res.ok) throw new Error("HTTP " + res.status);
       return res.json();
     })
     .then(data => {
-      voterData = data || {};
-
-      // flatten
-      Object.keys(voterData).forEach(house => {
-        voterData[house].forEach(p => {
-          allPeople.push({ house, ...p });
-        });
-      });
-
-      buildDuplicateIndex();
-      fillHouseDropdown();
-      buildHouseJump();
-      buildColorMap();
-
-      currentList = [...allPeople];
-      applyFiltersAndSearch();   // initial render
+      voterData = data;
+      processData();
     })
     .catch(err => {
-      console.error(err);
       resultsDiv.innerHTML = `<p style="color:red;">Failed to load voter list.</p>`;
+      console.error(err);
     });
 
-  // ---- UTILITIES ----
+  // Process Data
+  function processData() {
+    allPeople = [];
 
-  function buildDuplicateIndex() {
-    const bypCount = {};
-    allPeople.forEach(p => {
-      if (!p.byp) return;
-      const key = String(p.byp).trim();
-      bypCount[key] = (bypCount[key] || 0) + 1;
+    const houseKeys = Object.keys(voterData).sort();
+
+    houseKeys.forEach(h => {
+      voterData[h].forEach(p => {
+        allPeople.push({ house: h, ...p });
+      });
     });
-    Object.keys(bypCount).forEach(k => {
-      if (bypCount[k] > 1) duplicateBYP.add(k);
+
+    fillHouseDropdown();
+    generateHouseJump();
+    generateColors();
+    renderResults(allPeople);
+  }
+
+  // Generate unique background colors per house
+  function generateColors() {
+    const uniqueHouses = [...new Set(allPeople.map(p => p.house))];
+    uniqueHouses.forEach((h, i) => {
+      const hue = (i * 47) % 360;
+      colors[h] = `hsla(${hue}, 80%, 92%, 1)`;
     });
   }
 
-  function buildColorMap() {
-    const houses = Array.from(new Set(allPeople.map(p => p.house))).sort();
-    houses.forEach((h, idx) => {
-      colorMap[h] = houseColors[idx % houseColors.length];
-    });
-  }
-
-  function prettyHouseLabel(houseKey) {
-    // "house_22K" -> "22K"
-    return houseKey.replace(/^house_/i, "").toUpperCase();
-  }
-
-  function parseHouseNumber(houseKey) {
-    // For sorting houses naturally: "house_22K" -> { num: 22, suffix: "K" }
-    const raw = houseKey.replace(/^house_/i, "");
-    const m = raw.match(/^(\d+)(.*)$/);
-    if (!m) return { num: 9999, suffix: raw };
-    return { num: parseInt(m[1], 10), suffix: (m[2] || "").toUpperCase() };
-  }
-
+  // Fill dropdown houses
   function fillHouseDropdown() {
-    if (!houseSel) return;
-    const houses = Array.from(new Set(allPeople.map(p => p.house))).sort((a, b) => {
-      const pa = parseHouseNumber(a);
-      const pb = parseHouseNumber(b);
-      if (pa.num !== pb.num) return pa.num - pb.num;
-      return pa.suffix.localeCompare(pb.suffix);
-    });
+    const houses = Object.keys(voterData).sort();
 
     houses.forEach(h => {
       const op = document.createElement("option");
       op.value = h;
-      op.textContent = prettyHouseLabel(h);
-      houseSel.appendChild(op);
+      op.textContent = h.replace("house_", "House ");
+      filterHouse.appendChild(op);
     });
   }
 
-  function buildHouseJump() {
-    if (!houseJumpDiv) return;
-    houseJumpDiv.innerHTML = "";
-    const houses = Array.from(new Set(allPeople.map(p => p.house))).sort((a, b) => {
-      const pa = parseHouseNumber(a);
-      const pb = parseHouseNumber(b);
-      if (pa.num !== pb.num) return pa.num - pb.num;
-      return pa.suffix.localeCompare(pb.suffix);
-    });
+  // Generate quick jump
+  function generateHouseJump() {
+    houseJump.innerHTML = "";
+    const houses = Object.keys(voterData).sort();
 
     houses.forEach(h => {
-      const chip = document.createElement("button");
-      chip.type = "button";
+      const chip = document.createElement("div");
       chip.className = "house-chip";
-      chip.textContent = prettyHouseLabel(h);
-      chip.addEventListener("click", () => {
-        const section = document.getElementById("house_" + prettyHouseLabel(h));
-        if (section) {
-          section.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      });
-      houseJumpDiv.appendChild(chip);
+      chip.textContent = h.replace("house_", "");
+      chip.onclick = () => scrollToHouse(h);
+      houseJump.appendChild(chip);
     });
   }
 
-  // ---- RENDER ----
+  function scrollToHouse(houseKey) {
+    const section = document.getElementById("sec_" + houseKey);
+    if (section) section.scrollIntoView({ behavior: "smooth" });
+  }
 
+  // Render Results
   function renderResults(list) {
-    currentList = list;
-    const viewMode = viewModeSel ? viewModeSel.value : "list";
+    resultsDiv.classList.toggle("grid-view", viewMode.value === "grid");
 
     resultsDiv.innerHTML = "";
-    resultsDiv.classList.toggle("grid-view", viewMode === "grid");
 
     if (!list.length) {
-      resultsDiv.innerHTML = `<p>No results found.</p>`;
+      resultsDiv.innerHTML = "<p>No results found.</p>";
       return;
     }
 
-    // group by house
-    const groups = {};
+    // Group by house
+    const grouped = {};
     list.forEach(p => {
-      if (!groups[p.house]) groups[p.house] = [];
-      groups[p.house].push(p);
+      if (!grouped[p.house]) grouped[p.house] = [];
+      grouped[p.house].push(p);
     });
 
-    const houseKeys = Object.keys(groups).sort((a, b) => {
-      const pa = parseHouseNumber(a);
-      const pb = parseHouseNumber(b);
-      if (pa.num !== pb.num) return pa.num - pb.num;
-      return pa.suffix.localeCompare(pb.suffix);
-    });
-
-    houseKeys.forEach(houseKey => {
-      const houseList = groups[houseKey];
-      const pretty = prettyHouseLabel(houseKey);
-
+    Object.keys(grouped).forEach(house => {
       const section = document.createElement("div");
       section.className = "house-section";
-      section.id = "house_" + pretty;
-      section.style.background = colorMap[houseKey] || "rgba(148,163,184,0.12)";
+      section.id = "sec_" + house;
+      section.style.background = colors[house];
 
-      const header = document.createElement("div");
-      header.className = "house-title";
-      header.innerHTML = `
-        <span>House ${pretty}</span>
-        <span class="house-sub">${houseList.length} voter(s)</span>
+      const title = document.createElement("div");
+      title.className = "house-title";
+      title.innerHTML = `
+        <span>House: ${house.replace("house_", "")}</span>
+        <span class="house-sub">${grouped[house].length} voters</span>
       `;
-      section.appendChild(header);
+      section.appendChild(title);
 
-      const cardListDiv = document.createElement("div");
-      cardListDiv.className = "card-list";
+      const cardList = document.createElement("div");
+      cardList.className = "card-list";
 
-      houseList.forEach(p => {
+      grouped[house].forEach(p => {
         const card = document.createElement("div");
         card.className = "card";
-
-        // duplicate / missing markers
-        const bypKey = p.byp ? String(p.byp).trim() : "";
-        const isDup = duplicateBYP.has(bypKey);
-        const isMissing = p.age == null || p.age === "" || !p.byp;
-
-        if (isDup) card.classList.add("duplicate");
-        if (isMissing) card.classList.add("missing-data");
-
-        let badges = "";
-        if (isDup) {
-          badges += `<span class="badge">Duplicate BYP</span>`;
-        }
-        if (isMissing) {
-          badges += `<span class="badge">Missing data</span>`;
-        }
-
         card.innerHTML = `
-          <h3>
-            ${p.name || "-"}
-            <span class="pill">Serial ${p.serial}</span>
-            ${badges}
-          </h3>
-          <p><strong>Age:</strong> ${p.age ?? "-"}</p>
-          <p><strong>Gender:</strong> ${p.gender ?? "-"}</p>
-          <p><strong>House:</strong> ${pretty}</p>
-          <p><strong>Father:</strong> ${p.father ?? "-"}</p>
-          <p><strong>Husband:</strong> ${p.husband ?? "-"}</p>
-          <p><strong>BYP:</strong> ${p.byp ?? "-"}</p>
+          <h3>${p.name} <span class="pill">#${p.serial}</span></h3>
+          <p><strong>Age:</strong> ${p.age}</p>
+          <p><strong>Gender:</strong> ${p.gender}</p>
+          <p><strong>BYP:</strong> ${p.byp}</p>
         `;
-
-        cardListDiv.appendChild(card);
+        cardList.appendChild(card);
       });
 
-      section.appendChild(cardListDiv);
+      section.appendChild(cardList);
       resultsDiv.appendChild(section);
     });
   }
 
-  // ---- FILTER + SEARCH ----
-
-  function applyFiltersAndSearch() {
+  // FILTER LOGIC
+  function applyFilters() {
     let filtered = [...allPeople];
 
-    const q      = (searchInput?.value || "").trim().toLowerCase();
-    const g      = genderSel?.value || "";
-    const aVal   = ageSel?.value || "";
-    const houseV = houseSel?.value || "";
-    const sortV  = sortSel?.value || "";
-    const bypVal = (bypInput?.value || "").trim().toLowerCase();
-    const fhVal  = (fhInput?.value  || "").trim().toLowerCase();
-    const initV  = initialSel?.value || "";
+    const g = filterGender.value;
+    const a = filterAge.value;
+    const h = filterHouse.value;
+    const s = filterSort.value;
+    const byp = filterBYP.value.toLowerCase();
+    const initial = filterInitial.value;
 
-    // search first (name / house / serial / BYP)
-    if (q) {
-      filtered = filtered.filter(p => {
-        const name   = (p.name || "").toLowerCase();
-        const house  = (p.house || "").toLowerCase();
-        const serial = String(p.serial || "");
-        const byp    = (p.byp || "").toLowerCase();
-        return (
-          name.includes(q) ||
-          house.includes(q) ||
-          serial.includes(q) ||
-          byp.includes(q)
-        );
-      });
+    if (g) filtered = filtered.filter(p => p.gender === g);
+
+    if (h) filtered = filtered.filter(p => p.house === h);
+
+    if (a) {
+      const [min, max] = a.split("-").map(Number);
+      filtered = filtered.filter(p => p.age >= min && p.age <= max);
     }
 
-    // gender
-    if (g) {
-      filtered = filtered.filter(p => (p.gender || "") === g);
-    }
+    if (byp) filtered = filtered.filter(p => p.byp.toLowerCase().includes(byp));
 
-    // house
-    if (houseV) {
-      filtered = filtered.filter(p => p.house === houseV);
-    }
-
-    // father/husband text match
-    if (fhVal) {
-      filtered = filtered.filter(p => {
-        const f = (p.father || "").toLowerCase();
-        const h = (p.husband || "").toLowerCase();
-        return f.includes(fhVal) || h.includes(fhVal);
-      });
-    }
-
-    // BYP filter (contains)
-    if (bypVal) {
-      filtered = filtered.filter(p => (p.byp || "").toLowerCase().includes(bypVal));
-    }
-
-    // starting letter
-    if (initV) {
-      filtered = filtered.filter(p => {
-        const n = (p.name || "").trim();
-        if (!n) return false;
-        const first = n[0].toUpperCase();
-        if (initV === "#") {
-          return first < "A" || first > "Z";
-        }
-        return first === initV;
-      });
-    }
-
-    // age: dropdown OR custom range
-    if (aVal) {
-      const [min, max] = aVal.split("-").map(Number);
-      filtered = filtered.filter(p => {
-        if (p.age == null || p.age === "") return false;
-        return p.age >= min && p.age <= max;
-      });
-    } else {
-      const min = Number(ageMinInput?.value || "");
-      const max = Number(ageMaxInput?.value || "");
-      if (!Number.isNaN(min) && ageMinInput?.value !== "") {
-        filtered = filtered.filter(p => p.age != null && p.age >= min);
-      }
-      if (!Number.isNaN(max) && ageMaxInput?.value !== "") {
-        filtered = filtered.filter(p => p.age != null && p.age <= max);
+    if (initial) {
+      if (initial === "#") {
+        filtered = filtered.filter(p => !/^[A-Z]/i.test(p.name));
+      } else {
+        filtered = filtered.filter(p => p.name.startsWith(initial));
       }
     }
 
-    // serial range
-    const sMin = Number(serialMinInput?.value || "");
-    const sMax = Number(serialMaxInput?.value || "");
-    if (!Number.isNaN(sMin) && serialMinInput?.value !== "") {
-      filtered = filtered.filter(p => p.serial != null && p.serial >= sMin);
-    }
-    if (!Number.isNaN(sMax) && serialMaxInput?.value !== "") {
-      filtered = filtered.filter(p => p.serial != null && p.serial <= sMax);
-    }
-
-    // sorting
-    if (sortV === "name") {
-      filtered.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-    } else if (sortV === "serial") {
-      filtered.sort((a, b) => (a.serial || 0) - (b.serial || 0));
-    } else if (sortV === "age") {
-      filtered.sort((a, b) => (a.age || 0) - (b.age || 0));
-    } else if (sortV === "house") {
-      filtered.sort((a, b) => {
-        const pa = parseHouseNumber(a.house);
-        const pb = parseHouseNumber(b.house);
-        if (pa.num !== pb.num) return pa.num - pb.num;
-        return pa.suffix.localeCompare(pb.suffix);
-      });
-    } else if (sortV === "byp") {
-      filtered.sort((a, b) => (String(a.byp || "")).localeCompare(String(b.byp || "")));
-    } else if (sortV === "nameLength") {
-      filtered.sort((a, b) => (a.name || "").length - (b.name || "").length);
-    }
+    // Sorting
+    if (s === "name") filtered.sort((a, b) => a.name.localeCompare(b.name));
+    if (s === "serial") filtered.sort((a, b) => a.serial - b.serial);
+    if (s === "age") filtered.sort((a, b) => a.age - b.age);
+    if (s === "house") filtered.sort((a, b) => a.house.localeCompare(b.house));
+    if (s === "byp") filtered.sort((a, b) => a.byp.localeCompare(b.byp));
+    if (s === "nameLength") filtered.sort((a, b) => a.name.length - b.name.length);
 
     renderResults(filtered);
   }
 
-  // ---- EVENTS ----
+  // Event Listeners for filters
+  filterGender.onchange = applyFilters;
+  filterAge.onchange = applyFilters;
+  filterHouse.onchange = applyFilters;
+  filterSort.onchange = applyFilters;
+  filterBYP.oninput = applyFilters;
+  filterInitial.onchange = applyFilters;
 
-  // search with suggestions
-  if (searchInput) {
-    searchInput.addEventListener("input", () => {
-      const q = searchInput.value.trim().toLowerCase();
+  // Search
+  searchInput.addEventListener("input", () => {
+    const q = searchInput.value.toLowerCase();
+    suggestionsDiv.innerHTML = "";
+    suggestionsDiv.style.display = "none";
 
-      if (!q) {
-        suggestionsDiv.style.display = "none";
-        suggestionsDiv.innerHTML = "";
-        applyFiltersAndSearch();
-        return;
-      }
+    if (!q) {
+      applyFilters();
+      return;
+    }
 
-      // suggestion list (top 10 names)
-      const suggest = allPeople
-        .filter(p => (p.name || "").toLowerCase().includes(q))
-        .slice(0, 10);
+    const matches = allPeople.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      p.house.toLowerCase().includes(q) ||
+      p.byp.toLowerCase().includes(q) ||
+      String(p.serial).includes(q)
+    );
 
-      if (suggest.length) {
-        suggestionsDiv.innerHTML = "";
-        suggestionsDiv.style.display = "block";
-
-        suggest.forEach(p => {
-          const item = document.createElement("div");
-          item.className = "suggestion-item";
-          item.textContent = `${p.name} (House ${prettyHouseLabel(p.house)}, Serial ${p.serial})`;
-          item.addEventListener("click", () => {
-            searchInput.value = p.name || "";
-            suggestionsDiv.innerHTML = "";
-            suggestionsDiv.style.display = "none";
-            applyFiltersAndSearch();
-          });
-          suggestionsDiv.appendChild(item);
-        });
-      } else {
-        suggestionsDiv.style.display = "none";
-        suggestionsDiv.innerHTML = "";
-      }
-
-      applyFiltersAndSearch();
-    });
-
-    document.addEventListener("click", (e) => {
-      if (!e.target.closest(".search-wrapper")) {
-        suggestionsDiv.style.display = "none";
-      }
-    });
-  }
-
-  // filter changes
-  [genderSel, ageSel, houseSel, sortSel, initialSel].forEach(el => {
-    if (!el) return;
-    el.addEventListener("change", applyFiltersAndSearch);
+    renderResults(matches);
   });
 
-  [bypInput, fhInput, ageMinInput, ageMaxInput, serialMinInput, serialMaxInput].forEach(el => {
-    if (!el) return;
-    el.addEventListener("input", () => {
-      applyFiltersAndSearch();
-    });
-  });
-
-  if (viewModeSel) {
-    viewModeSel.addEventListener("change", () => {
-      renderResults(currentList);
-    });
-  }
-
-  if (btnClear) {
-    btnClear.addEventListener("click", () => {
-      if (genderSel) genderSel.value = "";
-      if (ageSel) ageSel.value = "";
-      if (houseSel) houseSel.value = "";
-      if (sortSel) sortSel.value = "";
-      if (initialSel) initialSel.value = "";
-      if (bypInput) bypInput.value = "";
-      if (fhInput) fhInput.value = "";
-      if (ageMinInput) ageMinInput.value = "";
-      if (ageMaxInput) ageMaxInput.value = "";
-      if (serialMinInput) serialMinInput.value = "";
-      if (serialMaxInput) serialMaxInput.value = "";
-      if (searchInput) searchInput.value = "";
-      applyFiltersAndSearch();
-    });
-  }
+  // View mode toggle
+  viewMode.onchange = () => applyFilters();
 
   // PS selector
-  if (psSelector) {
-    psSelector.addEventListener("change", () => {
-      const ps = psSelector.value;
-      window.location.href = `ps${ps}.html`;
-    });
-  }
+  psSelector.onchange = () => {
+    const ps = psSelector.value;
+    window.location.href = `ps${ps}.html`;
+  };
 
-  // dark mode
-  if (darkToggle) {
-    darkToggle.addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-      darkToggle.classList.toggle("active");
-    });
-  }
-
-  // back to top
+  // Back to Top
   window.addEventListener("scroll", () => {
-    if (window.scrollY > 200) {
-      backToTopBtn.style.display = "block";
-    } else {
-      backToTopBtn.style.display = "none";
-    }
+    backToTop.style.display = window.scrollY > 200 ? "block" : "none";
   });
-
-  backToTopBtn.addEventListener("click", () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  });
-
-  // Export CSV (Excel)
-  if (btnExportCSV) {
-    btnExportCSV.addEventListener("click", () => {
-      const rows = [
-        ["Name", "Serial", "House", "Age", "Gender", "Father", "Husband", "BYP"]
-      ];
-      currentList.forEach(p => {
-        rows.push([
-          p.name || "",
-          p.serial || "",
-          prettyHouseLabel(p.house),
-          p.age || "",
-          p.gender || "",
-          p.father || "",
-          p.husband || "",
-          p.byp || ""
-        ]);
-      });
-
-      const csv = rows.map(r =>
-        r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(",")
-      ).join("\n");
-
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "voter_list_ps87.csv";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    });
-  }
-
-  // Print / PDF
-  if (btnPrint) {
-    btnPrint.addEventListener("click", () => {
-      window.print();  // user can choose "Save as PDF"
-    });
-  }
+  backToTop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
 });
