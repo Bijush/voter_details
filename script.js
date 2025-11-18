@@ -143,15 +143,24 @@ document.addEventListener("DOMContentLoaded", () => {
             ? "2px solid #f97316"
             : "1px solid #ccc";
 
-          card.innerHTML = `
-            <h3>${p.name}  
-              <span class="pill">#${p.serial}</span>
-              ${duplicateBadge}
-            </h3>
-            <p><strong>Age:</strong> ${p.age}</p>
-            <p><strong>Gender:</strong> ${p.gender}</p>
-            <p><strong>BYP:</strong> ${p.byp}</p>
-          `;
+          // Determine head of family (first person in group)
+let headOfFamily = familyGroups[family][0].name;
+
+card.innerHTML = `
+  <h3>
+    ${p.name}  
+    <span class="pill">#${p.serial}</span>
+    ${p.name === headOfFamily ? `<span class="pill" style="background:#2563eb;color:#fff;">HEAD</span>` : ""}
+    ${duplicateBadge}
+  </h3>
+
+  <p><strong>House:</strong> ${p.house.replace("house_", "")}</p>
+  <p><strong>Age:</strong> ${p.age}</p>
+  <p><strong>Gender:</strong> ${p.gender}</p>
+  <p><strong>Father:</strong> ${p.father || "-"}</p>
+  <p><strong>Husband:</strong> ${p.husband || "-"}</p>
+  <p><strong>BYP:</strong> ${p.byp}</p>
+`;
 
           familyBox.appendChild(card);
         });
