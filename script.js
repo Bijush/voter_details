@@ -7,8 +7,24 @@ document.addEventListener("DOMContentLoaded", () => {
   let voterData = {};
   let allPeople = [];
 
+  // JSON file (PS-specific or master)
   const JSON_FILE = window.PS_JSON || "data/master.json";
 
+  // ----- House Color System -----
+  const HOUSE_COLORS = [
+    "#fff8e1", // light yellow
+    "#e3f2fd", // light blue
+    "#e8f5e9", // light green
+    "#fce4ec", // light pink
+    "#f3e5f5", // light purple
+    "#e0f7fa", // cyan
+    "#f9fbe7"  // lime yellow
+  ];
+
+  let houseColorMap = {}; 
+  let colorIndex = 0;
+
+  // ---------------- LOAD JSON ----------------
   fetch(JSON_FILE)
     .then(res => {
       if (!res.ok) throw new Error("HTTP " + res.status);
@@ -31,6 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     });
 
+
+  // ---------------- HOUSE DROPDOWN ----------------
   function fillHouseDropdown() {
     const houseSelect = document.getElementById("filterHouse");
     const houses = Object.keys(voterData).sort();
@@ -43,6 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ---------------- RENDER RESULTS ----------------
   function renderResults(list) {
     resultsDiv.innerHTML = "";
 
@@ -52,8 +71,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     list.forEach(p => {
+
+      // Assign color for each house
+      if (!houseColorMap[p.house]) {
+        houseColorMap[p.house] = HOUSE_COLORS[colorIndex % HOUSE_COLORS.length];
+        colorIndex++;
+      }
+
       const card = document.createElement("div");
       card.className = "card";
+
+      // Apply same background color for same house
+      card.style.background = houseColorMap[p.house];
 
       card.innerHTML = `
         <h3>${p.name} <span class="pill">Serial ${p.serial}</span></h3>
@@ -69,6 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // ---------------- FILTERS ----------------
   function applyFilters() {
     let filtered = [...allPeople];
 
@@ -97,6 +127,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("filterHouse").onchange = applyFilters;
   document.getElementById("filterSort").onchange = applyFilters;
 
+
+  // ---------------- SEARCH ----------------
   searchInput.addEventListener("input", () => {
     const q = searchInput.value.toLowerCase();
 
