@@ -10,6 +10,7 @@
         font-family: system-ui, sans-serif;
         margin: 0;
         background: #f5f5f7;
+        color: #111;
     }
 
     .container {
@@ -20,7 +21,6 @@
     }
 
     .card-main {
-        width: 100%;
         background: #fff;
         padding: 16px;
         border-radius: 14px;
@@ -29,13 +29,12 @@
 
     h1 {
         text-align: center;
+        font-size: 24px;
         margin: 0;
-        font-size: 26px;
-        font-weight: 700;
-        padding-bottom: 8px;
+        padding-bottom: 10px;
     }
 
-    /* SEARCH */
+    /* Search */
     .search-wrapper {
         margin-top: 10px;
     }
@@ -43,11 +42,11 @@
         width: 100%;
         padding: 12px;
         font-size: 15px;
-        border-radius: 10px;
         border: 2px solid #ccc;
+        border-radius: 10px;
     }
 
-    /* FILTERS */
+    /* Filters */
     .filter-bar {
         display: flex;
         flex-wrap: wrap;
@@ -55,139 +54,102 @@
         margin-top: 12px;
     }
     .filter-bar select {
+        flex: 1 1 140px;
         padding: 10px;
-        border-radius: 8px;
+        border-radius: 10px;
         border: 1px solid #ccc;
         font-size: 14px;
-        background: #fff;
-        flex: 1 1 150px;
     }
 
-    /* RESULTS */
-    #results {
-        margin-top: 16px;
-    }
-
+    /* House-section */
     .house-section {
-        padding: 10px;
+        padding: 12px;
         border-radius: 12px;
-        margin-bottom: 18px;
+        margin-top: 18px;
     }
 
     .house-title {
-        font-size: 15px;
-        font-weight: 700;
+        font-size: 16px;
+        font-weight: bold;
         margin-bottom: 10px;
-        background: rgba(0,0,0,0.05);
-        padding: 6px 10px;
-        border-radius: 8px;
     }
 
-    /* FAMILY BOX */
-    .family-box {
-        margin-bottom: 12px;
-        padding: 8px;
-        background: #fafafa;
-        border-radius: 8px;
-        border-left: 4px solid #999;
+    /* Collapsible Family Group */
+    .family-wrap {
+        background: rgba(255,255,255,0.7);
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        margin-bottom: 14px;
     }
 
-    .family-box strong {
-        font-size: 14px;
+    .family-header {
+        padding: 10px;
+        font-size: 15px;
+        background: #f1f5ff;
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: 10px 10px 0 0;
     }
 
-    /* CARD */
+    .family-content {
+        padding: 10px;
+    }
+
+    .family-content.hidden {
+        display: none;
+    }
+
+    .arrow {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    /* Person card */
     .card {
         background: #fff;
         border-radius: 10px;
         padding: 12px;
-        border: 1px solid #ddd;
-        margin-top: 8px;
-        transition: 0.15s;
-    }
-    .card:hover {
-        transform: scale(1.01);
-        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
     }
 
     .card h3 {
-        margin: 0;
+        margin: 0 0 5px;
         font-size: 17px;
-        display: flex;
-        gap: 6px;
-        align-items: center;
     }
 
     .pill {
         background: #e9edff;
-        padding: 2px 7px;
-        border-radius: 12px;
-        font-size: 11px;
-    }
-
-    .dup {
-        background: #f97316;
-        color: #fff;
         padding: 2px 6px;
         border-radius: 6px;
-        font-size: 10px;
+        font-size: 11px;
         margin-left: 6px;
     }
 
-    /* Back to top */
+    .dup-badge {
+        background: #f97316;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 6px;
+        font-size: 11px;
+        margin-left: 6px;
+    }
+
+    /* Back to Top */
     #backToTop {
         position: fixed;
         right: 15px;
-        bottom: 20px;
-        padding: 10px 14px;
+        bottom: 18px;
+        padding: 8px 12px;
+        border-radius: 20px;
         background: #fff;
-        border-radius: 50px;
         border: 1px solid #ccc;
-        font-size: 13px;
-        cursor: pointer;
         display: none;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        cursor: pointer;
     }
-    .family-wrap {
-    background: rgba(255,255,255,0.5);
-    margin-bottom: 10px;
-    border-radius: 10px;
-    padding: 8px;
-}
-
-.family-header {
-    font-size: 15px;
-    font-weight: 600;
-    padding: 8px;
-    background: rgba(0,0,0,0.05);
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.family-content {
-    padding-top: 10px;
-}
-
-.family-content.hidden {
-    display: none;
-}
-
-.arrow {
-    font-size: 14px;
-}
-
-.dup-badge {
-    background: #f97316;
-    color: white;
-    padding: 2px 6px;
-    border-radius: 5px;
-    font-size: 10px;
-    margin-left: 6px;
-}
-
 </style>
 </head>
 
@@ -196,14 +158,14 @@
 <div class="container">
     <div class="card-main">
 
-        <h1>Polling Station 87</h1>
+        <h1>Polling Station Viewer</h1>
 
-        <!-- SEARCH -->
+        <!-- Search -->
         <div class="search-wrapper">
             <input id="search" type="text" placeholder="Search by name / house / serial / BYP…" autocomplete="off">
         </div>
 
-        <!-- FILTERS -->
+        <!-- Filters -->
         <div class="filter-bar">
             <select id="filterGender">
                 <option value="">Gender</option>
@@ -225,27 +187,34 @@
 
             <select id="filterSort">
                 <option value="">Sort</option>
-                <option value="name">Name (A–Z)</option>
+                <option value="name">Name A–Z</option>
                 <option value="serial">Serial</option>
                 <option value="age">Age</option>
                 <option value="house">House</option>
                 <option value="byp">BYP</option>
+                <option value="nameLength">Name length</option>
             </select>
 
             <select id="filterInitial">
                 <option value="">A–Z</option>
-                <option>A</option><option>B</option><option>C</option><option>D</option>
-                <option>E</option><option>F</option><option>G</option><option>H</option>
-                <option>I</option><option>J</option><option>K</option><option>L</option>
-                <option>M</option><option>N</option><option>O</option><option>P</option>
-                <option>Q</option><option>R</option><option>S</option><option>T</option>
-                <option>U</option><option>V</option><option>W</option><option>X</option>
-                <option>Y</option><option>Z</option>
+                <option value="A">A</option><option value="B">B</option>
+                <option value="C">C</option><option value="D">D</option>
+                <option value="E">E</option><option value="F">F</option>
+                <option value="G">G</option><option value="H">H</option>
+                <option value="I">I</option><option value="J">J</option>
+                <option value="K">K</option><option value="L">L</option>
+                <option value="M">M</option><option value="N">N</option>
+                <option value="O">O</option><option value="P">P</option>
+                <option value="Q">Q</option><option value="R">R</option>
+                <option value="S">S</option><option value="T">T</option>
+                <option value="U">U</option><option value="V">V</option>
+                <option value="W">W</option><option value="X">X</option>
+                <option value="Y">Y</option><option value="Z">Z</option>
                 <option value="#">Other</option>
             </select>
         </div>
 
-        <!-- RESULTS -->
+        <!-- Results -->
         <div id="results"></div>
 
     </div>
@@ -253,7 +222,7 @@
 
 <button id="backToTop">↑ Top</button>
 
-<!-- LOAD PS87 DATA -->
+<!-- Load JSON -->
 <script>
   window.PS_JSON = "data/ps87.json";
 </script>
