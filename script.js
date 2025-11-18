@@ -148,7 +148,7 @@ let headOfFamily = familyGroups[family][0].name;
 
 card.innerHTML = `
   <h3>
-    ${p.name}  
+    ${p.name}
     <span class="pill">#${p.serial}</span>
     ${p.name === headOfFamily ? `<span class="pill" style="background:#2563eb;color:#fff;">HEAD</span>` : ""}
     ${duplicateBadge}
