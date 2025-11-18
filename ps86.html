@@ -10,23 +10,21 @@
         font-family: system-ui, sans-serif;
         margin: 0;
         background: #f5f5f7;
-        padding: 0;
     }
 
-    /* Full width container */
     .container {
         width: 100%;
-        max-width: 100%;
-        margin: 0;
+        max-width: 1100px;
+        margin: 0 auto;
         padding: 12px;
     }
 
     .card-main {
         width: 100%;
         background: #fff;
-        padding: 18px;
+        padding: 16px;
         border-radius: 14px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     h1 {
@@ -34,68 +32,162 @@
         margin: 0;
         font-size: 26px;
         font-weight: 700;
-        padding-bottom: 10px;
+        padding-bottom: 8px;
     }
 
-    /* Search Box */
+    /* SEARCH */
     .search-wrapper {
-        position: relative;
-        margin-top: 12px;
+        margin-top: 10px;
     }
-
     #search {
         width: 100%;
-        padding: 14px;
-        font-size: 16px;
+        padding: 12px;
+        font-size: 15px;
         border-radius: 10px;
         border: 2px solid #ccc;
     }
 
-    /* Dropdown filters */
+    /* FILTERS */
     .filter-bar {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
-        margin-top: 15px;
+        margin-top: 12px;
     }
     .filter-bar select {
         padding: 10px;
         border-radius: 8px;
         border: 1px solid #ccc;
         font-size: 14px;
-        width: 48%;
-    }
-
-    /* Results */
-    #results {
-        margin-top: 15px;
-        width: 100%;
-    }
-
-    .card {
-        width: 100%;
         background: #fff;
+        flex: 1 1 150px;
+    }
+
+    /* RESULTS */
+    #results {
+        margin-top: 16px;
+    }
+
+    .house-section {
+        padding: 10px;
         border-radius: 12px;
-        padding: 14px 16px;
+        margin-bottom: 18px;
+    }
+
+    .house-title {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        background: rgba(0,0,0,0.05);
+        padding: 6px 10px;
+        border-radius: 8px;
+    }
+
+    /* FAMILY BOX */
+    .family-box {
+        margin-bottom: 12px;
+        padding: 8px;
+        background: #fafafa;
+        border-radius: 8px;
+        border-left: 4px solid #999;
+    }
+
+    .family-box strong {
+        font-size: 14px;
+    }
+
+    /* CARD */
+    .card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 12px;
         border: 1px solid #ddd;
-        margin-bottom: 14px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        margin-top: 8px;
+        transition: 0.15s;
+    }
+    .card:hover {
+        transform: scale(1.01);
+        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
     }
 
     .card h3 {
-        margin: 0 0 8px;
-        font-size: 18px;
-        font-weight: 600;
+        margin: 0;
+        font-size: 17px;
+        display: flex;
+        gap: 6px;
+        align-items: center;
     }
 
     .pill {
-        background: #eef2ff;
-        padding: 3px 8px;
-        border-radius: 50px;
-        font-size: 12px;
+        background: #e9edff;
+        padding: 2px 7px;
+        border-radius: 12px;
+        font-size: 11px;
+    }
+
+    .dup {
+        background: #f97316;
+        color: #fff;
+        padding: 2px 6px;
+        border-radius: 6px;
+        font-size: 10px;
         margin-left: 6px;
     }
 
+    /* Back to top */
+    #backToTop {
+        position: fixed;
+        right: 15px;
+        bottom: 20px;
+        padding: 10px 14px;
+        background: #fff;
+        border-radius: 50px;
+        border: 1px solid #ccc;
+        font-size: 13px;
+        cursor: pointer;
+        display: none;
+        box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+    
+.family-wrap {
+    background: rgba(255,255,255,0.5);
+    margin-bottom: 10px;
+    border-radius: 10px;
+    padding: 8px;
+}
+
+.family-header {
+    font-size: 15px;
+    font-weight: 600;
+    padding: 8px;
+    background: rgba(0,0,0,0.05);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.family-content {
+    padding-top: 10px;
+}
+
+.family-content.hidden {
+    display: none;
+}
+
+.arrow {
+    font-size: 14px;
+}
+
+.dup-badge {
+    background: #f97316;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-size: 10px;
+    margin-left: 6px;
+}
 </style>
 </head>
 
@@ -104,15 +196,14 @@
 <div class="container">
     <div class="card-main">
 
-        <h1>Polling Station 87</h1>
+        <h1>Polling Station 86</h1>
 
         <!-- SEARCH -->
         <div class="search-wrapper">
-            <input id="search" type="text" placeholder="Search by Name / House Number…" autocomplete="off">
-            <div id="suggestions"></div>
+            <input id="search" type="text" placeholder="Search by name / house / serial / BYP…" autocomplete="off">
         </div>
 
-        <!-- FILTER BAR -->
+        <!-- FILTERS -->
         <div class="filter-bar">
             <select id="filterGender">
                 <option value="">Gender</option>
@@ -137,13 +228,30 @@
                 <option value="name">Name (A–Z)</option>
                 <option value="serial">Serial</option>
                 <option value="age">Age</option>
+                <option value="house">House</option>
+                <option value="byp">BYP</option>
+            </select>
+
+            <select id="filterInitial">
+                <option value="">A–Z</option>
+                <option>A</option><option>B</option><option>C</option><option>D</option>
+                <option>E</option><option>F</option><option>G</option><option>H</option>
+                <option>I</option><option>J</option><option>K</option><option>L</option>
+                <option>M</option><option>N</option><option>O</option><option>P</option>
+                <option>Q</option><option>R</option><option>S</option><option>T</option>
+                <option>U</option><option>V</option><option>W</option><option>X</option>
+                <option>Y</option><option>Z</option>
+                <option value="#">Other</option>
             </select>
         </div>
 
+        <!-- RESULTS -->
         <div id="results"></div>
 
     </div>
 </div>
+
+<button id="backToTop">↑ Top</button>
 
 <!-- LOAD PS87 DATA -->
 <script>
