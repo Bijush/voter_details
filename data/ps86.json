@@ -2,7 +2,7 @@
   "house_0": [
     {
       "serial": 1,
-      "name": "Bolta Dras",
+      "name": "Bulti Das",
       "father": null,
       "husband": "Mintu Das",
       "age": 29,
@@ -11,54 +11,9 @@
     }
   ],
 
-  "house_1K": [
-    {
-      "serial": 2,
-      "name": "Najira Begum Laskar",
-      "father": "Pakhi Mia Laskar",
-      "husband": null,
-      "age": 27,
-      "gender": "Female",
-      "byp": "BYP0157347"
-    }
-  ],
-
-  "house_5": [
-    {
-      "serial": 3,
-      "name": "Abdul Rahman Laskar",
-      "father": "Abdul Jalil Laskar",
-      "husband": null,
-      "age": 26,
-      "gender": "Male",
-      "byp": "BYP0156679"
-    },
-    {
-      "serial": 9,
-      "name": "Sajina Begum Laskar",
-      "father": "Abdul Jalil Laskar",
-      "husband": null,
-      "age": 26,
-      "gender": "Female",
-      "byp": "BYP0156687"
-    }
-  ],
-
-  "house_4KE": [
-    {
-      "serial": 4,
-      "name": "Sujon Roy",
-      "father": "Sahadeb Roy",
-      "husband": null,
-      "age": 29,
-      "gender": "Male",
-      "byp": "BYP0327544"
-    }
-  ],
-
   "house_1KH": [
     {
-      "serial": 5,
+      "serial": 2,
       "name": "Burhan Uddin Laskar",
       "father": "Pakhi Mia Laskar",
       "husband": null,
@@ -67,7 +22,7 @@
       "byp": "BYP0157396"
     },
     {
-      "serial": 6,
+      "serial": 3,
       "name": "Aklima Begum Borbhuiya",
       "father": null,
       "husband": "Burhan Uddin Laskar",
@@ -77,9 +32,21 @@
     }
   ],
 
+  "house_1K": [
+    {
+      "serial": 4,
+      "name": "Najira Begum Laskar",
+      "father": "Pakhi Mia Laskar",
+      "husband": null,
+      "age": 27,
+      "gender": "Female",
+      "byp": "BYP0157347"
+    }
+  ],
+
   "house_2GH": [
     {
-      "serial": 7,
+      "serial": 5,
       "name": "Sufia Khatun",
       "father": "Moyna Mia",
       "husband": null,
@@ -91,7 +58,7 @@
 
   "house_3": [
     {
-      "serial": 8,
+      "serial": 6,
       "name": "Nazrul Hosen Laskar",
       "father": "Kuti Mia Laskar",
       "husband": null,
@@ -101,15 +68,48 @@
     }
   ],
 
+  "house_5": [
+    {
+      "serial": 7,
+      "name": "Abdul Rahman Laskar",
+      "father": "Abdul Jalil Laskar",
+      "husband": null,
+      "age": 26,
+      "gender": "Male",
+      "byp": "BYP0156679"
+    },
+    {
+      "serial": 8,
+      "name": "Sajina Begum Laskar",
+      "father": "Abdul Jalil Laskar",
+      "husband": null,
+      "age": 26,
+      "gender": "Female",
+      "byp": "BYP0156687"
+    }
+  ],
+
   "house_8": [
     {
-      "serial": 10,
+      "serial": 9,
       "name": "Hamif Ahmed Laskar",
       "father": "Nasir Ahmed Laskar",
       "husband": null,
       "age": 25,
       "gender": "Male",
       "byp": "BYP0439653"
+    }
+  ],
+
+  "house_4KE": [
+    {
+      "serial": 10,
+      "name": "Sujon Roy",
+      "father": "Sahadeb Roy",
+      "husband": null,
+      "age": 29,
+      "gender": "Male",
+      "byp": "BYP0327544"
     }
   ],
 
@@ -293,18 +293,6 @@
     }
   ],
 
-  "house_36": [
-    {
-      "serial": 29,
-      "name": "Sahanara Begum Laskar",
-      "father": "Abdul Nur Laskar",
-      "husband": null,
-      "age": 27,
-      "gender": "Female",
-      "byp": null
-    }
-  ],
-
   "house_37": [
     {
       "serial": 27,
@@ -314,6 +302,18 @@
       "age": 35,
       "gender": "Male",
       "byp": "BYP0159764"
+    }
+  ],
+
+  "house_36": [
+    {
+      "serial": 29,
+      "name": "Sahanara Begum Laskar",
+      "father": "Abdul Nur Laskar",
+      "husband": null,
+      "age": 27,
+      "gender": "Female",
+      "byp": null
     }
   ],
 
@@ -631,7 +631,6 @@
       "gender": "Female",
       "byp": "BYP1490400"
     },
-
     {
       "serial": 61,
       "name": "Santos Namasudra",
@@ -670,7 +669,8 @@
       "father": "Ajit Namasudra",
       "husband": null,
       "age": 32,
-      "gender": "Male"
+      "gender": "Male",
+      "byp": "BYP1490422"
     },
     {
       "serial": 66,
@@ -829,7 +829,8 @@
       "father": "Krishna Namasudra",
       "husband": null,
       "age": 34,
-      "gender": "Male"
+      "gender": "Male",
+      "byp": "BYP0026047"
     },
     {
       "serial": 84,
