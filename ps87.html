@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-
     body {
         font-family: system-ui, sans-serif;
         margin: 0;
@@ -23,10 +22,10 @@
 
     .card-main {
         width: 100%;
-        background: #ffffff;
-        padding: 16px 16px 24px;
+        background: #fff;
+        padding: 16px;
         border-radius: 14px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     h1 {
@@ -34,164 +33,118 @@
         margin: 0;
         font-size: 24px;
         font-weight: 700;
-        padding-bottom: 6px;
+        padding-bottom: 8px;
     }
 
-    /* TOP BAR */
     .top-bar {
         display: flex;
+        justify-content: space-between;
         flex-wrap: wrap;
         gap: 8px;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 8px;
         font-size: 13px;
+        padding-bottom: 8px;
     }
 
-    select {
-        padding: 7px 9px;
+    select, input {
+        padding: 8px;
         border-radius: 8px;
         border: 1px solid #ccc;
-        font-size: 13px;
+        font-size: 14px;
+        background: #fff;
     }
 
-    /* SEARCH */
+    /* Search */
     .search-wrapper {
-        position: relative;
         margin-top: 8px;
     }
-
     #search {
         width: 100%;
         padding: 12px;
         font-size: 15px;
         border-radius: 10px;
-        border: 2px solid #ddd;
+        border: 2px solid #ccc;
     }
 
-    #suggestions {
-        position: absolute;
-        left: 0; right: 0;
-        top: 100%;
-        background: #fff;
-        border: 1px solid #ccc;
-        border-top: none;
-        display: none;
-        max-height: 220px;
-        overflow-y: auto;
-        z-index: 50;
-        border-radius: 0 0 10px 10px;
-    }
-
-    .suggestion-item {
-        padding: 8px 10px;
-        border-bottom: 1px solid #eee;
-        cursor: pointer;
-        font-size: 13px;
-    }
-
-    /* Filter Bar */
-    .filter-bar-wrapper {
-        position: sticky;
-        top: 0;
-        background: #fff;
-        padding: 8px 0;
-        z-index: 40;
-    }
-
+    /* Filters */
     .filter-bar {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: 10px;
+        margin-top: 12px;
     }
 
-    .filter-bar select,
-    .filter-bar input {
-        flex: 1 1 120px;
-        min-width: 120px;
+    .filter-bar select {
+        flex: 1 1 150px;
     }
 
-    /* EXTRA FILTERS (Removed unwanted ones) */
-    .filter-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 6px;
-        font-size: 12px;
-    }
-
-    .filter-row label {
-        font-size: 12px;
-    }
-
-    /* ONLY THESE EXTRA FILTERS WILL SHOW */
-    .filter-row input[type="text"] {
-        padding: 7px 9px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        min-width: 150px;
-    }
-
-    /* HOUSE QUICK JUMP */
-    .house-jump {
-        margin-top: 10px;
+    /* House Chips */
+    #houseJump {
         display: flex;
         flex-wrap: wrap;
         gap: 6px;
-        font-size: 12px;
+        margin-top: 12px;
     }
 
     .house-chip {
-        padding: 4px 7px;
-        border-radius: 999px;
-        border: 1px solid #bbb;
-        cursor: pointer;
+        padding: 6px 10px;
+        border-radius: 20px;
         background: #fff;
-        font-size: 11px;
+        border: 1px solid #ccc;
+        font-size: 12px;
+        cursor: pointer;
+    }
+
+    /* Results */
+    #results {
+        margin-top: 16px;
+    }
+
+    .house-section {
+        padding: 10px;
+        border-radius: 12px;
+        margin-bottom: 18px;
+    }
+
+    .house-title {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 8px;
     }
 
     .card {
-        width: 100%;
-        background: #ffffff;
+        background: #fff;
         border-radius: 10px;
-        padding: 12px 14px;
+        padding: 12px;
         border: 1px solid #ddd;
-        margin-bottom: 12px;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.09);
+        margin-bottom: 10px;
     }
 
     .card h3 {
-        margin: 0 0 6px;
-        font-size: 16px;
-        font-weight: 600;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        align-items: center;
+        margin: 0;
+        font-size: 17px;
     }
 
     .pill {
-        background: #eef2ff;
-        padding: 2px 8px;
-        border-radius: 999px;
+        background: #e9edff;
+        padding: 2px 7px;
+        border-radius: 12px;
         font-size: 11px;
+        margin-left: 6px;
     }
 
     /* Back to top */
     #backToTop {
         position: fixed;
-        right: 12px;
-        bottom: 16px;
-        padding: 8px 10px;
-        border-radius: 999px;
-        border: 1px solid #ccc;
+        right: 15px;
+        bottom: 18px;
+        padding: 8px 12px;
+        border-radius: 20px;
         background: #fff;
-        cursor: pointer;
+        border: 1px solid #ccc;
+        font-size: 13px;
         display: none;
-        font-size: 12px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        cursor: pointer;
     }
-
 </style>
 </head>
 
@@ -200,102 +153,94 @@
 <div class="container">
     <div class="card-main">
 
-        <h1>Polling Station 87</h1>
+        <h1>Polling Station Viewer</h1>
 
-        <!-- TOP BAR -->
+        <!-- Top Bar -->
         <div class="top-bar">
-            <div>
-                <label>PS:
-                    <select id="psSelector">
-                        <option value="80">PS 80</option>
-                        <option value="81">PS 81</option>
-                        <option value="82">PS 82</option>
-                        <option value="83">PS 83</option>
-                        <option value="84">PS 84</option>
-                        <option value="85">PS 85</option>
-                        <option value="86">PS 86</option>
-                        <option value="87" selected>PS 87</option>
-                        <option value="88">PS 88</option>
-                        <option value="89">PS 89</option>
-                        <option value="90">PS 90</option>
-                    </select>
-                </label>
+            <label>
+                PS:
+                <select id="psSelector">
+                    <option value="80">PS 80</option>
+                    <option value="81">PS 81</option>
+                    <option value="82">PS 82</option>
+                    <option value="83">PS 83</option>
+                    <option value="84">PS 84</option>
+                    <option value="85">PS 85</option>
+                    <option value="86">PS 86</option>
+                    <option value="87" selected>PS 87</option>
+                    <option value="88">PS 88</option>
+                    <option value="89">PS 89</option>
+                    <option value="90">PS 90</option>
+                </select>
+            </label>
 
-                <label>View:
-                    <select id="viewMode">
-                        <option value="list" selected>List</option>
-                        <option value="grid">Grid</option>
-                    </select>
-                </label>
-            </div>
+            <label>
+                View:
+                <select id="viewMode">
+                    <option value="list">List</option>
+                    <option value="grid">Grid</option>
+                </select>
+            </label>
         </div>
 
         <!-- SEARCH -->
         <div class="search-wrapper">
-            <input id="search" type="text" placeholder="Search by name / house / serial / BYP…" autocomplete="off">
+            <input id="search" type="text" placeholder="Search by name / house / serial / BYP…">
             <div id="suggestions"></div>
         </div>
 
-        <!-- FILTER BAR -->
-        <div class="filter-bar-wrapper">
+        <!-- FILTERS -->
+        <div class="filter-bar">
+            <select id="filterGender">
+                <option value="">Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
 
-            <div class="filter-bar">
-                <select id="filterGender">
-                    <option value="">Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                </select>
+            <select id="filterAge">
+                <option value="">Age</option>
+                <option value="18-25">18–25</option>
+                <option value="26-40">26–40</option>
+                <option value="41-60">41–60</option>
+                <option value="60-200">60+</option>
+            </select>
 
-                <select id="filterAge">
-                    <option value="">Age</option>
-                    <option value="18-25">18–25</option>
-                    <option value="26-40">26–40</option>
-                    <option value="41-60">41–60</option>
-                    <option value="60-200">60+</option>
-                </select>
+            <select id="filterHouse">
+                <option value="">House</option>
+            </select>
 
-                <select id="filterHouse">
-                    <option value="">House</option>
-                </select>
+            <select id="filterSort">
+                <option value="">Sort</option>
+                <option value="name">Name (A–Z)</option>
+                <option value="serial">Serial</option>
+                <option value="age">Age</option>
+                <option value="house">House</option>
+                <option value="byp">BYP</option>
+                <option value="nameLength">Name length</option>
+            </select>
 
-                <select id="filterSort">
-                    <option value="">Sort</option>
-                    <option value="name">Name (A–Z)</option>
-                    <option value="serial">Serial</option>
-                    <option value="age">Age</option>
-                    <option value="house">House</option>
-                    <option value="byp">BYP</option>
-                </select>
-            </div>
-
-            <!-- ONLY KEEP THESE TWO EXTRA FILTERS -->
-            <div class="filter-row">
-                <label>
-                    BYP:
-                    <input type="text" id="filterBYP" placeholder="Starts with / contains">
-                </label>
-
-                <label>
-                    Starts with:
-                    <select id="filterInitial">
-                        <option value="">All</option>
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
-                        <option value="D">D</option>
-                        <option value="E">E</option>
-                        <option value="#">Other</option>
-                    </select>
-                </label>
-            </div>
-
-            <div style="margin-top:8px;">
-                <button id="btnClear" class="btn">Clear filters</button>
-            </div>
+            <input id="filterBYP" type="text" placeholder="BYP filter">
+            <select id="filterInitial">
+                <option value="">A–Z</option>
+                <option value="A">A</option><option value="B">B</option>
+                <option value="C">C</option><option value="D">D</option>
+                <option value="E">E</option><option value="F">F</option>
+                <option value="G">G</option><option value="H">H</option>
+                <option value="I">I</option><option value="J">J</option>
+                <option value="K">K</option><option value="L">L</option>
+                <option value="M">M</option><option value="N">N</option>
+                <option value="O">O</option><option value="P">P</option>
+                <option value="Q">Q</option><option value="R">R</option>
+                <option value="S">S</option><option value="T">T</option>
+                <option value="U">U</option><option value="V">V</option>
+                <option value="W">W</option><option value="X">X</option>
+                <option value="Y">Y</option><option value="Z">Z</option>
+                <option value="#">Other</option>
+            </select>
         </div>
 
-        <!-- HOUSE QUICK JUMP -->
-        <div id="houseJump" class="house-jump"></div>
+        <!-- HOUSE JUMP -->
+        <div id="houseJump"></div>
 
         <!-- RESULTS -->
         <div id="results"></div>
@@ -305,11 +250,9 @@
 
 <button id="backToTop">↑ Top</button>
 
-<!-- LOAD PS87 DATA -->
 <script>
-  window.PS_JSON = "data/ps87.json";
+    window.PS_JSON = "data/ps87.json";
 </script>
-
 <script src="script.js"></script>
 
 </body>
