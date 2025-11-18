@@ -126,9 +126,60 @@ document.addEventListener("DOMContentLoaded", () => {
 
       Object.keys(familyGroups).forEach(family => {
 
-        const familyBox = document.createElement("div");
-        familyBox.style.marginBottom = "10px";
-        familyBox.innerHTML = `<strong>👨‍👩‍👧 Family: ${family}</strong>`;
+    // Family wrapper
+    const familyWrap = document.createElement("div");
+    familyWrap.className = "family-wrap";
+
+    // Family Header (click to toggle)
+    const familyHeader = document.createElement("div");
+    familyHeader.className = "family-header";
+    familyHeader.innerHTML = `
+        👨‍👩‍👧 <strong>${family}</strong>
+        <span class="arrow">▼</span>
+    `;
+
+    // Family content (initially visible)
+    const familyContent = document.createElement("div");
+    familyContent.className = "family-content";
+
+    // All members inside family
+    familyGroups[family].forEach(p => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const duplicateBadge = duplicateBYPs.has(p.byp)
+            ? `<span class="dup-badge">DUPLICATE BYP</span>`
+            : "";
+
+        card.innerHTML = `
+            <h3>${p.name} <span class="pill">#${p.serial}</span> ${duplicateBadge}</h3>
+            <p><strong>House:</strong> ${p.house.replace("house_","")}</p>
+            <p><strong>Age:</strong> ${p.age}</p>
+            <p><strong>Gender:</strong> ${p.gender}</p>
+            <p><strong>Father:</strong> ${p.father || "-"}</p>
+            <p><strong>Husband:</strong> ${p.husband || "-"}</p>
+            <p><strong>BYP:</strong> ${p.byp}</p>
+        `;
+
+        if (duplicateBYPs.has(p.byp)) {
+            card.style.border = "2px solid #f97316";
+        }
+
+        familyContent.appendChild(card);
+    });
+
+    // Toggle collapse
+    familyHeader.addEventListener("click", () => {
+        familyContent.classList.toggle("hidden");
+
+        const arrow = familyHeader.querySelector(".arrow");
+        arrow.textContent = familyContent.classList.contains("hidden") ? "►" : "▼";
+    });
+
+    familyWrap.appendChild(familyHeader);
+    familyWrap.appendChild(familyContent);
+    houseSection.appendChild(familyWrap);
+});
 
         familyGroups[family].forEach(p => {
           const card = document.createElement("div");
