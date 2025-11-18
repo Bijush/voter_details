@@ -14,10 +14,13 @@ document.addEventListener("DOMContentLoaded", () => {
   let voterData = {};
   let allPeople = [];
   let colors = {};
+  let duplicateBYPs = new Set();
 
   const JSON_FILE = window.PS_JSON || "data/master.json";
 
-  // Load data
+  // ---------------------------
+  // LOAD JSON DATA
+  // ---------------------------
   fetch(JSON_FILE)
     .then(res => res.json())
     .then(data => {
@@ -29,6 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     });
 
+
+  // ---------------------------
+  // PROCESS DATA
+  // ---------------------------
   function processData() {
     allPeople = [];
 
@@ -44,9 +51,10 @@ document.addEventListener("DOMContentLoaded", () => {
     renderResults(allPeople);
   }
 
-  // ✔️ FIND DUPLICATE BYP
-  let duplicateBYPs = new Set();
 
+  // ---------------------------
+  // DUPLICATE BYP DETECTOR
+  // ---------------------------
   function findDuplicateBYP() {
     let map = {};
 
@@ -55,11 +63,15 @@ document.addEventListener("DOMContentLoaded", () => {
       map[p.byp]++;
     });
 
-    Object.keys(map).forEach(b => {
-      if (map[b] > 1 && b.trim() !== "") duplicateBYPs.add(b);
-    });
+    duplicateBYPs = new Set(
+      Object.keys(map).filter(b => map[b] > 1 && b.trim() !== "")
+    );
   }
 
+
+  // ---------------------------
+  // AUTO HOUSE COLORS
+  // ---------------------------
   function generateColors() {
     const houses = [...new Set(allPeople.map(p => p.house))];
     houses.forEach((h, i) => {
@@ -68,6 +80,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+
+  // ---------------------------
+  // HOUSE DROPDOWN
+  // ---------------------------
   function fillHouseDropdown() {
     const houses = Object.keys(voterData).sort();
     houses.forEach(h => {
@@ -78,13 +94,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ✔️ GROUP FAMILY BY FATHER / HUSBAND
+
+  // ---------------------------
+  // GROUP BY FAMILY
+  // ---------------------------
   function groupFamily(peopleList) {
     const groups = {};
 
     peopleList.forEach(p => {
       let key = p.father || p.husband || "Unknown Family";
-
       if (!groups[key]) groups[key] = [];
       groups[key].push(p);
     });
@@ -92,7 +110,10 @@ document.addEventListener("DOMContentLoaded", () => {
     return groups;
   }
 
+
+  // ---------------------------
   // RENDER RESULTS
+  // ---------------------------
   function renderResults(list) {
     resultsDiv.innerHTML = "";
 
@@ -102,7 +123,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const groupedByHouse = {};
-
     list.forEach(p => {
       if (!groupedByHouse[p.house]) groupedByHouse[p.house] = [];
       groupedByHouse[p.house].push(p);
@@ -116,114 +136,85 @@ document.addEventListener("DOMContentLoaded", () => {
 
       houseSection.innerHTML = `
         <div class="house-title">
-            <span>House: ${h.replace("house_", "")}</span>
-            <span>${groupedByHouse[h].length} voters</span>
+          <span>House: ${h.replace("house_", "")}</span>
+          <span>${groupedByHouse[h].length} voters</span>
         </div>
       `;
 
-      // ✔️ FAMILY TREE inside house
+      // FAMILY TREE
       const familyGroups = groupFamily(groupedByHouse[h]);
 
       Object.keys(familyGroups).forEach(family => {
 
-    // Family wrapper
-    const familyWrap = document.createElement("div");
-    familyWrap.className = "family-wrap";
+        const familyWrap = document.createElement("div");
+        familyWrap.className = "family-wrap";
 
-    // Family Header (click to toggle)
-    const familyHeader = document.createElement("div");
-    familyHeader.className = "family-header";
-    familyHeader.innerHTML = `
-        👨‍👩‍👧 <strong>${family}</strong>
-        <span class="arrow">▼</span>
-    `;
-
-    // Family content (initially visible)
-    const familyContent = document.createElement("div");
-    familyContent.className = "family-content";
-
-    // All members inside family
-    familyGroups[family].forEach(p => {
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const duplicateBadge = duplicateBYPs.has(p.byp)
-            ? `<span class="dup-badge">DUPLICATE BYP</span>`
-            : "";
-
-        card.innerHTML = `
-            <h3>${p.name} <span class="pill">#${p.serial}</span> ${duplicateBadge}</h3>
-            <p><strong>House:</strong> ${p.house.replace("house_","")}</p>
-            <p><strong>Age:</strong> ${p.age}</p>
-            <p><strong>Gender:</strong> ${p.gender}</p>
-            <p><strong>Father:</strong> ${p.father || "-"}</p>
-            <p><strong>Husband:</strong> ${p.husband || "-"}</p>
-            <p><strong>BYP:</strong> ${p.byp}</p>
+        const familyHeader = document.createElement("div");
+        familyHeader.className = "family-header";
+        familyHeader.innerHTML = `
+          👨‍👩‍👧 <strong>${family}</strong>
+          <span class="arrow">▼</span>
         `;
 
-        if (duplicateBYPs.has(p.byp)) {
-            card.style.border = "2px solid #f97316";
-        }
+        const familyContent = document.createElement("div");
+        familyContent.className = "family-content";
 
-        familyContent.appendChild(card);
-    });
-
-    // Toggle collapse
-    familyHeader.addEventListener("click", () => {
-        familyContent.classList.toggle("hidden");
-
-        const arrow = familyHeader.querySelector(".arrow");
-        arrow.textContent = familyContent.classList.contains("hidden") ? "►" : "▼";
-    });
-
-    familyWrap.appendChild(familyHeader);
-    familyWrap.appendChild(familyContent);
-    houseSection.appendChild(familyWrap);
-});
+        const headOfFamily = familyGroups[family][0]?.name;
 
         familyGroups[family].forEach(p => {
           const card = document.createElement("div");
           card.className = "card";
 
-          // Duplicate BYP badge
           const duplicateBadge = duplicateBYPs.has(p.byp)
-            ? `<span style="color:#fff;background:#f97316;padding:2px 6px;border-radius:6px;font-size:10px;margin-left:6px;">DUPLICATE BYP</span>`
+            ? `<span class="dup-badge">DUPLICATE BYP</span>`
             : "";
 
-          card.style.border = duplicateBYPs.has(p.byp)
-            ? "2px solid #f97316"
-            : "1px solid #ccc";
+          const headBadge =
+            p.name === headOfFamily
+              ? `<span class="pill" style="background:#2563eb;color:white;">HEAD</span>`
+              : "";
 
-          // Determine head of family (first person in group)
-let headOfFamily = familyGroups[family][0].name;
+          card.innerHTML = `
+            <h3>${p.name}
+              <span class="pill">#${p.serial}</span>
+              ${headBadge}
+              ${duplicateBadge}
+            </h3>
+            <p><strong>House:</strong> ${p.house.replace("house_", "")}</p>
+            <p><strong>Age:</strong> ${p.age}</p>
+            <p><strong>Gender:</strong> ${p.gender}</p>
+            <p><strong>Father:</strong> ${p.father || "-"}</p>
+            <p><strong>Husband:</strong> ${p.husband || "-"}</p>
+            <p><strong>BYP:</strong> ${p.byp}</p>
+          `;
 
-card.innerHTML = `
-  <h3>
-    ${p.name}
-    <span class="pill">#${p.serial}</span>
-    ${p.name === headOfFamily ? `<span class="pill" style="background:#2563eb;color:#fff;">HEAD</span>` : ""}
-    ${duplicateBadge}
-  </h3>
+          if (duplicateBYPs.has(p.byp)) {
+            card.style.border = "2px solid #f97316";
+          }
 
-  <p><strong>House:</strong> ${p.house.replace("house_", "")}</p>
-  <p><strong>Age:</strong> ${p.age}</p>
-  <p><strong>Gender:</strong> ${p.gender}</p>
-  <p><strong>Father:</strong> ${p.father || "-"}</p>
-  <p><strong>Husband:</strong> ${p.husband || "-"}</p>
-  <p><strong>BYP:</strong> ${p.byp}</p>
-`;
-
-          familyBox.appendChild(card);
+          familyContent.appendChild(card);
         });
 
-        houseSection.appendChild(familyBox);
+        // COLLAPSE
+        familyHeader.addEventListener("click", () => {
+          familyContent.classList.toggle("hidden");
+          familyHeader.querySelector(".arrow").textContent =
+            familyContent.classList.contains("hidden") ? "►" : "▼";
+        });
+
+        familyWrap.appendChild(familyHeader);
+        familyWrap.appendChild(familyContent);
+        houseSection.appendChild(familyWrap);
       });
 
       resultsDiv.appendChild(houseSection);
     });
   }
 
+
+  // ---------------------------
   // FILTERS
+  // ---------------------------
   function applyFilters() {
     let filtered = [...allPeople];
 
@@ -234,7 +225,6 @@ card.innerHTML = `
     const initial = filterInitial.value;
 
     if (g) filtered = filtered.filter(p => p.gender === g);
-
     if (h) filtered = filtered.filter(p => p.house === h);
 
     if (a) {
@@ -243,10 +233,10 @@ card.innerHTML = `
     }
 
     if (initial) {
-      if (initial === "#")
-        filtered = filtered.filter(p => !/^[A-Z]/i.test(p.name));
-      else
-        filtered = filtered.filter(p => p.name.startsWith(initial));
+      filtered =
+        initial === "#"
+          ? filtered.filter(p => !/^[A-Z]/i.test(p.name))
+          : filtered.filter(p => p.name.startsWith(initial));
     }
 
     if (s === "name") filtered.sort((a, b) => a.name.localeCompare(b.name));
@@ -265,7 +255,10 @@ card.innerHTML = `
   filterSort.onchange = applyFilters;
   filterInitial.onchange = applyFilters;
 
+
+  // ---------------------------
   // SEARCH
+  // ---------------------------
   searchInput.addEventListener("input", () => {
     const q = searchInput.value.toLowerCase();
 
@@ -281,7 +274,10 @@ card.innerHTML = `
     renderResults(matches);
   });
 
-  // Back to top
+
+  // ---------------------------
+  // BACK TO TOP
+  // ---------------------------
   window.addEventListener("scroll", () => {
     backToTop.style.display = window.scrollY > 200 ? "block" : "none";
   });
