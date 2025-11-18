@@ -65,7 +65,7 @@
         border: 2px solid #ccc;
     }
 
-    /* Filters */
+    /* FILTERS */
     .filter-bar {
         display: flex;
         flex-wrap: wrap;
@@ -77,24 +77,7 @@
         flex: 1 1 150px;
     }
 
-    /* House Chips */
-    #houseJump {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        margin-top: 12px;
-    }
-
-    .house-chip {
-        padding: 6px 10px;
-        border-radius: 20px;
-        background: #fff;
-        border: 1px solid #ccc;
-        font-size: 12px;
-        cursor: pointer;
-    }
-
-    /* Results */
+    /* RESULTS */
     #results {
         margin-top: 16px;
     }
@@ -185,8 +168,7 @@
 
         <!-- SEARCH -->
         <div class="search-wrapper">
-            <input id="search" type="text" placeholder="Search by name / house / serial / BYP…">
-            <div id="suggestions"></div>
+            <input id="search" type="text" placeholder="Search by name / house / serial / BYP…" autocomplete="off">
         </div>
 
         <!-- FILTERS -->
@@ -219,7 +201,6 @@
                 <option value="nameLength">Name length</option>
             </select>
 
-           <!-- <input id="filterBYP" type="text" placeholder="BYP filter">-->
             <select id="filterInitial">
                 <option value="">A–Z</option>
                 <option value="A">A</option><option value="B">B</option>
@@ -239,9 +220,6 @@
             </select>
         </div>
 
-        <!-- HOUSE JUMP -->
-        <div id="houseJump"></div>
-
         <!-- RESULTS -->
         <div id="results"></div>
 
@@ -251,8 +229,9 @@
 <button id="backToTop">↑ Top</button>
 
 <script>
-    window.PS_JSON = "data/ps87.json";
+  window.PS_JSON = "data/ps87.json";
 </script>
+
 <script src="script.js"></script>
 
 </body>
