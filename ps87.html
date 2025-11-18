@@ -75,13 +75,20 @@
     }
 
     .house-title {
-        font-size: 15px;
-        font-weight: 700;
-        margin-bottom: 10px;
-        background: rgba(0,0,0,0.05);
-        padding: 6px 10px;
-        border-radius: 8px;
-    }
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    padding: 8px 10px;
+
+    display: flex;                 /* puts both items in one row */
+    justify-content: space-between;/* pushes voters count to right end */
+    align-items: center;           /* vertical alignment */
+}
+    
+.house-title span:last-child {
+    opacity: 0.85;
+    font-size: 13px;
+}
 
     /* FAMILY BOX */
     .family-box {
