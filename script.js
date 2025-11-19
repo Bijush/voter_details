@@ -292,17 +292,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Only HOUSE HEAD collapses members
   if (isHouseHead) {
-    card.addEventListener("click", () => {
-      familyContent.classList.toggle("hidden");
-      const arrowEl = card.querySelector(".toggle-arrow");
-      const collapsed = familyContent.classList.contains("hidden");
-      if (arrowEl) arrowEl.textContent = collapsed ? "►" : "▼";
-    });
+  card.addEventListener("click", () => {
 
-    familyWrap.appendChild(card);
-  } else {
-    familyContent.appendChild(card);
-  }
+    // toggle this family ONLY
+    familyContent.classList.toggle("hidden");
+
+    const collapsed = familyContent.classList.contains("hidden");
+
+    // smooth hide/show
+    familyContent.style.display = collapsed ? "none" : "block";
+
+    // update arrow
+    const arrowEl = card.querySelector(".toggle-arrow");
+    if (arrowEl) {
+      arrowEl.textContent = collapsed ? "►" : "▼";
+    }
+  });
+
+  familyWrap.appendChild(card);
+} else {
+  familyContent.appendChild(card);
+}
 });
           
 
