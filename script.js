@@ -248,61 +248,63 @@ document.addEventListener("DOMContentLoaded", () => {
 
           members.forEach(p => {
 
-            const card = document.createElement("div");
-            card.className = "card";
+  const card = document.createElement("div");
+  card.className = "card";
 
-            const isFamilyHead = p.serial === familyHead.serial;
-            const isHouseHead = p.serial === houseHead.serial;
+  const isHouseHead = p.serial === houseHead.serial;
 
-            const duplicateBadge = duplicateBYPs.has(p.byp)
-              ? `<span class="dup-badge">DUPLICATE</span>`
-              : "";
+  const duplicateBadge = duplicateBYPs.has(p.byp)
+    ? `<span class="dup-badge">DUPLICATE</span>`
+    : "";
 
-            const headBadge = isHouseHead
-              ? `<span class="pill head-pill">HEAD</span>`
-              : "";
+  const headBadge = isHouseHead
+    ? `<span class="pill head-pill">HEAD</span>`
+    : "";
 
-            const genderLabel = normalizeGender(p.gender);
-            const genderClass = genderLabel === "Male" ? "male" : "female";
+  const genderLabel = normalizeGender(p.gender);
+  const genderClass = genderLabel === "Male" ? "male" : "female";
 
-            const arrow = isFamilyHead
-              ? `<span class="toggle-arrow">▼</span>`
-              : "";
+  const arrow = isHouseHead
+    ? `<span class="toggle-arrow">▼</span>`
+    : "";     // ❗ NO ARROW for others
 
-            card.innerHTML = `
-              <h3 class="card-header-line">
-                <span>
-                  ${p.name}
-                  <span class="pill">#${p.serial}</span>
-                  ${headBadge}
-                  ${duplicateBadge}
-                </span>
-                <span class="gender-pill ${genderClass}">${genderLabel}</span>
-                ${arrow}
-              </h3>
+  card.innerHTML = `
+    <h3 class="card-header-line">
+      <span>
+        ${p.name}
+        <span class="pill">#${p.serial}</span>
+        ${headBadge}
+        ${duplicateBadge}
+      </span>
 
-              <p><strong>Father:</strong> ${p.father || "-"}</p>
-              <p><strong>Husband:</strong> ${p.husband || "-"}</p>
-              <p><strong>BYP:</strong> ${p.byp}</p>
-              <p><strong>Age:</strong> ${p.age}</p>
-            `;
+      <span class="gender-pill ${genderClass}">
+        ${genderLabel}
+      </span>
 
-            // Collapsible logic
-            if (isFamilyHead) {
-              card.addEventListener("click", () => {
-                familyContent.classList.toggle("hidden");
+      ${arrow}
+    </h3>
 
-                const collapsed = familyContent.classList.contains("hidden");
-                const arrowEl = card.querySelector(".toggle-arrow");
+    <p><strong>Father:</strong> ${p.father || "-"}</p>
+    <p><strong>Husband:</strong> ${p.husband || "-"}</p>
+    <p><strong>BYP:</strong> ${p.byp}</p>
+    <p><strong>Age:</strong> ${p.age}</p>
+  `;
 
-                if (arrowEl) arrowEl.textContent = collapsed ? "►" : "▼";
-              });
+  // Only HOUSE HEAD collapses members
+  if (isHouseHead) {
+    card.addEventListener("click", () => {
+      familyContent.classList.toggle("hidden");
+      const arrowEl = card.querySelector(".toggle-arrow");
+      const collapsed = familyContent.classList.contains("hidden");
+      if (arrowEl) arrowEl.textContent = collapsed ? "►" : "▼";
+    });
 
-              familyWrap.appendChild(card);
-            } else {
-              familyContent.appendChild(card);
-            }
-          });
+    familyWrap.appendChild(card);
+  } else {
+    familyContent.appendChild(card);
+  }
+});
+          
 
           familyWrap.appendChild(familyContent);
           houseSection.appendChild(familyWrap);
