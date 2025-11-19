@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  // DOM elements
+  // ----------------------------
+  // DOM ELEMENTS
+  // ----------------------------
   const searchInput    = document.getElementById("search");
   const resultsDiv     = document.getElementById("results");
 
@@ -25,9 +27,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const JSON_FILE = window.PS_JSON || "data/master.json";
 
-  // ---------------------------
+
+  // ----------------------------
   // LOAD DATA
-  // ---------------------------
+  // ----------------------------
   fetch(JSON_FILE)
     .then(res => res.json())
     .then(data => {
@@ -39,9 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error(err);
     });
 
-  // ---------------------------
+
+  // ----------------------------
   // PROCESS DATA
-  // ---------------------------
+  // ----------------------------
   function processData() {
     allPeople = [];
     Object.keys(voterData).forEach(h => {
@@ -55,7 +59,10 @@ document.addEventListener("DOMContentLoaded", () => {
     renderResults(allPeople);
   }
 
-  // DUPLICATE BYP DETECTION
+
+  // ----------------------------
+  // DUPLICATE BYP
+  // ----------------------------
   function findDuplicateBYP() {
     const map = {};
     allPeople.forEach(p => {
@@ -65,21 +72,29 @@ document.addEventListener("DOMContentLoaded", () => {
     duplicateBYPs = new Set(Object.keys(map).filter(b => map[b] > 1));
   }
 
-  // HOUSE SORTING
+
+  // ----------------------------
+  // SORT HOUSE
+  // ----------------------------
   function sortHouseASC(a, b) {
     return parseInt(a.replace("house_", "")) - parseInt(b.replace("house_", ""));
   }
 
-  // AUTO COLORS PER HOUSE
+
+  // ----------------------------
+  // COLORS PER HOUSE
+  // ----------------------------
   function generateColors() {
     const houses = [...new Set(allPeople.map(p => p.house))].sort(sortHouseASC);
     houses.forEach((h, i) => {
-      const hue = (i * 47) % 360;
-      colors[h] = `hsla(${hue}, 80%, 92%, 1)`;
+      colors[h] = `hsla(${(i * 47) % 360}, 78%, 92%, 1)`;
     });
   }
 
+
+  // ----------------------------
   // HOUSE DROPDOWN
+  // ----------------------------
   function fillHouseDropdown() {
     const houses = Object.keys(voterData).sort(sortHouseASC);
     houses.forEach(h => {
@@ -90,84 +105,96 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // SIDEBAR HOUSE NAV
+
+  // ----------------------------
+  // LEFT NAVIGATION (HOUSE LIST)
+  // ----------------------------
   function buildHouseNav() {
     if (!houseNav) return;
-    const houses = [...new Set(allPeople.map(p => p.house))].sort(sortHouseASC);
     houseNav.innerHTML = "";
+
+    const houses = [...new Set(allPeople.map(p => p.house))].sort(sortHouseASC);
+
     houses.forEach(h => {
       const btn = document.createElement("button");
       btn.className = "house-nav-item";
-      const num = h.replace("house_", "");
-      btn.textContent = num;
+      btn.textContent = h.replace("house_", "");
 
       btn.addEventListener("click", () => {
-        document
-          .querySelectorAll(".house-nav-item")
-          .forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".house-nav-item").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
 
         const sec = document.getElementById("house-section-" + h);
-        if (sec) {
-          sec.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
+        if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
       });
 
       houseNav.appendChild(btn);
     });
   }
 
-  // GROUP BY FAMILY
+
+  // ----------------------------
+  // GROUP BY FAMILY (father/husband)
+  // ----------------------------
   function groupFamily(peopleList) {
     const groups = {};
     peopleList.forEach(p => {
-      const key = p.father || p.husband || "Unknown Family";
+      const key = p.father || p.husband || "Unknown";
       if (!groups[key]) groups[key] = [];
       groups[key].push(p);
     });
     return groups;
   }
 
-  // GET HOUSE HEAD (lowest serial number in that house)
+
+  // ----------------------------
+  // GET HOUSE HEAD = lowest serial
+  // ----------------------------
   function getHouseHead(housePeople) {
     return housePeople.reduce((min, p) => (p.serial < min.serial ? p : min));
   }
-  // normalised zender
-  
-function normalizeGender(g) {
-  if (!g) return "";
-  g = g.trim();
 
-  if (["Male", "पुरुष", "পুরুষ"].includes(g)) return "Male";
-  if (["Female", "মহিলা", "নারী"].includes(g)) return "Female";
 
-  return g;
-}
-  // UPDATE STATS (for current visible list)
+  // ----------------------------
+  // NORMALIZE GENDER TEXT (Bangla → English)
+  // ----------------------------
+  function normalizeGender(g) {
+    if (!g) return "";
+    g = g.trim();
+
+    if (["Male", "পুরুষ"].includes(g)) return "Male";
+    if (["Female", "মহিলা", "নারী"].includes(g)) return "Female";
+
+    return g;
+  }
+
+
+  // ----------------------------
+  // UPDATE STATS
+  // ----------------------------
   function updateStats(list) {
-  const total = list.length;
+    const total = list.length;
 
-  const male = list.filter(p => normalizeGender(p.gender) === "Male").length;
-  const female = list.filter(p => normalizeGender(p.gender) === "Female").length;
+    const male = list.filter(p => normalizeGender(p.gender) === "Male").length;
+    const female = list.filter(p => normalizeGender(p.gender) === "Female").length;
 
-    // count unique duplicate BYPs in current set
-     const dupSet = new Set(
-    list.filter(p => duplicateBYPs.has(p.byp)).map(p => p.byp)
-  );
+    const dupSet = new Set(
+      list.filter(p => duplicateBYPs.has(p.byp)).map(p => p.byp)
+    );
 
-  statTotal.textContent  = total;
-  statMale.textContent   = male;
-  statFemale.textContent = female;
-  statDup.textContent    = dupSet.size;
-}
+    statTotal.textContent = total;
+    statMale.textContent = male;
+    statFemale.textContent = female;
+    statDup.textContent = dupSet.size;
+  }
 
-  // ---------------------------
-  // RENDER RESULTS
-  // ---------------------------
+
+  // ----------------------------
+  // RENDER RESULTS (MAIN)
+  // ----------------------------
   function renderResults(list) {
 
     resultsDiv.innerHTML = "";
-
     if (!list.length) {
       resultsDiv.innerHTML = "<p>No results found.</p>";
       updateStats([]);
@@ -176,24 +203,26 @@ function normalizeGender(g) {
 
     updateStats(list);
 
+    // Group by house
     const groupedByHouse = {};
     list.forEach(p => {
       if (!groupedByHouse[p.house]) groupedByHouse[p.house] = [];
       groupedByHouse[p.house].push(p);
     });
 
+    // Render each house
     Object.keys(groupedByHouse)
       .sort(sortHouseASC)
       .forEach(h => {
 
         const housePeople = groupedByHouse[h];
-        const houseHead   = getHouseHead(housePeople); // one HEAD per house
+        const houseHead = getHouseHead(housePeople);
         const houseNumber = h.replace("house_", "");
 
         const houseSection = document.createElement("div");
         houseSection.className = "house-section";
-        houseSection.id = "house-section-" + h; // for sidebar jump
-        houseSection.style.background = colors[h] || "#eef2ff";
+        houseSection.id = "house-section-" + h;
+        houseSection.style.background = colors[h];
 
         houseSection.innerHTML = `
           <div class="house-title">
@@ -202,6 +231,7 @@ function normalizeGender(g) {
           </div>
         `;
 
+        // Group by family
         const familyGroups = groupFamily(housePeople);
 
         Object.keys(familyGroups).forEach(family => {
@@ -211,80 +241,66 @@ function normalizeGender(g) {
 
           const familyContent = document.createElement("div");
           familyContent.className = "family-content";
-          familyContent.style.marginTop = "6px";
 
-          // sort members by serial inside this family
-          const members = [...familyGroups[family]].sort(
-            (a, b) => a.serial - b.serial
-          );
-          const familyHead = members[0]; // family head controls collapse
+          // Sort family by serial
+          const members = [...familyGroups[family]].sort((a, b) => a.serial - b.serial);
+          const familyHead = members[0];
 
           members.forEach(p => {
+
             const card = document.createElement("div");
             card.className = "card";
 
             const isFamilyHead = p.serial === familyHead.serial;
-            const isHouseHead  = p.serial === houseHead.serial;
+            const isHouseHead = p.serial === houseHead.serial;
 
             const duplicateBadge = duplicateBYPs.has(p.byp)
-              ? `<span class="dup-badge">DUPLICATE BYP</span>`
+              ? `<span class="dup-badge">DUPLICATE</span>`
               : "";
 
             const headBadge = isHouseHead
               ? `<span class="pill head-pill">HEAD</span>`
               : "";
 
-            const genderClass =
-              p.gender === "Male"
-                ? "male"
-                : p.gender === "Female"
-                ? "female"
-                : "";
+            const genderLabel = normalizeGender(p.gender);
+            const genderClass = genderLabel === "Male" ? "male" : "female";
 
             const arrow = isFamilyHead
               ? `<span class="toggle-arrow">▼</span>`
               : "";
 
             card.innerHTML = `
-              <h3>
-                <div class="card-header-line">
-                  <span class="card-main-label">
-                    ${p.name}
-                    <span class="pill">#${p.serial}</span>
-                    ${headBadge}
-                    ${duplicateBadge}
-                  </span>
-                  <span class="card-main-label">
-                    <span class="gender-pill ${genderClass}">
-  ${normalizeGender(p.gender) === "Male" ? "Male" : "Female"}
-</span>
-                    ${arrow}
-                  </span>
-                </div>
+              <h3 class="card-header-line">
+                <span>
+                  ${p.name}
+                  <span class="pill">#${p.serial}</span>
+                  ${headBadge}
+                  ${duplicateBadge}
+                </span>
+                <span class="gender-pill ${genderClass}">${genderLabel}</span>
+                ${arrow}
               </h3>
+
               <p><strong>Father:</strong> ${p.father || "-"}</p>
               <p><strong>Husband:</strong> ${p.husband || "-"}</p>
               <p><strong>BYP:</strong> ${p.byp}</p>
               <p><strong>Age:</strong> ${p.age}</p>
             `;
 
-            if (duplicateBYPs.has(p.byp)) {
-              card.style.border = "2px solid #f97316";
-            }
-
+            // Collapsible logic
             if (isFamilyHead) {
-              // FAMILY HEAD: clicking toggles only this family's members
               card.addEventListener("click", () => {
                 familyContent.classList.toggle("hidden");
-                const arrowEl = card.querySelector(".toggle-arrow");
+
                 const collapsed = familyContent.classList.contains("hidden");
-                if (arrowEl) {
-                  arrowEl.textContent = collapsed ? "►" : "▼";
-                }
+                const arrowEl = card.querySelector(".toggle-arrow");
+
+                if (arrowEl) arrowEl.textContent = collapsed ? "►" : "▼";
               });
-              familyWrap.appendChild(card);      // head card outside
+
+              familyWrap.appendChild(card);
             } else {
-              familyContent.appendChild(card);   // others inside collapsible
+              familyContent.appendChild(card);
             }
           });
 
@@ -296,19 +312,20 @@ function normalizeGender(g) {
       });
   }
 
-  // ---------------------------
+
+  // ----------------------------
   // FILTERS
-  // ---------------------------
+  // ----------------------------
   function applyFilters() {
     let filtered = [...allPeople];
 
     const g = filterGender.value;
     const a = filterAge.value;
     const h = filterHouse.value;
-    const initial = filterInitial.value;
     const s = filterSort.value;
+    const initial = filterInitial.value;
 
-    if (g) filtered = filtered.filter(p => p.gender === g);
+    if (g) filtered = filtered.filter(p => normalizeGender(p.gender) === g);
     if (h) filtered = filtered.filter(p => p.house === h);
 
     if (a) {
@@ -323,15 +340,13 @@ function normalizeGender(g) {
           : filtered.filter(p => p.name.startsWith(initial));
     }
 
-    // optional sort
-    if (s === "name")  filtered.sort((x, y) => x.name.localeCompare(y.name));
-    if (s === "serial")filtered.sort((x, y) => x.serial - y.serial);
-    if (s === "age")   filtered.sort((x, y) => x.age - y.age);
-    if (s === "house") filtered.sort((x, y) =>
-      sortHouseASC(x.house, y.house)
-    );
-    if (s === "byp")   filtered.sort((x, y) => (x.byp || "").localeCompare(y.byp || ""));
-    if (s === "nameLength") filtered.sort((x, y) => x.name.length - y.name.length);
+    // Sorting
+    if (s === "name") filtered.sort((a, b) => a.name.localeCompare(b.name));
+    if (s === "serial") filtered.sort((a, b) => a.serial - b.serial);
+    if (s === "age") filtered.sort((a, b) => a.age - b.age);
+    if (s === "house") filtered.sort((a, b) => sortHouseASC(a.house, b.house));
+    if (s === "byp") filtered.sort((a, b) => (a.byp || "").localeCompare(b.byp || ""));
+    if (s === "nameLength") filtered.sort((a, b) => a.name.length - b.name.length);
 
     renderResults(filtered);
   }
@@ -342,16 +357,14 @@ function normalizeGender(g) {
   filterSort.onchange    = applyFilters;
   filterInitial.onchange = applyFilters;
 
-  // ---------------------------
-  // SEARCH
-  // ---------------------------
+
+  // ----------------------------
+  // SEARCH FUNCTION
+  // ----------------------------
   searchInput.addEventListener("input", () => {
     const q = searchInput.value.toLowerCase().trim();
 
-    if (!q) {
-      applyFilters();
-      return;
-    }
+    if (!q) return applyFilters();
 
     const matches = allPeople.filter(p =>
       p.name.toLowerCase().includes(q) ||
@@ -363,9 +376,10 @@ function normalizeGender(g) {
     renderResults(matches);
   });
 
-  // ---------------------------
+
+  // ----------------------------
   // BACK TO TOP
-  // ---------------------------
+  // ----------------------------
   window.addEventListener("scroll", () => {
     backToTop.style.display = window.scrollY > 200 ? "block" : "none";
   });
