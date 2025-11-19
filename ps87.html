@@ -97,7 +97,7 @@
     border-radius: 18px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.08);
     position: relative;
-    overflow: hidden;
+    /* overflow: hidden;  ⛔ removed so sticky works */
   }
 
   h1 {
@@ -451,7 +451,6 @@
 <button id="backToTop">↑ Top</button>
 
 <script>
-  // point to this PS JSON
   window.PS_JSON = "data/ps87.json";
 </script>
 <script src="script.js"></script>
