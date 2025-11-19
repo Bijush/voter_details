@@ -132,25 +132,34 @@ document.addEventListener("DOMContentLoaded", () => {
   function getHouseHead(housePeople) {
     return housePeople.reduce((min, p) => (p.serial < min.serial ? p : min));
   }
+  // normalised zender
+  
+function normalizeGender(g) {
+  if (!g) return "";
+  g = g.trim();
 
+  if (["Male", "पुरुष", "পুরুষ"].includes(g)) return "Male";
+  if (["Female", "মহিলা", "নারী"].includes(g)) return "Female";
+
+  return g;
+}
   // UPDATE STATS (for current visible list)
   function updateStats(list) {
-    const total = list.length;
-    const male  = list.filter(p => p.gender === "Male").length;
-    const female= list.filter(p => p.gender === "Female").length;
+  const total = list.length;
+
+  const male = list.filter(p => normalizeGender(p.gender) === "Male").length;
+  const female = list.filter(p => normalizeGender(p.gender) === "Female").length;
 
     // count unique duplicate BYPs in current set
-    const dupSet = new Set(
-      list
-        .filter(p => duplicateBYPs.has(p.byp))
-        .map(p => p.byp)
-    );
+     const dupSet = new Set(
+    list.filter(p => duplicateBYPs.has(p.byp)).map(p => p.byp)
+  );
 
-    statTotal.textContent  = total;
-    statMale.textContent   = male;
-    statFemale.textContent = female;
-    statDup.textContent    = dupSet.size;
-  }
+  statTotal.textContent  = total;
+  statMale.textContent   = male;
+  statFemale.textContent = female;
+  statDup.textContent    = dupSet.size;
+}
 
   // ---------------------------
   // RENDER RESULTS
