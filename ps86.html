@@ -47,6 +47,15 @@
         border: 2px solid #ccc;
     }
 
+    /* Sticky Search Bar */
+.sticky-search {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background: white;
+    padding: 10px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
     /* FILTERS */
     .filter-bar {
         display: flex;
@@ -205,9 +214,11 @@
         <h1>Polling Station 86</h1>
 
         <!-- SEARCH -->
-        <div class="search-wrapper">
-            <input id="search" type="text" placeholder="Search by name / house / serial / BYP…" autocomplete="off">
-        </div>
+        <div class="sticky-search">
+  <div class="search-wrapper">
+      <input id="search" type="text" placeholder="Search by name / house / serial / BYP…" autocomplete="off">
+  </div>
+</div>
 
         <!-- FILTERS -->
         <div class="filter-bar">
