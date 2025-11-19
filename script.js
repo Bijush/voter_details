@@ -170,50 +170,54 @@ document.addEventListener("DOMContentLoaded", () => {
         houseContent.style.marginTop = "8px";
 
         // FAMILY TREE (for display only)
-        const familyGroups = groupFamily(housePeople);
+        // FAMILY TREE (clean version)
+const familyGroups = groupFamily(housePeople);
 
-        Object.keys(familyGroups).forEach(family => {
-          // small label for family
-          const famLabel = document.createElement("div");
-          famLabel.style.fontWeight = "600";
-          famLabel.style.margin = "4px 0 2px";
-          famLabel.textContent = "👨‍👩‍👧 Family: " + family;
-          houseContent.appendChild(famLabel);
+Object.keys(familyGroups).forEach(family => {
 
-          // sort inside family, skip the house head
-          const members = [...familyGroups[family]]
-            .filter(p => p.serial !== houseHead.serial)
-            .sort((a, b) => a.serial - b.serial);
+  // SHOW FAMILY LABEL ONLY ONCE  
+  const famLabel = document.createElement("div");
+  famLabel.style.fontWeight = "600";
+  famLabel.style.margin = "10px 0 5px";
+  famLabel.textContent = "👨‍👩‍👧 Family: " + family;
+  houseContent.appendChild(famLabel);
 
-          members.forEach(p => {
-            const card = document.createElement("div");
-            card.className = "card";
-            card.style.marginBottom = "8px";
+  // Sort family members
+  const members = [...familyGroups[family]].sort(
+    (a, b) => a.serial - b.serial
+  );
 
-            const duplicateBadge = duplicateBYPs.has(p.byp)
-              ? `<span class="pill" style="background:#f97316;color:white;">DUPLICATE</span>`
-              : "";
+  // Skip HOUSE HEAD
+  const otherMembers = members.filter(p => p.serial !== houseHead.serial);
 
-            card.innerHTML = `
-              <h3>
-                ${p.name}
-                <span class="pill">#${p.serial}</span>
-                ${duplicateBadge}
-              </h3>
-              <p><strong>Age:</strong> ${p.age}</p>
-              <p><strong>Gender:</strong> ${p.gender}</p>
-              <p><strong>Father:</strong> ${p.father || "-"}</p>
-              <p><strong>Husband:</strong> ${p.husband || "-"}</p>
-              <p><strong>BYP:</strong> ${p.byp}</p>
-            `;
+  otherMembers.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.marginBottom = "10px";
 
-            if (duplicateBYPs.has(p.byp)) {
-              card.style.border = "2px solid #f97316";
-            }
+    const duplicateBadge = duplicateBYPs.has(p.byp)
+      ? `<span class="pill" style="background:#f97316;color:white;">DUPLICATE</span>`
+      : "";
 
-            houseContent.appendChild(card);
-          });
-        });
+    card.innerHTML = `
+      <h3>${p.name}
+        <span class="pill">#${p.serial}</span>
+        ${duplicateBadge}
+      </h3>
+      <p><strong>Age:</strong> ${p.age}</p>
+      <p><strong>Gender:</strong> ${p.gender}</p>
+      <p><strong>Father:</strong> ${p.father || "-"}</p>
+      <p><strong>Husband:</strong> ${p.husband || "-"}</p>
+      <p><strong>BYP:</strong> ${p.byp}</p>
+    `;
+
+    if (duplicateBYPs.has(p.byp)) {
+      card.style.border = "2px solid #f97316";
+    }
+
+    houseContent.appendChild(card);
+  });
+});
 
         // click on HEAD = collapse / expand ALL other members in that house
         headCard.addEventListener("click", () => {
