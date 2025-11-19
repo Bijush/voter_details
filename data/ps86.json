@@ -1158,6 +1158,306 @@
       "husband": "Ajay Das",
       "age": 47,
       "gender": "Female"
+    },
+    {
+      "serial": 121,
+      "name": "Bijoy Das",
+      "father": "Sushanta Kumar Das",
+      "husband": null,
+      "age": 46,
+      "gender": "Male",
+      "byp": "BYP1490795"
+    },
+    {
+      "serial": 122,
+      "name": "Jaya Rani Das",
+      "father": null,
+      "husband": "Bijoy Das",
+      "age": 32,
+      "gender": "Female",
+      "byp": null
+    }
+  ],
+
+  "house_153K": [
+    {
+      "serial": 123,
+      "name": "Sandip Das",
+      "father": "Ajay Das",
+      "husband": null,
+      "age": 20,
+      "gender": "Male",
+      "byp": "BYP2486132"
+    },
+    {
+      "serial": 124,
+      "name": "Ajay Das",
+      "father": "Sushanta Kumar Das",
+      "husband": null,
+      "age": 40,
+      "gender": "Male",
+      "byp": "BYP1490808"
+    }
+  ],
+
+  "house_154": [
+    {
+      "serial": 125,
+      "name": "Jaymoni Bosak",
+      "father": null,
+      "husband": "Debendra Bosak",
+      "age": 72,
+      "gender": "Female",
+      "byp": BYP1490820
+    },
+    {
+      "serial": 126,
+      "name": "Ashutosh Bosak",
+      "father": "Debendra Bosak",
+      "husband": null,
+      "age": 47,
+      "gender": "Male",
+      "byp": BYP1490831
+    },
+    {
+      "serial": 127,
+      "name": "Bishu Bosak",
+      "father": "Debendra Bosak",
+      "husband": null,
+      "age": 41,
+      "gender": "Male",
+      "byp": BYP1490842
+    },
+    {
+      "serial": 128,
+      "name": "Basanti Bosak",
+      "father": "Anand Bosak",
+      "husband": null,
+      "age": 41,
+      "gender": "Female",
+      "byp": BYP1490853
+    },
+    {
+      "serial": 129,
+      "name": "Sumitra Das",
+      "father": null,
+      "husband": "Bishu Bosak",
+      "age": 34,
+      "gender": "Female",
+      "byp": BYP0182139
+    },
+    {
+      "serial": 130,
+      "name": "Raju Bosak",
+      "father": null,
+      "mother": "Basanti Bosak",
+      "husband": null,
+      "age": 29,
+      "gender": "Male",
+      "byp": ΒΥΡ0160374
+    },
+    {
+      "serial": 131,
+      "name": "Soma Bosak",
+      "father": null,
+      "mother": "Basanti Bosak",
+      "husband": null,
+      "age": 27,
+      "gender": "Female",
+      "byp": ΒΥΡ0174763
+    },
+    {
+      "serial": 132,
+      "name": "Ganesh Bosak",
+      "father": null,
+      "mother": "Basanti Bosak",
+      "husband": null,
+      "age": 24,
+      "gender": "Male",
+      "byp": ΒΥΡ0175844
+    }
+  ],
+
+  "house_155": [
+    {
+      "serial": 133,
+      "name": "Basudev Bosak",
+      "father": "Debendra Bosak",
+      "husband": null,
+      "age": 50,
+      "gender": "Male",
+      "byp": BYP1490864
+    },
+    {
+      "serial": 134,
+      "name": "Dhananjay Bosak",
+      "father": "Basudev Bosak",
+      "husband": null,
+      "age": 24,
+      "gender": "Male",
+      "byp": BYP0521211
+    },
+    {
+      "serial": 135,
+      "name": "Bhaskar Bosak",
+      "father": "Basudev Bosak",
+      "husband": null,
+      "age": 21,
+      "gender": "Male",
+      "byp": BYP1903921
+    }
+  ],
+
+  "house_156": [
+    {
+      "serial": 136,
+      "name": "Krishna Mohan Namashudra",
+      "father": "Jogendra Namashudra",
+      "husband": null,
+      "age": 74,
+      "gender": "Male",
+      "byp": BYP1490875
+    },
+    {
+      "serial": 137,
+      "name": "Sathi Runi Namashudra",
+      "father": null,
+      "husband": "Dilip Kumar Namashudra",
+      "age": 40,
+      "gender": "Female",
+      "byp": BYP0009865
+    }
+  ],
+
+  "house_156K": [
+    {
+      "serial": 138,
+      "name": "Sompa Brani Namashudra",
+      "father": null,
+      "husband": "Bijoy Kumar Namashudra",
+      "age": 39,
+      "gender": "Female",
+      "byp": BYP1755926
+    },
+    {
+      "serial": 139,
+      "name": "Bijoy Kumar Namashudra",
+      "father": "Krishna Mohan Namashudra",
+      "husband": null,
+      "age": 47,
+      "gender": "Male",
+      "byp": ΒΥΡ0183780
+    }
+  ],
+
+  "house_157": [
+    {
+      "serial": 140,
+      "name": "Bishu Namashudra",
+      "father": "Lakhan Namashudra",
+      "husband": null,
+      "age": 32,
+      "gender": "Male",
+      "byp": BYP1490933
+    },
+    {
+      "serial": 141,
+      "name": "Shukla Namashudra",
+      "father": null,
+      "husband": "Bishu Namashudra",
+      "age": null,
+      "gender": "Female",
+      "byp": BYP0183681
+    }
+  ],
+
+  "house_158": [
+    {
+      "serial": 142,
+      "name": "Pushpa Rani Namashudra",
+      "father": null,
+      "husband": "Aniruddha Namashudra",
+      "age": 57,
+      "gender": "Female",
+      "byp": BYP1490944
+    },
+    {
+      "serial": 143,
+      "name": "Krishna Namashudra",
+      "father": "Aniruddha Namashudra",
+      "husband": null,
+      "age": 39,
+      "gender": "Female",
+      "byp": "BYP0030858"
+    },
+    {
+      "serial": 144,
+      "name": "Jyotsna Namashudra",
+      "father": "Aniruddha Namashudra",
+      "husband": null,
+      "age": 38,
+      "gender": "Female",
+      "byp": BYP0009866
+    },
+    {
+      "serial": 145,
+      "name": "Asim Roy",
+      "father": "Aniruddha Roy",
+      "husband": null,
+      "age": 27,
+      "gender": "Male",
+      "byp": ΒΥΡ0159293
+    },
+    {
+      "serial": 146,
+      "name": "Anjali Roy",
+      "father": null,
+      "husband": "Asim Roy",
+      "age": 25,
+      "gender": "Female",
+      "byp": "WJW0062935"
+    }
+  ],
+
+  "house_159": [
+    {
+      "serial": 147,
+      "name": "Jaya Namashudra",
+      "father": null,
+      "husband": "Amulya Namashudra",
+      "age": 57,
+      "gender": "Female",
+      "byp": BYP1490977
+    },
+    {
+      "serial": 148,
+      "name": "Kalyani Biswas",
+      "father": "Nip Biswas",
+      "husband": null,
+      "age": 37,
+      "gender": "Female",
+      "byp": "BYP2479947"
+    }
+  ],
+
+  "house_160": [
+    {
+      "serial": 149,
+      "name": "Hira Das",
+      "father": "Surendra Das",
+      "husband": null,
+      "age": 50,
+      "gender": "Male",
+      "byp": "BYP1490999"
+    },
+    {
+      "serial": 150,
+      "name": "Bornali Das",
+      "father": null,
+      "husband": "Hiralal Das",
+      "age": 31,
+      "gender": "Female",
+      "byp": "BYP0543843"
     }
   ]
 }
