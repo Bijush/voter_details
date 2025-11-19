@@ -255,7 +255,9 @@ function normalizeGender(g) {
                     ${duplicateBadge}
                   </span>
                   <span class="card-main-label">
-                    <span class="gender-pill ${genderClass}">${p.gender || "-"}</span>
+                    span class="gender-pill ${genderClass}">
+  ${normalizeGender(p.gender) === "Male" ? "Male" : "Female"}
+</span>
                     ${arrow}
                   </span>
                 </div>
