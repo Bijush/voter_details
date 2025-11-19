@@ -194,135 +194,116 @@ document.addEventListener("DOMContentLoaded", () => {
   // ----------------------------
   function renderResults(list) {
 
-    resultsDiv.innerHTML = "";
-    if (!list.length) {
-      resultsDiv.innerHTML = "<p>No results found.</p>";
-      updateStats([]);
-      return;
-    }
+  resultsDiv.innerHTML = "";
+  if (!list.length) {
+    resultsDiv.innerHTML = "<p>No results found.</p>";
+    updateStats([]);
+    return;
+  }
 
-    updateStats(list);
+  updateStats(list);
 
-    // Group by house
-    const groupedByHouse = {};
-    list.forEach(p => {
-      if (!groupedByHouse[p.house]) groupedByHouse[p.house] = [];
-      groupedByHouse[p.house].push(p);
-    });
-
-    // Render each house
-    Object.keys(groupedByHouse)
-      .sort(sortHouseASC)
-      .forEach(h => {
-
-        const housePeople = groupedByHouse[h];
-        const houseHead = getHouseHead(housePeople);
-        const houseNumber = h.replace("house_", "");
-
-        const houseSection = document.createElement("div");
-        houseSection.className = "house-section";
-        houseSection.id = "house-section-" + h;
-        houseSection.style.background = colors[h];
-
-        houseSection.innerHTML = `
-          <div class="house-title">
-            <span>House: ${houseNumber}</span>
-            <small>${housePeople.length} voters</small>
-          </div>
-        `;
-
-        // Group by family
-        const familyGroups = groupFamily(housePeople);
-
-        Object.keys(familyGroups).forEach(family => {
-
-          const familyWrap = document.createElement("div");
-          familyWrap.className = "family-wrap";
-
-          const familyContent = document.createElement("div");
-          familyContent.className = "family-content";
-
-          // Sort family by serial
-          const members = [...familyGroups[family]].sort((a, b) => a.serial - b.serial);
-          const familyHead = members[0];
-
-          members.forEach(p => {
-
-  const card = document.createElement("div");
-  card.className = "card";
-
-  const isHouseHead = p.serial === houseHead.serial;
-
-  const duplicateBadge = duplicateBYPs.has(p.byp)
-    ? `<span class="dup-badge">DUPLICATE</span>`
-    : "";
-
-  const headBadge = isHouseHead
-    ? `<span class="pill head-pill">HEAD</span>`
-    : "";
-
-  const genderLabel = normalizeGender(p.gender);
-  const genderClass = genderLabel === "Male" ? "male" : "female";
-
-  const arrow = isHouseHead
-    ? `<span class="toggle-arrow">▼</span>`
-    : "";     // ❗ NO ARROW for others
-
-  card.innerHTML = `
-    <h3 class="card-header-line">
-      <span>
-        ${p.name}
-        <span class="pill">#${p.serial}</span>
-        ${headBadge}
-        ${duplicateBadge}
-      </span>
-
-      <span class="gender-pill ${genderClass}">
-        ${genderLabel}
-      </span>
-
-      ${arrow}
-    </h3>
-
-    <p><strong>Father:</strong> ${p.father || "-"}</p>
-    <p><strong>Husband:</strong> ${p.husband || "-"}</p>
-    <p><strong>BYP:</strong> ${p.byp}</p>
-    <p><strong>Age:</strong> ${p.age}</p>
-  `;
-
-  // Only HOUSE HEAD collapses members
-  if (isHouseHead) {
-  card.addEventListener("click", () => {
-
-    // toggle this family ONLY
-    familyContent.classList.toggle("hidden");
-
-    const collapsed = familyContent.classList.contains("hidden");
-
-    // smooth hide/show
-    familyContent.style.display = collapsed ? "none" : "block";
-
-    // update arrow
-    const arrowEl = card.querySelector(".toggle-arrow");
-    if (arrowEl) {
-      arrowEl.textContent = collapsed ? "►" : "▼";
-    }
+  // Group by house
+  const groupedByHouse = {};
+  list.forEach(p => {
+    if (!groupedByHouse[p.house]) groupedByHouse[p.house] = [];
+    groupedByHouse[p.house].push(p);
   });
 
-  familyWrap.appendChild(card);
-} else {
-  familyContent.appendChild(card);
-}
-});
-          
+  Object.keys(groupedByHouse)
+    .sort(sortHouseASC)
+    .forEach(h => {
 
-          familyWrap.appendChild(familyContent);
-          houseSection.appendChild(familyWrap);
-        });
+      const housePeople = groupedByHouse[h].sort((a,b)=>a.serial-b.serial);
+      const houseHead   = getHouseHead(housePeople);
+      const houseNumber = h.replace("house_", "");
 
-        resultsDiv.appendChild(houseSection);
+      // Main wrapper for house
+      const houseSection = document.createElement("div");
+      houseSection.className = "house-section";
+      houseSection.id = "house-section-" + h;
+      houseSection.style.background = colors[h];
+
+      houseSection.innerHTML = `
+        <div class="house-title">
+          <span>House: ${houseNumber}</span>
+          <small>${housePeople.length} voters</small>
+        </div>
+      `;
+
+      // Container for members except head
+      const houseContent = document.createElement("div");
+      houseContent.className = "house-content";
+
+      // Render each member
+      housePeople.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const isHead = p.serial === houseHead.serial;
+
+        const duplicateBadge = duplicateBYPs.has(p.byp)
+          ? `<span class="dup-badge">DUPLICATE</span>`
+          : "";
+
+        const headBadge = isHead
+          ? `<span class="pill head-pill">HEAD</span>`
+          : "";
+
+        const genderLabel = normalizeGender(p.gender);
+        const genderClass = genderLabel === "Male" ? "male" : "female";
+
+        const arrow = isHead
+          ? `<span class="toggle-arrow">▼</span>`
+          : "";
+
+        card.innerHTML = `
+          <h3 class="card-header-line">
+            <span>
+              ${p.name}
+              <span class="pill">#${p.serial}</span>
+              ${headBadge}
+              ${duplicateBadge}
+            </span>
+
+            <span class="gender-pill ${genderClass}">
+              ${genderLabel}
+            </span>
+
+            ${arrow}
+          </h3>
+
+          <p><strong>Father:</strong> ${p.father || "-"}</p>
+          <p><strong>Husband:</strong> ${p.husband || "-"}</p>
+          <p><strong>BYP:</strong> ${p.byp}</p>
+          <p><strong>Age:</strong> ${p.age}</p>
+        `;
+
+        // If HEAD — put outside + add toggle effect
+        if (isHead) {
+          card.addEventListener("click", () => {
+            houseContent.classList.toggle("hidden");
+
+            const collapsed = houseContent.classList.contains("hidden");
+            houseContent.style.display = collapsed ? "none" : "block";
+
+            const arrowEl = card.querySelector(".toggle-arrow");
+            if (arrowEl) arrowEl.textContent = collapsed ? "►" : "▼";
+          });
+
+          houseSection.appendChild(card);  // HEAD first
+
+        } else {
+          houseContent.appendChild(card);  // others inside collapsible box
+        }
       });
-  }
+
+      // Add remaining members
+      houseSection.appendChild(houseContent);
+
+      resultsDiv.appendChild(houseSection);
+    });
+}
 
 
   // ----------------------------
