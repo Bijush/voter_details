@@ -6,275 +6,454 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-    body {
-        font-family: system-ui, sans-serif;
-        margin: 0;
-        background: #f5f5f7;
-    }
+  :root {
+    --bg-body: #f3f4f6;
+    --bg-card: #ffffff;
+    --border-soft: #d1d5db;
+    --accent: #2563eb;
+    --accent-soft: #e5edff;
+    --text-main: #111827;
+  }
 
-    .container {
-        width: 100%;
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 12px;
-    }
+  * {
+    box-sizing: border-box;
+  }
 
-    .card-main {
-        width: 100%;
-        background: #fff;
-        padding: 16px;
-        border-radius: 14px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: var(--bg-body);
+    color: var(--text-main);
+  }
 
-    h1 {
-        text-align: center;
-        margin: 0;
-        font-size: 26px;
-        font-weight: 700;
-        padding-bottom: 8px;
-    }
+  .page {
+    display: flex;
+    align-items: flex-start;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+    gap: 10px;
+  }
 
-    /* SEARCH */
-    .search-wrapper {
-        margin-top: 10px;
-    }
-    #search {
-        width: 100%;
-        padding: 12px;
-        font-size: 15px;
-        border-radius: 10px;
-        border: 2px solid #ccc;
-    }
+  /* LEFT SIDEBAR - HOUSE JUMP */
+  .sidebar {
+    width: 80px;
+    position: sticky;
+    top: 8px;
+    align-self: flex-start;
+    background: rgba(255,255,255,0.9);
+    border-radius: 14px;
+    border: 1px solid var(--border-soft);
+    padding: 8px 6px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  }
 
-    /* Sticky Search Bar */
-.sticky-search {
+  .sidebar-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    margin: 0 0 6px;
+  }
+
+  .house-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+  }
+
+  .house-nav-item {
+    width: 100%;
+    border-radius: 999px;
+    border: 1px solid var(--border-soft);
+    background: #f9fafb;
+    padding: 4px 0;
+    font-size: 11px;
+    cursor: pointer;
+  }
+
+  .house-nav-item:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+  }
+
+  .house-nav-item.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* MAIN AREA */
+  .main {
+    flex: 1;
+  }
+
+  .card-main {
+    width: 100%;
+    background: var(--bg-card);
+    padding: 12px 12px 20px;
+    border-radius: 18px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    position: relative;
+    /* overflow: hidden;  ⛔ removed so sticky works */
+  }
+
+  h1 {
+    margin: 0 0 4px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 6px;
+  }
+
+  /* STICKY GLASS HEADER (search + filters + stats) */
+  .sticky-header {
     position: sticky;
     top: 0;
-    z-index: 999;
-    background: white;
-    padding: 10px 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-}
-    /* FILTERS */
-    .filter-bar {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 12px;
-    }
-    .filter-bar select {
-        padding: 10px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        font-size: 14px;
-        background: #fff;
-        flex: 1 1 150px;
-    }
+    z-index: 50;
+    margin: 0 -8px 10px;
+    padding: 8px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.88);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(148,163,184,0.45);
+  }
 
-    /* RESULTS */
-    #results {
-        margin-top: 16px;
-    }
-
-    .house-section {
-        padding: 10px;
-        border-radius: 12px;
-        margin-bottom: 18px;
-    }
-
-    .house-title {
-    font-size: 15px;
-    font-weight: 700;
+  .search-wrapper {
+    position: relative;
     margin-bottom: 8px;
-    padding: 8px 10px;
+  }
 
-    display: flex;                 /* puts both items in one row */
-    justify-content: space-between;/* pushes voters count to right end */
-    align-items: center;           /* vertical alignment */
-}
-    
-.house-title span:last-child {
-    opacity: 0.85;
-    font-size: 13px;
-}
-    /* FAMILY BOX */
-    .family-box {
-        margin-bottom: 12px;
-        padding: 8px;
-        background: #fafafa;
-        border-radius: 8px;
-        border-left: 4px solid #999;
-    }
+  #search {
+    width: 100%;
+    padding: 12px 12px;
+    border-radius: 999px;
+    border: 2px solid var(--border-soft);
+    font-size: 14px;
+    outline: none;
+  }
 
-    .family-box strong {
-        font-size: 14px;
-    }
+  #search:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.18);
+  }
 
-    /* CARD */
-    .card {
-        background: #fff;
-        border-radius: 10px;
-        padding: 12px;
-        border: 1px solid #ddd;
-        margin-top: 8px;
-        transition: 0.15s;
-    }
-    .card:hover {
-        transform: scale(1.01);
-        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-    }
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
 
-    .card h3 {
-        margin: 0;
-        font-size: 17px;
-        display: flex;
-        gap: 6px;
-        align-items: center;
-    }
+  .filter-bar select {
+    flex: 1 1 120px;
+    min-width: 110px;
+    padding: 7px 9px;
+    border-radius: 999px;
+    border: 1px solid var(--border-soft);
+    font-size: 12px;
+    background: #f9fafb;
+  }
 
-    .pill {
-        background: #e9edff;
-        padding: 2px 7px;
-        border-radius: 12px;
-        font-size: 11px;
-    }
+  /* STATS BAR */
+  .stats-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 11px;
+  }
 
-    .dup {
-        background: #f97316;
-        color: #fff;
-        padding: 2px 6px;
-        border-radius: 6px;
-        font-size: 10px;
-        margin-left: 6px;
-    }
+  .stat-chip {
+    padding: 4px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border-soft);
+    background: #f9fafb;
+  }
 
-    /* Back to top */
-    #backToTop {
-        position: fixed;
-        right: 15px;
-        bottom: 20px;
-        padding: 10px 14px;
-        background: #fff;
-        border-radius: 50px;
-        border: 1px solid #ccc;
-        font-size: 13px;
-        cursor: pointer;
-        display: none;
-        box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-    }
-    
-.family-wrap {
-    background: rgba(255,255,255,0.5);
-    margin-bottom: 10px;
-    border-radius: 10px;
-    padding: 8px;
-}
+  .stat-chip span.value {
+    font-weight: 700;
+    color: var(--accent);
+    margin-left: 3px;
+  }
 
-.family-header {
-    font-size: 15px;
-    font-weight: 600;
-    padding: 8px;
-    background: rgba(0,0,0,0.05);
-    border-radius: 8px;
-    cursor: pointer;
+  /* RESULTS */
+  #results {
+    margin-top: 10px;
+  }
+
+  .house-section {
+    padding: 10px;
+    border-radius: 14px;
+    margin-bottom: 16px;
+  }
+
+  .house-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
+  }
 
-.family-content {
-    padding-top: 10px;
-}
+  .house-title small {
+    font-size: 11px;
+    opacity: 0.8;
+  }
 
-.family-content.hidden {
-    display: none;
-}
+  .family-wrap {
+    margin-top: 6px;
+  }
 
-.arrow {
+  .card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 10px 11px;
+    border: 1px solid var(--border-soft);
+    margin-bottom: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  }
+
+  .card h3 {
+    margin: 0 0 6px;
     font-size: 14px;
-}
+  }
 
-.dup-badge {
-    background: #f97316;
-    color: white;
-    padding: 2px 6px;
-    border-radius: 5px;
+  .card-header-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .card-main-label {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .pill {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 999px;
     font-size: 10px;
+    background: var(--accent-soft);
+    color: #1f2933;
+  }
+
+  .head-pill {
+    background: #2563eb;
+    color: #ffffff;
+  }
+
+  .dup-badge {
+    background: #f97316;
+    color: #ffffff;
+    padding: 2px 6px;
+    border-radius: 999px;
+    font-size: 10px;
+  }
+
+  .gender-pill {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 999px;
+    font-size: 10px;
+    min-width: 46px;
+    text-align: center;
+  }
+  .gender-pill.male {
+    background: #dbeafe;
+    color: #1d4ed8;
+  }
+  .gender-pill.female {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+
+  .toggle-arrow {
+    font-size: 16px;
+    cursor: pointer;
     margin-left: 6px;
-}
+  }
+
+  .card p {
+    margin: 1px 0;
+    font-size: 12px;
+  }
+
+  .family-content.hidden {
+    display: none;
+  }
+
+  /* Back to top */
+  #backToTop {
+    position: fixed;
+    right: 14px;
+    bottom: 18px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border-soft);
+    background: #ffffff;
+    font-size: 12px;
+    cursor: pointer;
+    display: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+
+  /* Mobile tweaks */
+  @media (max-width: 768px) {
+    .page {
+      flex-direction: column;
+      padding: 8px;
+    }
+    .sidebar {
+      width: 100%;
+      position: static;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 8px;
+    }
+    .house-nav {
+      flex-direction: row;
+      flex-wrap: wrap;
+      max-height: none;
+    }
+    .house-nav-item {
+      flex: 0 0 auto;
+      width: auto;
+      padding: 4px 8px;
+      font-size: 11px;
+    }
+    .sticky-header {
+      margin: 0 -4px 8px;
+    }
+  }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-    <div class="card-main">
+<div class="page">
+  <!-- SIDEBAR: House quick jump -->
+  <aside class="sidebar">
+    <h2 class="sidebar-title">Houses</h2>
+    <div id="houseNav" class="house-nav"></div>
+  </aside>
 
-        <h1>Polling Station 86</h1>
+  <!-- MAIN -->
+  <main class="main">
+    <div class="card-main">
+      <h1>Polling Station 86</h1>
+      <div class="subtitle">Smart voter list with search, filters & family view</div>
+
+      <!-- Sticky glass header -->
+      <div class="sticky-header">
 
         <!-- SEARCH -->
-        <div class="sticky-search">
-  <div class="search-wrapper">
-      <input id="search" type="text" placeholder="Search by name / house / serial / BYP…" autocomplete="off">
-  </div>
-</div>
-
+        <div class="search-wrapper">
+          <input
+            id="search"
+            type="text"
+            placeholder="Search by name / house / serial / BYP…"
+            autocomplete="off"
+          >
+        </div>
+</div><!-- /sticky-header -->
+      
         <!-- FILTERS -->
         <div class="filter-bar">
-            <select id="filterGender">
-                <option value="">Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-            </select>
+          <select id="filterGender">
+            <option value="">Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
 
-            <select id="filterAge">
-                <option value="">Age</option>
-                <option value="18-25">18–25</option>
-                <option value="26-40">26–40</option>
-                <option value="41-60">41–60</option>
-                <option value="60-200">60+</option>
-            </select>
+          <select id="filterAge">
+            <option value="">Age</option>
+            <option value="18-25">18–25</option>
+            <option value="26-40">26–40</option>
+            <option value="41-60">41–60</option>
+            <option value="60-200">60+</option>
+          </select>
 
-            <select id="filterHouse">
-                <option value="">House</option>
-            </select>
+          <select id="filterHouse">
+            <option value="">House</option>
+          </select>
 
-            <select id="filterSort">
-                <option value="">Sort</option>
-                <option value="name">Name (A–Z)</option>
-                <option value="serial">Serial</option>
-                <option value="age">Age</option>
-                <option value="house">House</option>
-                <option value="byp">BYP</option>
-            </select>
+          <select id="filterSort">
+            <option value="">Sort</option>
+            <option value="name">Name (A–Z)</option>
+            <option value="serial">Serial</option>
+            <option value="age">Age</option>
+            <option value="house">House</option>
+            <option value="byp">BYP</option>
+            <option value="nameLength">Name length</option>
+          </select>
 
-            <select id="filterInitial">
-                <option value="">A–Z</option>
-                <option>A</option><option>B</option><option>C</option><option>D</option>
-                <option>E</option><option>F</option><option>G</option><option>H</option>
-                <option>I</option><option>J</option><option>K</option><option>L</option>
-                <option>M</option><option>N</option><option>O</option><option>P</option>
-                <option>Q</option><option>R</option><option>S</option><option>T</option>
-                <option>U</option><option>V</option><option>W</option><option>X</option>
-                <option>Y</option><option>Z</option>
-                <option value="#">Other</option>
-            </select>
+          <select id="filterInitial">
+            <option value="">A–Z</option>
+            <option value="A">A</option><option value="B">B</option>
+            <option value="C">C</option><option value="D">D</option>
+            <option value="E">E</option><option value="F">F</option>
+            <option value="G">G</option><option value="H">H</option>
+            <option value="I">I</option><option value="J">J</option>
+            <option value="K">K</option><option value="L">L</option>
+            <option value="M">M</option><option value="N">N</option>
+            <option value="O">O</option><option value="P">P</option>
+            <option value="Q">Q</option><option value="R">R</option>
+            <option value="S">S</option><option value="T">T</option>
+            <option value="U">U</option><option value="V">V</option>
+            <option value="W">W</option><option value="X">X</option>
+            <option value="Y">Y</option><option value="Z">Z</option>
+            <option value="#">Other</option>
+          </select>
         </div>
 
-        <!-- RESULTS -->
-        <div id="results"></div>
+        <!-- STATS -->
+        <div class="stats-bar">
+          <div class="stat-chip">
+            Total voters: <span id="statTotal" class="value">0</span>
+          </div>
+          <div class="stat-chip">
+            Male: <span id="statMale" class="value">0</span>
+          </div>
+          <div class="stat-chip">
+            Female: <span id="statFemale" class="value">0</span>
+          </div>
+          <div class="stat-chip">
+            Duplicate BYP: <span id="statDup" class="value">0</span>
+          </div>
+        </div>
 
+      
+
+      <!-- RESULTS -->
+      <div id="results"></div>
     </div>
+  </main>
 </div>
 
 <button id="backToTop">↑ Top</button>
 
-<!-- LOAD PS87 DATA -->
 <script>
   window.PS_JSON = "data/ps86.json";
 </script>
-
 <script src="script.js"></script>
 
 </body>
