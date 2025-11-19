@@ -1175,25 +1175,7 @@
       "husband": "Bijoy Das",
       "age": 32,
       "gender": "Female",
-      "byp": null
-    },
-    {
-      "serial": 121,
-      "name": "Bijoy Das",
-      "father": "Sushanta Kumar Das",
-      "husband": null,
-      "age": 46,
-      "gender": "Male",
-      "byp": "BYP1490795"
-    },
-    {
-      "serial": 122,
-      "name": "Jaya Rani Das",
-      "father": null,
-      "husband": "Bijoy Das",
-      "age": 32,
-      "gender": "Female",
-      "byp": null
+      "byp": "BYP0030858"
     }
   ],
 
@@ -1476,11 +1458,8 @@
       "age": 31,
       "gender": "Female",
       "byp": "BYP0543843"
-    }
-  ],
-  
-  "house_160": [
-    {
+    },
+   {
       "serial": 151,
       "name": "Basanti Bala Das",
       "father": null,
@@ -1496,7 +1475,7 @@
       "husband": null,
       "age": 27,
       "gender": "Male",
-      "byp": "BYP0184507"
+      "byp": "BYP0184655"
     }
   ],
 
@@ -1560,12 +1539,12 @@
   "house_161K": [
     {
       "serial": 160,
-      "name": "Bitu Das",
+      "name": "Ritu Das",
       "father": "Surendra Das",
       "husband": null,
       "age": 37,
       "gender": "Male",
-      "byp": "BYP1491038"
+      "byp": "BYP0326165"
     }
   ],
 
@@ -1611,6 +1590,15 @@
       "age": 51,
       "gender": "Female",
       "byp": "BYP1755528"
+    },
+    {
+      "serial": 166,
+      "name": "Biswajit Nampudra",
+      "father": "Jati Nampudra",
+      "husband": null,
+      "age": 23,
+      "gender": "Male",
+      "byp": "BYP1491072"
     }
   ],
 
@@ -1644,18 +1632,6 @@
       "age": 24,
       "gender": "Female",
       "byp": "BYP1845932"
-    }
-  ],
-
-  "house_162": [
-    {
-      "serial": 166,
-      "name": "Biswajit Nampudra",
-      "father": "Jati Nampudra",
-      "husband": null,
-      "age": 23,
-      "gender": "Female",
-      "byp": "BYP1491072"
     }
   ],
 
@@ -1777,6 +1753,15 @@
       "gender": "Male",
       "byp": "BYP1491209"
     },
+     {
+      "serial": 181,
+      "name": "Nami Roy",
+      "father": null,
+      "husband": "Chamak Roy",
+      "age": 27,
+      "gender": "Female",
+      "byp": "BYP0036939"
+    },
     {
       "serial": 180,
       "name": "Namita Roy",
@@ -1788,17 +1773,6 @@
     }
   ],
   
-  "house_167": [
-    {
-      "serial": 181,
-      "name": "Nami Roy",
-      "father": null,
-      "husband": "Chamak Roy",
-      "age": 27,
-      "gender": "Female",
-      "byp": "BYP0036939"
-    }
-  ],
 
   "house_167K": [
     {
@@ -2097,10 +2071,7 @@
       "age": 45,
       "gender": "Male",
       "byp": "BYP1491414"
-    }
-  ],
-  
-  "house_174KO": [
+    },
     {
       "serial": 211,
       "name": "Kalpana Dey",
@@ -2111,7 +2082,7 @@
       "byp":"BYP0040378"
     }
   ],
-
+  
   "house_175": [
     {
       "serial": 212,
@@ -2168,7 +2139,7 @@
       "husband": null,
       "age": 39,
       "gender": "Male",
-      "byp"
+      "byp":"BYP1491447"
     },
     {
       "serial": 217,
@@ -2388,10 +2359,7 @@
       "age": 32,
       "gender": "Female",
       "byp": "BYP1496102"
-    }
-  ],
-  
-  "house_181": [
+    },
     {
       "serial": 241,
       "name": "Bidut Roy",
@@ -2421,6 +2389,7 @@
       "byp": "WJW0057646"
     }
   ],
+ 
 
   "house_182": [
     {
