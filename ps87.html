@@ -384,20 +384,42 @@
   }
 
   /* Sidebar mobile behaviour */
-  .sidebar {
-  display: none;
+  /* MOBILE SIDEBAR */
+
+  .sidebar-overlay {
     position: fixed;
+    top: 0;
     left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(2px);
+    display: none;
+    z-index: 9998;
+  }
+
+  .sidebar {
+    display: block;
+    position: fixed;
+    left: -240px;
     top: 0;
     height: 100vh;
-    width: 200px;
+    width: 220px;
+    background: #fff;
     z-index: 9999;
-    background: white;
-    box-shadow: 2px 0 8px rgba(0,0,0,0.15);
-    padding-top: 10px;
-    flex-direction: column;
-    margin-bottom: 0;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+    padding: 10px;
+    transition: left 0.3s ease;
   }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .sidebar-toggle-btn {
+    display: block !important;
+  }
+
 
   /* Sidebar house nav layout on mobile */
   .house-nav {
@@ -430,7 +452,7 @@
 
 <div class="page">
   <!-- SIDEBAR: House quick jump -->
-  
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
   <aside class="sidebar">
   <h2 class="sidebar-title">Houses</h2>
   <div id="houseNav" class="house-nav"></div>
@@ -557,22 +579,33 @@
 </script>
   <script>
 document.addEventListener("DOMContentLoaded", () => {
-  const sidebar = document.querySelector(".sidebar");
-  const btn = document.getElementById("toggleSidebarBtn");
 
-  sidebar.style.display = "none";
+  const sidebar = document.querySelector(".sidebar");
+  const overlay = document.getElementById("sidebarOverlay");
+  const btn     = document.getElementById("toggleSidebarBtn");
+
+  function openSidebar() {
+    sidebar.classList.add("open");
+    overlay.style.display = "block";
+    document.body.style.overflow = "hidden";   // lock scroll
+  }
+
+  function closeSidebar() {
+    sidebar.classList.remove("open");
+    overlay.style.display = "none";
+    document.body.style.overflow = "auto";     // unlock scroll
+  }
 
   btn.addEventListener("click", () => {
-
-    if (window.innerWidth <= 768) {
-      sidebar.style.display =
-        sidebar.style.display === "block" ? "none" : "block";
-      return;
+    if (sidebar.classList.contains("open")) {
+      closeSidebar();
+    } else {
+      openSidebar();
     }
-
-    sidebar.style.display =
-      sidebar.style.display === "block" ? "none" : "block";
   });
+
+  overlay.addEventListener("click", closeSidebar);
+
 });
 </script>
 <script src="script.js"></script>
