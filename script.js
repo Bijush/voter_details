@@ -380,8 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
   backToTop.onclick = () =>
     window.scrollTo({ top: 0, behavior: "smooth" });
   
-backToTop.onclick = () =>
-    window.scrollTo({ top: 0, behavior: "smooth" });
+
 
   // ----------------------------
   // DUPLICATE BYP JUMP SYSTEM
@@ -422,4 +421,4 @@ backToTop.onclick = () =>
   });
 
 });
-});
+
