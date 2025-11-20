@@ -303,6 +303,7 @@
   }
 
   /* Back to top */
+  
   #backToTop {
     position: fixed;
     right: 14px;
@@ -318,6 +319,7 @@
   }
 
   /* Mobile tweaks */
+  /*
   @media (max-width: 768px) {
     .page {
       flex-direction: column;
@@ -345,6 +347,7 @@
       margin: 0 -4px 8px;
     }
   }
+  */
   .sidebar-toggle-btn {
   height: 40px;
   margin-top: 8px;
@@ -366,6 +369,7 @@
 }
 
 /* Mobile - hide sidebar & button if needed */
+  /*
 @media (max-width: 768px) {
   .sidebar {
     display: none !important;
@@ -374,6 +378,53 @@
     display: none;
   }
 }
+  */
+  @media (max-width: 768px) {
+  .page {
+    flex-direction: column;
+    padding: 8px;
+  }
+
+  /* Sidebar mobile behaviour */
+  .sidebar {
+    display: none !important;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 200px;
+    z-index: 9999;
+    background: white;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+    padding-top: 10px;
+    flex-direction: column;
+    margin-bottom: 0;
+  }
+
+  /* Sidebar house nav layout on mobile */
+  .house-nav {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    max-height: calc(100vh - 50px);
+    overflow-y: auto;
+  }
+
+  /* Sidebar buttons remain compact */
+  .house-nav-item {
+    width: 100%;
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  .sticky-header {
+    margin: 0 -4px 8px;
+  }
+
+  /* Sidebar toggle BUTTON — ALWAYS visible on mobile */
+  .sidebar-toggle-btn {
+    display: block !important;
+  }
+  }
 </style>
 </head>
 
