@@ -397,6 +397,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const card = badge.closest(".card");
       if (card) duplicateJumpList.push(card);
     });
+    updateDupButtonVisibility();
   }
 
   // Override renderResults to collect duplicates each time it updates
@@ -419,6 +420,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
     duplicateJumpIndex = (duplicateJumpIndex + 1) % duplicateJumpList.length;
   });
+// ----------------------------
+// FLOATING DUPLICATE BUTTON
+// ----------------------------
+function updateDupButtonVisibility() {
+  const btn = document.getElementById("dupJumpBtn");
+  if (duplicateJumpList.length > 0) {
+    btn.style.display = "block";
+  } else {
+    btn.style.display = "none";
+  }
+}
 
+// Floating button click → next duplicate
+document.getElementById("dupJumpBtn").addEventListener("click", () => {
+  if (!duplicateJumpList.length) return;
+
+  const el = duplicateJumpList[duplicateJumpIndex];
+
+  el.scrollIntoView({ behavior: "smooth", block: "center" });
+  el.style.boxShadow = "0 0 0 3px #f97316";
+
+  setTimeout(() => (el.style.boxShadow = ""), 1500);
+
+  duplicateJumpIndex = (duplicateJumpIndex + 1) % duplicateJumpList.length;
+});
 });
 
