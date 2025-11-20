@@ -481,5 +481,28 @@ function setupDuplicateCardClicks() {
     });
   });
 }
+// ----------------------------
+// SIDEBAR TOGGLE SYSTEM
+// ----------------------------
+const sidebar = document.querySelector(".sidebar");
+const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
+
+// Default hidden
+sidebar.classList.add("sidebar-hidden");
+
+toggleSidebarBtn.addEventListener("click", () => {
+  const isHidden = sidebar.classList.contains("sidebar-hidden");
+
+  if (isHidden) {
+    sidebar.classList.remove("sidebar-hidden");
+    sidebar.classList.add("sidebar-visible");
+    toggleSidebarBtn.textContent = "✖ Close";
+  } else {
+    sidebar.classList.add("sidebar-hidden");
+    sidebar.classList.remove("sidebar-visible");
+    toggleSidebarBtn.textContent = "☰ Houses";
+  }
+});
+  
 });
 
