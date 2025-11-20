@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Polling Station 86</title>
+<title>Polling Station 87</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
@@ -46,7 +46,7 @@
     border: 1px solid var(--border-soft);
     padding: 8px 6px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-    display:none;
+    display: none;
   }
 
   .sidebar-title {
@@ -345,6 +345,35 @@
       margin: 0 -4px 8px;
     }
   }
+  .sidebar-toggle-btn {
+  height: 40px;
+  margin-top: 8px;
+  margin-left: 5px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 13px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.10);
+}
+
+.sidebar-hidden {
+  display: none !important;
+}
+.sidebar-visible {
+  display: block !important;
+}
+
+/* Mobile - hide sidebar & button if needed */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none !important;
+  }
+  .sidebar-toggle-btn {
+    display: none;
+  }
+}
 </style>
 </head>
 
@@ -352,15 +381,18 @@
 
 <div class="page">
   <!-- SIDEBAR: House quick jump -->
+  
   <aside class="sidebar">
-    <h2 class="sidebar-title">Houses</h2>
-    <div id="houseNav" class="house-nav"></div>
-  </aside>
+  <h2 class="sidebar-title">Houses</h2>
+  <div id="houseNav" class="house-nav"></div>
+</aside>
+
+<button id="toggleSidebarBtn" class="sidebar-toggle-btn">☰ Houses</button>
 
   <!-- MAIN -->
   <main class="main">
     <div class="card-main">
-      <h1>Polling Station 86</h1>
+      <h1>Polling Station 87</h1>
       <div class="subtitle">Smart voter list with search, filters & family view</div>
 
       <!-- Sticky glass header -->
@@ -472,7 +504,7 @@
   </button>
 
 <script>
-  window.PS_JSON = "data/ps86.json";
+  window.PS_JSON = "data/ps87.json";
 </script>
 <script src="script.js"></script>
 
