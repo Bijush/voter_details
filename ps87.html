@@ -557,6 +557,26 @@
 <script>
   window.PS_JSON = "data/ps87.json";
 </script>
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const sidebar = document.querySelector(".sidebar");
+  const btn = document.getElementById("toggleSidebarBtn");
+
+  sidebar.style.display = "none";
+
+  btn.addEventListener("click", () => {
+
+    if (window.innerWidth <= 768) {
+      sidebar.style.display =
+        sidebar.style.display === "block" ? "none" : "block";
+      return;
+    }
+
+    sidebar.style.display =
+      sidebar.style.display === "block" ? "none" : "block";
+  });
+});
+</script>
 <script src="script.js"></script>
 
 </body>
