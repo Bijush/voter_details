@@ -307,36 +307,7 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.25);
   }
 
-  /* Mobile tweaks */
-  /*
-  @media (max-width: 768px) {
-    .page {
-      flex-direction: column;
-      padding: 8px;
-    }
-    .sidebar {
-      width: 100%;
-      position: static;
-      display: none !important;
-      flex-direction: column;
-      margin-bottom: 8px;
-    }
-    .house-nav {
-      flex-direction: row;
-      flex-wrap: wrap;
-      max-height: none;
-    }
-    .house-nav-item {
-      flex: 0 0 auto;
-      width: auto;
-      padding: 4px 8px;
-      font-size: 11px;
-    }
-    .sticky-header {
-      margin: 0 -4px 8px;
-    }
-  }
-  */
+  
   .sidebar-toggle-btn {
   height: 40px;
   margin-top: 8px;
@@ -355,35 +326,12 @@
   display: block !important;
 }
 
-/* Mobile - hide sidebar & button if needed */
-  /*
-@media (max-width: 768px) {
-  .sidebar {
-    display: none !important;
-  }
-  .sidebar-toggle-btn {
-    display: none;
-  }
-}
-  */
+
 
 
 
   /* ───────────── DESKTOP SIDEBAR ───────────── */
-  /*
-.sidebar {
-  width: 80px;
-  position: sticky;
-  top: 8px;
-  align-self: flex-start;
-  background: rgba(255,255,255,0.9);
-  border-radius: 14px;
-  border: 1px solid var(--border-soft);
-  padding: 8px 6px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-  display: block;
-}
-*/
+  
 .sidebar-overlay {
   display: none;
 }
@@ -401,70 +349,7 @@
   /* MOBILE SIDEBAR */
 
   
-/*
-  .sidebar-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.35);
-    backdrop-filter: blur(2px);
-    display: none;
-    z-index: 9998;
-  }
 
-  .sidebar {
-    display: block;
-    position: fixed;
-    left: -240px;
-    top: 0;
-    height: 100vh;
-    width: 220px;
-    background: #fff;
-    z-index: 9999;
-    box-shadow: 2px 0 8px rgba(0,0,0,0.2);
-    padding: 10px;
-    transition: left 0.3s ease;
-  }
-
-  .sidebar.open {
-    left: 0;
-  }
-
-
-  .sidebar-toggle-btn {
-    display: block !important;
-  }
-
-
-  /* Sidebar house nav layout on mobile */
-    /*
-  .house-nav {
-    flex-direction: column;
-    flex-wrap: nowrap;
-    max-height: calc(100vh - 50px);
-    overflow-y: auto;
-  }
-
-  /* Sidebar buttons remain compact */
-    /*
-  .house-nav-item {
-    width: 100%;
-    padding: 6px 8px;
-    font-size: 12px;
-  }
-
-  .sticky-header {
-    margin: 0 -4px 8px;
-  }
-
-  /* Sidebar toggle BUTTON — ALWAYS visible on mobile */
-    /*
-  .sidebar-toggle-btn {
-    display: block !important;
-  }
-    */
     /* Overlay */
   .sidebar-overlay {
     position: fixed;
