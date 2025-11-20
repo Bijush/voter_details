@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Polling Station 87</title>
+<title>Polling Station 86</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
@@ -393,6 +393,31 @@
     display: block !important;
   }
   }
+  /* Close button inside mobile sidebar */
+.sidebar-close-btn {
+  display: none;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: #efefef;
+  border: 1px solid var(--border-soft);
+  font-size: 18px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 30px;
+}
+
+/* On mobile show it */
+@media (max-width: 768px) {
+  .sidebar-close-btn {
+    display: flex;
+  }
+}
 </style>
 </head>
 
@@ -401,7 +426,9 @@
 <div class="page">
   <!-- SIDEBAR: House quick jump -->
   <div id="sidebarOverlay" class="sidebar-overlay"></div>
+  
   <aside class="sidebar">
+  <button class="sidebar-close-btn">✖</button>
   <h2 class="sidebar-title">Houses</h2>
   <div id="houseNav" class="house-nav"></div>
 </aside>
@@ -411,7 +438,7 @@
   <!-- MAIN -->
   <main class="main">
     <div class="card-main">
-      <h1>Polling Station 87</h1>
+      <h1>Polling Station 86</h1>
       <div class="subtitle">Smart voter list with search, filters & family view</div>
 
       <!-- Sticky glass header -->
@@ -523,7 +550,7 @@
   </button>
 
 <script>
-  window.PS_JSON = "data/ps87.json";
+  window.PS_JSON = "data/ps86.json";
 </script>
   <script>
 document.addEventListener("DOMContentLoaded", () => {
@@ -531,6 +558,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const sidebar = document.querySelector(".sidebar");
   const overlay = document.getElementById("sidebarOverlay");
   const btn     = document.getElementById("toggleSidebarBtn");
+  const closeBtn = document.querySelector(".sidebar-close-btn");
 
   function openSidebar() {
     sidebar.classList.add("open");
@@ -551,7 +579,7 @@ document.addEventListener("DOMContentLoaded", () => {
       openSidebar();
     }
   });
-
+closeBtn.addEventListener("click", closeSidebar);
   overlay.addEventListener("click", closeSidebar);
 
 });
