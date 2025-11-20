@@ -379,5 +379,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
   backToTop.onclick = () =>
     window.scrollTo({ top: 0, behavior: "smooth" });
+  
+backToTop.onclick = () =>
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
+  // ----------------------------
+  // DUPLICATE BYP JUMP SYSTEM
+  // ----------------------------
+  let duplicateJumpList = [];
+  let duplicateJumpIndex = 0;
+
+  // Build the list of duplicate items after rendering results
+  function collectDuplicateCards() {
+    duplicateJumpList = [];
+    duplicateJumpIndex = 0;
+
+    document.querySelectorAll(".dup-badge").forEach(badge => {
+      const card = badge.closest(".card");
+      if (card) duplicateJumpList.push(card);
+    });
+  }
+
+  // Override renderResults to collect duplicates each time it updates
+  const originalRenderResults = renderResults;
+  renderResults = function(list) {
+    originalRenderResults(list);
+    collectDuplicateCards(); 
+  };
+
+  // Click duplicate stat → jump one by one
+  statDup.addEventListener("click", () => {
+    if (!duplicateJumpList.length) return;
+
+    const el = duplicateJumpList[duplicateJumpIndex];
+
+    el.scrollIntoView({ behavior: "smooth", block: "center" });
+    el.style.boxShadow = "0 0 0 3px #f97316";
+
+    setTimeout(() => (el.style.boxShadow = ""), 1500);
+
+    duplicateJumpIndex = (duplicateJumpIndex + 1) % duplicateJumpList.length;
+  });
+
+});
 });
