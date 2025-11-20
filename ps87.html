@@ -366,6 +366,29 @@
   }
 }
   */
+
+
+
+  /* ───────────── DESKTOP SIDEBAR ───────────── */
+.sidebar {
+  width: 80px;
+  position: sticky;
+  top: 8px;
+  align-self: flex-start;
+  background: rgba(255,255,255,0.9);
+  border-radius: 14px;
+  border: 1px solid var(--border-soft);
+  padding: 8px 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  display: block;
+}
+
+.sidebar-overlay {
+  display: none;
+}
+
+/* ───────────── MOBILE SIDEBAR ───────────── */
+
   @media (max-width: 768px) {
   .page {
     flex-direction: column;
@@ -376,7 +399,7 @@
   /* MOBILE SIDEBAR */
 
   
-
+/*
   .sidebar-overlay {
     position: fixed;
     top: 0;
@@ -414,6 +437,7 @@
 
 
   /* Sidebar house nav layout on mobile */
+    /*
   .house-nav {
     flex-direction: column;
     flex-wrap: nowrap;
@@ -422,6 +446,7 @@
   }
 
   /* Sidebar buttons remain compact */
+    /*
   .house-nav-item {
     width: 100%;
     padding: 6px 8px;
@@ -433,6 +458,50 @@
   }
 
   /* Sidebar toggle BUTTON — ALWAYS visible on mobile */
+    /*
+  .sidebar-toggle-btn {
+    display: block !important;
+  }
+    */
+    /* Overlay */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(2px);
+    display: none;
+    z-index: 9998;
+  }
+
+  /* Mobile drawer version */
+  .sidebar {
+    position: fixed;
+    left: -240px;     /* Hidden initially */
+    top: 0;
+    height: 100vh;
+    width: 220px;
+    background: #fff;
+    z-index: 9999;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+    padding: 10px;
+    transition: left 0.3s ease;
+    display: block;
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  /* House list styling same */
+  .house-nav {
+    max-height: calc(100vh - 50px);
+    overflow-y: auto;
+  }
+
+  /* Show button */
   .sidebar-toggle-btn {
     display: block !important;
   }
