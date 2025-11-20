@@ -398,6 +398,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (card) duplicateJumpList.push(card);
     });
     updateDupButtonVisibility();
+    setupDuplicateCardClicks();
   }
 
   // Override renderResults to collect duplicates each time it updates
@@ -445,5 +446,40 @@ document.getElementById("dupJumpBtn").addEventListener("click", () => {
 
   duplicateJumpIndex = (duplicateJumpIndex + 1) % duplicateJumpList.length;
 });
+  // ----------------------------
+// CLICK DUPLICATE CARD → JUMP NEXT DUPLICATE
+// ----------------------------
+function setupDuplicateCardClicks() {
+  const bypGroups = {};
+
+  // Build groups based on BYP numbers
+  duplicateJumpList.forEach(card => {
+    const bypLine = card.querySelector("p:nth-child(4)");
+    if (!bypLine) return;
+
+    const raw = bypLine.textContent.replace("BYP:", "").trim();
+    if (!bypGroups[raw]) bypGroups[raw] = [];
+    bypGroups[raw].push(card);
+  });
+
+  // Add click listeners to each duplicate member
+  Object.keys(bypGroups).forEach(byp => {
+    const group = bypGroups[byp];
+
+    group.forEach((card, index) => {
+      card.addEventListener("click", () => {
+        if (group.length <= 1) return;
+
+        const nextIndex = (index + 1) % group.length;
+        const nextCard = group[nextIndex];
+
+        nextCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        nextCard.style.boxShadow = "0 0 0 3px #f97316";
+
+        setTimeout(() => (nextCard.style.boxShadow = ""), 1500);
+      });
+    });
+  });
+}
 });
 
