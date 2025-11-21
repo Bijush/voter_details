@@ -1,7 +1,7 @@
 {
-  "house_00": [
+  "house_183": [
     {
-      "serial": 2,
+      "serial": 1,
       "name": "Jamona Bai",
       "father": null,
       "husband": "Sanjay Roy",
@@ -13,7 +13,7 @@
 
   "house_1": [
     {
-      "serial": 3,
+      "serial": 2,
       "name": "Nirod Das",
       "father": "Rajindra Das",
       "husband": null,
@@ -22,14 +22,33 @@
       "byp": "BYP1484566"
     },
     {
-      "serial": 4,
+      "serial": 3,
       "name": "Chandan Das",
       "father": "Nirod Das",
       "husband": null,
       "age": 40,
       "gender": "Male",
       "byp": "BYP1484588"
+    },
+    {
+      "serial": 4,
+      "name": " Miaha Rani Das",
+      "father": "Chandan Das",
+      "husband": null,
+      "age": 35,
+      "gender": "Female",
+      "byp": "BYP1484602"
+    },
+    {
+      "serial": 5,
+      "name": "Rumi Rani Das",
+      "father": "Nirod Das",
+      "husband": null,
+      "age": 32,
+      "gender": "Female",
+      "byp": "BYP1484599"
     }
+    
   ],
 
   "house_2": [
@@ -40,7 +59,7 @@
       "husband": "Shuklal Das",
       "age": 69,
       "gender": "Female",
-      "byp": "BYP1484602"
+      "byp": "BYP1484635"
     },
     {
       "serial": 7,
@@ -70,14 +89,43 @@
       "byp": "BYP1484668"
     },
     {
+      "serial": 10,
+      "name": "Jolal Uddin Laskar",
+      "father": "Moyna Mia Laskar",
+      "husband": null,
+      "age": 37,
+      "gender": "Male",
+      "byp": "BYP1484624"
+    },
+    
+    {
+      "serial": 11,
+      "name": "Pranati Rani Das",
+      "father": "",
+      "husband": null,
+      "age": 36,
+      "gender": "Female",
+      "byp": "BYP1484613"
+    },
+    {
       "serial": 12,
       "name": "Sampa Das",
       "father": null,
       "husband": "Kiron Das",
       "age": 35,
       "gender": "Female",
-      "byp": "BYP1484624"
+      "byp": "BYP0545970"
     },
+    {
+      "serial": 13,
+      "name": "Puja Das",
+      "father": null,
+      "husband": "Mison Das",
+      "age": 27,
+      "gender": "Female",
+      "byp": "BYP1806322"
+    },
+    
     {
       "serial": 14,
       "name": "Ruma Das",
@@ -94,7 +142,7 @@
       "husband": null,
       "age": 19,
       "gender": "Male",
-      "byp": "BYP1806322"
+      "byp": "WJW0035659"
     }
   ],
 
@@ -106,25 +154,53 @@
       "husband": "Anowar Uddin Laskar",
       "age": 31,
       "gender": "Female",
-      "byp": "BYP1484613"
+      "byp": "BYP0009790"
     }
   ],
 
   "house_3": [
+   {
+      "serial": 17,
+      "name": "Shanku Namashudra",
+      "father": "Rangalal Namasudra",
+      "husband": null,
+      "age": 41,
+      "gender": "Male",
+      "byp": "BYP1484679"
+    },
+    {
+      "serial": 18,
+      "name": "Chaya Namashudra",
+      "father": "Rangalal Namasudra",
+      "husband": null,
+      "age": 37,
+      "gender": "Female",
+      "byp": "BYP1484691"
+    },
+   
     {
       "serial": 19,
       "name": "Kalpana Namashudra",
       "father": null,
-      "husband": "Solok Namashudra",
+      "husband": "Sanku Namashudra",
       "age": 37,
       "gender": "Female",
-      "byp": "BYP0009790"
+      "byp": "BYP1755915"
+    },
+     {
+      "serial": 20,
+      "name": "Pinku Namashudra",
+      "father": "Rangalal Namasudra",
+      "husband": null,
+      "age": 34,
+      "gender": "Male",
+      "byp": "BYP1484704"
     },
     {
       "serial": 21,
       "name": "Kaushalya Namashudra",
       "father": null,
-      "husband": "Pindhu Namashudra",
+      "husband": "Pinku Namashudra",
       "age": 30,
       "gender": "Female",
       "byp": "BYP0177444"
@@ -140,7 +216,7 @@
       "husband": null,
       "age": 30,
       "gender": "Male",
-      "byp": "BYP1484679"
+      "byp": "ΒΥΡ0009791"
     },
     {
       "serial": 23,
@@ -159,19 +235,19 @@
       "serial": 24,
       "name": "Atula Bala Namashudra",
       "father": null,
-      "husband": "Bondho Namashudra",
+      "husband": "Bonko Namashudra",
       "age": 69,
-           "gender": "Female",
+      "gender": "Female",
       "byp": "BYP0545970"
     },
     {
       "serial": 25,
       "name": "Babul Namashudra",
-      "father": "Bondho Namashudra",
+      "father": "Bonko Namashudra",
       "husband": null,
       "age": 56,
       "gender": "Male",
-      "byp": "BYP1484715"
+      "byp": "BYP1484726"
     },
     {
       "serial": 26,
@@ -180,25 +256,25 @@
       "husband": "Babul Namashudra",
       "age": 48,
       "gender": "Female",
-      "byp": "BYP1484726"
+      "byp": "BYP1484737"
     },
     {
       "serial": 27,
       "name": "Bakul Namashudra",
-      "father": "Bondho Namashudra",
+      "father": "Bonko Namashudra",
       "husband": null,
       "age": 42,
       "gender": "Male",
-      "byp": "BYP1484737"
+      "byp": "BYP1484748"
     },
     {
       "serial": 28,
       "name": "Bijon Namashudra",
-      "father": "Bondho Namashudra",
+      "father": "Bonko Namashudra",
       "husband": null,
       "age": 40,
       "gender": "Male",
-      "byp": "BYP1484748"
+      "byp": "BYP1484759"
     },
     {
       "serial": 29,
@@ -207,7 +283,7 @@
       "husband": "Bijon Namashudra",
       "age": 36,
       "gender": "Female",
-      "byp": "BYP1484759"
+      "byp": "BYP0410969"
     },
     {
       "serial": 30,
@@ -216,11 +292,284 @@
       "husband": "Bakul Namashudra",
       "age": 33,
       "gender": "Female",
-      "byp": "BYP0410969"
+      "byp": "BYP0529230"
+    },
+    
+    {
+
+      "serial": 31,
+      "name": "Safia Khatun Laskar",
+      "father": "Abdul Jabbar Laskar",
+      "age": 30,
+      "gender": "Female",
+      "byp": "BYP0009792"
+    },
+    {
+      "serial": 32,
+      "name": "Rohit Namashudra",
+      "father": "Babul Namashudra",
+      "age": 24,
+      "gender": "Male",
+      "byp": "BYP0472209"
     }
   ],
 
+  "house_4K": [
+    {
+      "serial": 34,
+      "name": "Bimal Namashudra",
+      "father": "Bondho Namashudra",
+      "age": 49,
+      "gender": "Male",
+      "byp": "BYP1484760"
+    },
+    {
+      "serial": 33,
+      "name": "Chayan Namashudra",
+      "father": "Bimal Namashudra",
+      "age": 19,
+      "gender": "Male",
+      "byp": "WJW0035691"
+    },
+    {
+      "serial": 35,
+      "name": "Shantana Namashudra",
+      "husband": "Bimal Namashudra",
+      "age": 39,
+      "gender": "Female",
+      "byp": "BYP0009793"
+    }
+  ],
+
+  "house_5": [
+    {
+      "serial": 37,
+      "name": "Ratna Namashudra",
+      "husband": "Manik Namashudra",
+      "age": 49,
+      "gender": "Female",
+      "byp": "ΒΥΡ1484793"
+    },
+    {
+      "serial": 36,
+      "name": "Manik Namashudra",
+      "father": "Ambika Namashudra",
+      "age": 54,
+      "gender": "Male",
+      "byp": "BYP1484782"
+    },
+     {
+      "serial": 40,
+      "name": "Sumit Namashudra",
+      "father": "Manik Namashudra",
+      "age": 54,
+      "gender": "Male",
+      "byp": "BYP1845650"
+    },
+    
+  ],
+
+  "house_5K": [
+    {
+      "serial": 41,
+      "name": "Anita Roy",
+      "husband": "Mintu Namashudra",
+      "age": 19,
+      "gender": "Female",
+      "byp": "WJW0023523"
+    },
+    {
+      "serial": 42,
+      "name": "Amit Kumar Namashudra",
+      "father": "Min Namashudra",
+      "age": 22,
+      "gender": "Male",
+      "byp": "BYP0177055"
+    },
+    {
+      "serial": 43,
+      "name": "Moni Namashudra",
+      "father": "Ambika Namashudra",
+      "age": 51,
+      "gender": "Male",
+      "byp": "BYP1484839"
+    },
+    {
+      "serial": 44,
+      "name": "Shipra Namashudra",
+      "husband": "Moni Namashudra",
+      "age": 47,
+      "gender": "Female",
+      "byp": "BYP1484840"
+    }
+  ],
+  
+  "house_5KH":[
+        {
+      "serial": 38,
+      "name": "Kamendra Namashudra",
+      "father": "Manik Namashudra",
+      "age": 32,
+      "gender": "Male",
+      "byp": "BYP1484817"
+    },
+    {
+      "serial": 39,
+      "name": "Sushmita Namashudra",
+      "husband": "Kamendra Namashudra",
+      "age": 24,
+      "gender": "Female",
+      "byp": "BYP0470047"
+    }
+  ],
+
+  "house_6": [
+   {
+      "serial": 45,
+      "name": "Sima Namashudra",
+      "father": null,
+      "husband":"Bappon Namasudra "
+      "age": 31,
+      "gender": "Female",
+      "byp": "BYP0177022"
+    },
+    {
+      "serial": 46,
+      "name": "Bappon Namashudra",
+      "father": "Sukumar Namashudra",
+      "age": 30,
+      "gender": "Male",
+      "byp": "BYP0177055"
+    }
+  ],
+
+  "house_6K": [
+    {
+      "serial": 49,
+      "name": "Balai Namashudra",
+      "father": "Kushal Namashudra",
+      "age": 45,
+      "gender": "Male",
+      "byp": null
+    },
+    {
+      "serial": 47,
+      "name": "Babul Namashudra",
+      "father": "Balai Namashudra",
+      "age": 22,
+      "gender": "Male",
+      "byp": "BYP1812361"
+    },
+    {
+      "serial": 50,
+      "name": "Moyna Namashudra",
+      "husband": "Sukumar Namashudra",
+      "age": 44,
+      "gender": "Female",
+      "byp": "BYP1484908"
+    },
+    {
+      "serial": 48,
+      "name": "Ani Namashudra",
+      "husband": "Balai Namashudra",
+      "age": 53,
+      "gender": "Female",
+      "byp": "BYP1484873"
+    },
+    {
+      "serial": 51,
+      "name": "Jhantu Namashudra",
+      "father": "Sukumar Namashudra",
+      "age": 29,
+      "gender": "Male",
+      "byp": "BYP1484920"
+    }
+  ],
+
+  "house_7": [
+    {
+      "serial": 52,
+      "name": "Geeta Rani Roy",
+      "husband": "Bidhan Roy",
+      "age": 59,
+      "gender": "Female",
+      "byp": "BYP1484793"
+    },
+    {
+      "serial": 53,
+      "name": "Manoranjan Roy",
+      "father": "Bidhan Roy",
+      "age": 41,
+      "gender": "Male",
+      "byp": "BYP1484920"
+    },
+    {
+      "serial": 54,
+      "name": "Sanjay Roy",
+      "father": "Bidhan Roy",
+      "age": 29,
+      "gender": "Male",
+      "byp": "BYP0009794"
+    }
+  ],
+
+  "house_7K": [
+    {
+      "serial": 55,
+      "name": "Monoranjan Roy",
+      "father": "Bidhan Roy",
+      "age": 42,
+      "gender": "Male",
+      "byp": "BYP0327643"
+    }
+    ],
+    
+    "house_7KH"[
+    {
+      "serial": 56,
+      "name": "Niranjan Roy",
+      "father": "Bidhan Roy",
+      "age": 43,
+      "gender": "Male",
+      "byp": "BYP1484919"
+    },
+    {
+      "serial": 57,
+      "name": "Chandana Roy",
+      "husband": "Niranjan Roy",
+      "age": 27,
+      "gender": "Female",
+      "byp": "BYP0170175"
+    }
+          
+    ],
+    
+
   "house_8": [
+    {
+      "serial": 58,
+      "name": "Sahadev Roy",
+      "father": "Kushal Roy",
+      "age": 53,
+      "gender": "Male",
+      "byp": "BYP1484953"
+    },
+    {
+      "serial": 59,
+      "name": "Reboti Roy",
+      "husband": "Sahadev Roy",
+      "age": 43,
+      "gender": "Female",
+      "byp": "BYP1484964"
+    },
+    {
+      "serial": 60,
+      "name": "Sujon Roy",
+      "father": "Sahadev Roy",
+      "age": 32,
+      "gender": "Male",
+      "byp": "BYP1484942"
+    },
     {
       "serial": 61,
       "name": "Karim Uddin",
@@ -228,6 +577,24 @@
       "husband": null,
       "age": 32,
       "gender": "Male",
+      "byp": "BYP0009797"
+    },
+    {
+      "serial": 62,
+      "name": "Sajiya Begum",
+      "father": null,
+      "husband": "Karim Uddin",
+      "age": 32,
+      "gender": "Female",
+      "byp": "BYP1952555"
+    },
+    {
+      "serial": 63,
+      "name": "Alim Uddin",
+      "father": "Abdul Gaffar",
+      "husband": null,
+      "age": 32,
+      "gender": "Female",
       "byp": "BYP0009796"
     },
     {
@@ -237,11 +604,40 @@
       "husband": null,
       "age": 30,
       "gender": "Female",
-      "byp": "BYP0009797"
+      "byp": "BYP1755722"
+    },
+    {
+      "serial": 65,
+      "name": "Brumar Roy",
+      "father": "Sahadev Roy",
+      "husband": null,
+      "age": 30,
+      "gender": "Male",
+      "byp": "BYP0272591"
     }
+    
   ],
 
   "house_9": [
+  
+  {
+      "serial": 66,
+      "name": "Pradip Deb",
+      "father": "Prahlad Deb",
+      "husband": null,
+      "age": 52,
+      "gender": "Male",
+      "byp": "BYP1484986"
+    },
+    {
+      "serial": 67,
+      "name": "Sandya Deb",
+      "father": null,
+      "husband": "Pradeep Deb",
+      "age": 42,
+      "gender": "Female",
+      "byp": "BYP0193623"
+    },
     {
       "serial": 68,
       "name": "Sintu Deb",
@@ -249,8 +645,10 @@
       "husband": null,
       "age": 40,
       "gender": "Male",
-      "byp": "BYP0193623"
+      "byp": "BYP1484997"
     },
+    
+    
     {
       "serial": 69,
       "name": "Pinki Deb",
@@ -258,11 +656,61 @@
       "husband": "Sintu Deb",
       "age": 31,
       "gender": "Female",
-      "byp": "BYP1484997"
+      "byp": "BYP0282640"
+    },
+    {
+      "serial": 70,
+      "name": "Pappu Deb",
+      "father": "Pradeep Deb",
+      "husband":null ,
+      "age": 30,
+      "gender": "Male",
+      "byp": "BYP1755642"
+    },
+    {
+      "serial": 71,
+      "name": "Minakki Deb",
+      "father": "Pradeep Deb",
+      "husband":null ,
+      "age": 26,
+      "gender": "Female",
+      "byp": "BYP0356659"
     }
+    
   ],
+"house_9KO":[
+ {
+      "serial": 72,
+      "name": "Pinaki Shil",
+      "father": null,
+      "husband": "Rubel Shil",
+      "age": 30,
+      "gender": "Female",
+      "byp": "WJW0004523"
+    },
+    {
+      "serial": 73,
+      "name": "Samir Shil",
+      "father": "Rabindra Shil",
+      "husband":null",
+      "age": 25,
+      "gender": "Male",
+      "byp": "BYP1946680"
+    }
+      
+],
 
   "house_9K": [
+  {
+      "serial": 74,
+      "name": "Sanjaoy Shil",
+      "father": "Rabindra Shil",
+      "husband":null",
+      "age": 25,
+      "gender": "Male",
+      "byp": "BYP1946680"
+    },
+    
     {
       "serial": 76,
       "name": "Josna Shil",
@@ -281,15 +729,7 @@
       "gender": "Male",
       "byp": "BYP1485014"
     },
-    {
-      "serial": 77,
-      "name": "Dipali Shil",
-      "father": "Rabindra Shil",
-      "husband": null,
-      "age": 31,
-      "gender": "Female",
-      "byp": "BYP1485025"
-    },
+    
     {
       "serial": 78,
       "name": "Rubel Shil",
@@ -300,6 +740,17 @@
       "byp": "BYP1485036"
     }
   ],
+"house_9KH":[
+      {
+      "serial": 77,
+      "name": "Dipali Shil",
+      "father": "Rabindra Shil",
+      "husband": null,
+      "age": 31,
+      "gender": "Female",
+      "byp": "BYP0009798"
+    }
+],
 
   "house_10": [
     {
@@ -312,13 +763,22 @@
       "byp": "BYP1485036"
     },
     {
-      "serial": 81,
+      "serial": 80,
       "name": "Jayanta Namashudra",
       "father": "Sonamani Namashudra",
       "husband": null,
       "age": 36,
       "gender": "Male",
       "byp": "BYP0009799"
+    },
+     {
+      "serial": 81,
+      "name": "Alom Hussain Barbhuiya",
+      "father": "Abid Raja Barbhuiya",
+      "husband": null,
+      "age": 33,
+      "gender": "Male",
+      "byp": "BYP0009800"
     },
     {
       "serial": 82,
@@ -382,7 +842,7 @@
     },
     {
       "serial": 89,
-      "name": "Basanti Dey",
+      "name": "Basanti Deb",
       "father": null,
       "husband": "Ashish Deb",
       "age": 47,
