@@ -747,6 +747,7 @@
     }
   ],
 
+ 
   "house_58": [
     {
       "serial": 388,
@@ -771,6 +772,1057 @@
       "husband": "Ashish Kumar Roy",
       "age": 44,
       "gender": "Female"
+    },
+    {
+      "serial": 391,
+      "byp": "BYP1487112",
+      "name": "Mina Roy",
+      "husband": "Debashish Roy",
+      "age": 40,
+      "gender": "Female"
+    }
+  ],
+
+  "house_59": [
+    {
+      "serial": 392,
+      "byp": "BYP1487123",
+      "name": "Renubala Roy",
+      "husband": "Monmohan Roy",
+      "age": 64,
+      "gender": "Female"
+    },
+    {
+      "serial": 393,
+      "byp": "BYP1487134",
+      "name": "Jhontu Roy",
+      "father": "Monmohan Roy",
+      "age": 42,
+      "gender": "Male"
+    },
+    {
+      "serial": 394,
+      "byp": "BYP1487145",
+      "name": "Pintu Roy",
+      "father": "Monmohan Roy",
+      "age": 41,
+      "gender": "Male"
+    },
+    {
+      "serial": 395,
+      "byp": "BYP1487156",
+      "name": "Niyoti Roy",
+      "husband": "Pintu Roy",
+      "age": 40,
+      "gender": "Female"
+    },
+    {
+      "serial": 396,
+      "byp": "BYP1487167",
+      "name": "Mintu Roy",
+      "father": "Monmohan Roy",
+      "age": 39,
+      "gender": "Male"
+    },
+    {
+      "serial": 397,
+      "byp": "BYP1487178",
+      "name": "Mission Roy",
+      "father": "Monmohan Roy",
+      "age": 37,
+      "gender": "Male"
+    },
+    {
+      "serial": 398,
+      "byp": "BYP1785476",
+      "name": "Ratan Roy",
+      "father": "Monmohan Roy",
+      "age": 35,
+      "gender": "Male"
+    },
+    {
+      "serial": 399,
+      "byp": "BYP1487189",
+      "name": "Rakhee Roy",
+      "father": "Monmohan Roy",
+      "age": 34,
+      "gender": "Female"
+    },
+    {
+      "serial": 400,
+      "byp": "BYP1487190",
+      "name": "Minakshi Roy",
+      "father": "Ashwini Roy",
+      "age": 31,
+      "gender": "Female"
+    },
+    {
+      "serial": 401,
+      "byp": "BYP1487203",
+      "name": "Momota Biswas",
+      "husband": "Pintu Roy",
+      "age": 28,
+      "gender": "Female"
+    },
+    {
+      "serial": 402,
+      "byp": "BYP0181560",
+      "name": "Kajoli Roy",
+      "husband": "Jhontu Roy",
+      "age": 26,
+      "gender": "Female"
+    }
+  ],
+
+  "house_59K": [
+    {
+      "serial": 403,
+      "byp": "BYP1487214",
+      "name": "Nantu Roy",
+      "father": "Monmohan Roy",
+      "age": 44,
+      "gender": "Male"
+    },
+    {
+      "serial": 404,
+      "byp": "BYP1496497",
+      "name": "Shibani Roy",
+      "husband": "Nantu Roy",
+      "age": 43,
+      "gender": "Female"
+    }
+  ],
+
+  "house_60": [
+    {
+      "serial": 405,
+      "byp": "BYP2471662",
+      "name": "Nagendra Namashudra",
+      "father": "Narottam Namashudra",
+      "age": 51,
+      "gender": "Male"
+    },
+    {
+      "serial": 406,
+      "byp": "BYP1487225",
+      "name": "Kutu Namashudra",
+      "father": "Narottam Namashudra",
+      "age": 45,
+      "gender": "Male"
+    },
+    {
+      "serial": 407,
+      "byp": "BYP1487247",
+      "name": "Shanta Namashudra",
+      "husband": "Nagendra Namashudra",
+      "age": 32,
+      "gender": "Female"
+    }
+  ],
+
+  "house_60K": [
+    {
+      "serial": 408,
+      "byp": "WJW0084871",
+      "name": "Ajay Namashudra",
+      "father": "Nagendra Namashudra",
+      "age": 29,
+      "gender": "Male"
+    },
+    {
+      "serial": 409,
+      "byp": "BYP0181511",
+      "name": "Sujay Namashudra",
+      "father": "Nagendra Namashudra",
+      "age": 34,
+      "gender": "Male"
+    },
+    {
+      "serial": 410,
+      "byp": "BYP1495836",
+      "name": "Bijoy Namashudra",
+      "father": "Nagendra Namashudra",
+      "age": 34,
+      "gender": "Male"
+    },
+    {
+      "serial": 411,
+      "byp": "BYP1847326",
+      "name": "Nifa Rani Roy",
+      "husband": "Bijoy Namashudra",
+      "age": 33,
+      "gender": "Female"
+    }
+  ],
+
+  "house_61": [
+    {
+      "serial": 412,
+      "byp": "BYP1487258",
+      "name": "Nripendra Namashudra",
+      "father": "Narottam Namashudra",
+      "age": 54,
+      "gender": "Male"
+    },
+    {
+      "serial": 413,
+      "byp": "BYP0009832",
+      "name": "Anima Namashudra",
+      "husband": "Nripendra Namashudra",
+      "age": 51,
+      "gender": "Female"
+    },
+    {
+      "serial": 414,
+      "byp": "BYP1487269",
+      "name": "Nikhil Namashudra",
+      "father": "Nripendra Namashudra",
+      "age": 37,
+      "gender": "Male"
+    },
+    {
+      "serial": 415,
+      "byp": "BYP0413112",
+      "name": "Kokil Namashudra",
+      "father": "Nripendra Namashudra",
+      "age": 32,
+      "gender": "Male"
+    },
+    {
+      "serial": 416,
+      "byp": "WJW0034967",
+      "name": "Jolly Roy",
+      "husband": "Sushil Namashudra",
+      "age": 31,
+      "gender": "Female"
+    },
+    {
+      "serial": 417,
+      "byp": "BYP0530030",
+      "name": "Sushil Namashudra",
+      "father": "Nripendra Namashudra",
+      "age": 30,
+      "gender": "Male"
+    },
+    {
+      "serial": 418,
+      "byp": "BYP0348219",
+      "name": "Shampa Namasudra",
+      "husband": "Kokil Namasudra",
+      "age": 29,
+      "gender": "Female"
+    },
+    {
+      "serial": 419,
+      "byp": "BYP1495836",
+      "name": "Ratna Roy",
+      "husband": "Nikhil Namashudra",
+      "age": 28,
+      "gender": "Female"
+    },
+    {
+      "serial": 420,
+      "byp": "BYP1496497",
+      "name": "Shimbhu Namashudra",
+      "father": "Nripendra Namashudra",
+      "age": 25,
+      "gender": "Male"
+    }
+  ],
+  {
+  "house_62": [
+    {
+      "serial": 421,
+      "name": "Reenarani Roy",
+      "husband": "Hemanta Roy",
+      "age": 47,
+      "gender": "Female",
+      "byp": "BYP1487292"
+    },
+    {
+      "serial": 422,
+      "name": "Amit Roy",
+      "father": "Hemanta Roy",
+      "age": 30,
+      "gender": "Male",
+      "byp": "BYP0009834"
+    },
+    {
+      "serial": 423,
+      "name": "Rupan Roy",
+      "husband": "Ashit Roy",
+      "age": 33,
+      "gender": "Female",
+      "byp": "GGZ3141353"
+    }
+  ],
+
+  "house_62G": [
+    {
+      "serial": 424,
+      "name": "Shiben Roy",
+      "father": "Bhabananda Roy",
+      "age": 38,
+      "gender": "Male",
+      "byp": "BYP1487338"
+    }
+  ],
+
+  "house_62K": [
+    {
+      "serial": 425,
+      "name": "Subodh Roy",
+      "father": "Bhabananda Roy",
+      "age": 39,
+      "gender": "Male",
+      "byp": "BYP1487327"
+    },
+    {
+      "serial": 426,
+      "name": "Sumati Roy",
+      "husband": "Subodh Roy",
+      "age": 33,
+      "gender": "Female",
+      "byp": "BYP0529883"
+    }
+  ],
+
+  "house_62KO": [
+    {
+      "serial": 427,
+      "name": "Aparna Roy",
+      "husband": "Shiben Roy",
+      "age": 29,
+      "gender": "Female",
+      "byp": "FFW1717460"
+    }
+  ],
+
+  "house_62GH": [
+    {
+      "serial": 428,
+      "name": "Bhabananda Roy",
+      "father": "Dayal Roy",
+      "age": 61,
+      "gender": "Male",
+      "byp": "BYP1487305"
+    },
+    {
+      "serial": 429,
+      "name": "Beenarani Roy",
+      "husband": "Bhabananda Roy",
+      "age": 58,
+      "gender": "Female",
+      "byp": "BYP1487316"
+    },
+    {
+      "serial": 430,
+      "name": "Sudhan Roy",
+      "father": "Bhabananda Roy",
+      "age": 34,
+      "gender": "Male",
+      "byp": "BYP1487350"
+    }
+  ],
+
+  "house_63": [
+    {
+      "serial": 431,
+      "name": "Kunjalal Roy",
+      "father": "Baikuntha Roy",
+      "age": 57,
+      "gender": "Male",
+      "byp": "BYP1487394"
+    },
+    {
+      "serial": 432,
+      "name": "Tinku Roy",
+      "father": "Kumpal Roy",
+      "age": 38,
+      "gender": "Male",
+      "byp": "BYP1487383"
+    },
+    {
+      "serial": 433,
+      "name": "Pijush Roy",
+      "mother": "Kumpal Roy",
+      "age": 37,
+      "gender": "Male",
+      "byp": "BYP1487361"
+    },
+    {
+      "serial": 434,
+      "name": "Rakhee Roy",
+      "husband": "Pijush Roy",
+      "age": 22,
+      "gender": "Female",
+      "byp": "WJW0059238"
+    }
+  ],
+
+  "house_64": [
+    {
+      "serial": 435,
+      "name": "Bashistha Roy",
+      "father": "Bharat Roy",
+      "age": 51,
+      "gender": "Male",
+      "byp": "BYP1487407"
+    },
+    {
+      "serial": 436,
+      "name": "Banamala Roy",
+      "husband": "Bashistha Roy",
+      "age": 45,
+      "gender": "Female",
+      "byp": "BYP1487338"
+    }
+  ],
+
+  "house_65": [
+    {
+      "serial": 437,
+      "name": "Binod Roy",
+      "father": "Brajendra Roy",
+      "age": 61,
+      "gender": "Male",
+      "byp": "BYP1487429"
+    },
+    {
+      "serial": 438,
+      "name": "Bijon Roy",
+      "father": "Binod Roy",
+      "age": 26,
+      "gender": "Male",
+      "byp": "BYP0255786"
+    },
+    {
+      "serial": 439,
+      "name": "Sujay Roy",
+      "father": "Binod Roy",
+      "age": 25,
+      "gender": "Male",
+      "byp": "BYP0177584"
+    },
+    {
+      "serial": 440,
+      "name": "Bijaya Roy",
+      "father": "Binod Roy",
+      "age": 24,
+      "gender": "Female",
+      "byp": "BYP1951268"
+    },
+    {
+      "serial": 441,
+      "name": "Bappi Roy",
+      "husband": "Bijon Roy",
+      "age": 21,
+      "gender": "Female",
+      "byp": "BYP1871508"
+    }
+  ],
+
+  "house_66": [
+    {
+      "serial": 442,
+      "name": "Geeta Namashudra",
+      "husband": "Shanti Kumar Namashudra",
+      "age": 54,
+      "gender": "Female",
+      "byp": "BYP0301119"
+    },
+    {
+      "serial": 443,
+      "name": "Shanti Kumar Namashudra",
+      "father": "Sonamoni Namashudra",
+      "age": 52,
+      "gender": "Male",
+      "byp": "BYP1487452"
+    },
+    {
+      "serial": 444,
+      "name": "Diju Namashudra",
+      "father": "Shanti Kumar Namashudra",
+      "age": 27,
+      "gender": "Male",
+      "byp": "BYP1934231"
+    }
+  ],
+
+  "house_66K": [
+    {
+      "serial": 445,
+      "name": "Ranjan Kumar Namashudra",
+      "father": "Sonamoni Namashudra",
+      "age": 50,
+      "gender": "Male",
+      "byp": "BYP1487463"
+    },
+    {
+      "serial": 446,
+      "name": "Namita Namashudra",
+      "husband": "Ranjan Kumar Namashudra",
+      "age": 44,
+      "gender": "Female",
+      "byp": "BYP1487474"
+    },
+    {
+      "serial": 447,
+      "name": "Sanjay Kumar Roy",
+      "father": "Sonamoni Roy",
+      "age": 39,
+      "gender": "Male",
+      "byp": "BYP1487496"
+    }
+  ],
+
+  "house_67": [
+    {
+      "serial": 448,
+      "name": "Sanat Kumar Roy",
+      "father": "Sonamoni Namashudra",
+      "age": 64,
+      "gender": "Male",
+      "byp": "BYP1487485"
+    },
+    {
+      "serial": 449,
+      "name": "Shubhadhaani Roy",
+      "husband": "Sanat Kumar Roy",
+      "age": 58,
+      "gender": "Female",
+      "byp": "BYP1487441"
+    },
+    {
+      "serial": 450,
+      "name": "Bijush Kumar Roy",
+      "father": "Sanat Kumar Roy",
+      "age": 38,
+      "gender": "Male",
+      "byp": "BYP1487510"
+    },
+    {
+      "serial": 451,
+      "name": "Ranjit Roy",
+      "father": "Sanat Roy",
+      "age": 31,
+      "gender": "Male",
+      "byp": "BYP0009835"
+    },
+    {
+      "serial": 452,
+      "name": "Jayashree Roy",
+      "husband": "Bijus Kumar Roy",
+      "age": 24,
+      "gender": "Female",
+      "byp": "BYP1487509"
+    }
+  ],
+
+  "house_67K": [
+    {
+      "serial": 453,
+      "name": "Sujit Kumar Roy",
+      "father": "Sanat Roy",
+      "age": 37,
+      "gender": "Male",
+      "byp": "BYP1487521"
+    },
+    {
+      "serial": 454,
+      "name": "Jhuma Roy",
+      "husband": "Sujit Roy",
+      "age": 23,
+      "gender": "Female",
+      "byp": "BYP0278622"
+    }
+  ],
+
+  "house_68": [
+    {
+      "serial": 455,
+      "name": "Sukhendra Namashudra",
+      "father": "Sonamani Namashudra",
+      "age": 54,
+      "gender": "Male",
+      "byp": "BYP1964105"
+    },
+    {
+      "serial": 456,
+      "name": "Shilpana Namashudra",
+      "husband": "Sukhendra Namashudra",
+      "age": 48,
+      "gender": "Female",
+      "byp": "BYP1487554"
+    },
+    {
+      "serial": 457,
+      "name": "Pradeep Roy",
+      "father": "Bashistha Roy",
+      "age": 24,
+      "gender": "Male",
+      "byp": "BYP1964105"
+    }
+  ],
+
+  "house_69": [
+    {
+      "serial": 458,
+      "name": "Dhirendra Namashudra",
+      "father": "Rajani Namashudra",
+      "age": 64,
+      "gender": "Male",
+      "byp": "BYP1487587"
+    },
+    {
+      "serial": 459,
+      "name": "Borobala Namashudra",
+      "husband": "Dhirendra Namashudra",
+      "age": 59,
+      "gender": "Female",
+      "byp": "BYP0177311"
+    },
+    {
+      "serial": 460,
+      "name": "Kajoli Roy",
+      "husband": "Deepan Namashudra",
+      "age": 39,
+      "gender": "Female",
+      "byp": "WJW0069245"
+    },
+    {
+      "serial": 461,
+      "name": "Ripon Namashudra",
+      "father": "Dhirendra Namashudra",
+      "age": 38,
+      "gender": "Male",
+      "byp": "BYP1487601"
+    },
+    {
+      "serial": 462,
+      "name": "Shanku Namashudra",
+      "father": "Birendra Namashudra",
+      "age": 34,
+      "gender": "Male",
+      "byp": "BYP0009838"
+    },
+    {
+      "serial": 463,
+      "name": "Sujoy Rani Namashudra",
+      "husband": "Ripon Namashudra",
+      "age": 29,
+      "gender": "Female",
+      "byp": "BYP1487601"
+    },
+    {
+      "serial": 464,
+      "name": "Sangeeta Roy",
+      "husband": "Ripon Namashudra",
+      "age": 24,
+      "gender": "Female",
+      "byp": "WJW0012914"
+    }
+  ],
+
+  "house_69K": [
+    {
+      "serial": 465,
+      "name": "Deepan Namashudra",
+      "father": "Dhirendra Namashudra",
+      "age": 40,
+      "gender": "Male",
+      "byp": "BYP1487598"
+    }
+  ],
+
+  "house_70": [
+    {
+      "serial": 466,
+      "name": "Nagendra Namashudra",
+      "father": "Rajani Namashudra",
+      "age": 59,
+      "gender": "Male",
+      "byp": "BYP1487190"
+    },
+    {
+      "serial": 467,
+      "name": "Anjana Namashudra",
+      "husband": "Nagendra Namashudra",
+      "age": 54,
+      "gender": "Female",
+      "byp": "BYP1487678"
+    },
+    {
+      "serial": 468,
+      "name": "Bimal Namashudra",
+      "father": "Nagendra Namashudra",
+      "age": 34,
+      "gender": "Male",
+      "byp": "BYP1487576"
+    },
+    {
+      "serial": 469,
+      "name": "Amal Namashudra",
+      "father": "Nagendra Namashudra",
+      "age": 29,
+      "gender": "Male",
+      "byp": "BYP1487667"
+    }
+  ],
+
+  "house_71": [
+    {
+      "serial": 470,
+      "name": "Maloti Namashudra",
+      "husband": "Arun Namashudra",
+      "age": 68,
+      "gender": "Female",
+      "byp": "BYP1487689"
+    },
+    {
+      "serial": 471,
+      "name": "Shilu Namashudra",
+      "husband": "Debaraj Namashudra",
+      "age": 43,
+      "gender": "Female",
+      "byp": "BYP0009836"
+    },
+    {
+      "serial": 472,
+      "name": "Chintamoni Namashudra",
+      "father": "Arun Namashudra",
+      "age": 37,
+      "gender": "Male",
+      "byp": "BYP1486971"
+    },
+    {
+      "serial": 473,
+      "name": "Purnima Namashudra",
+      "husband": "Chintamoni Namashudra",
+      "age": 32,
+      "gender": "Female",
+      "byp": "BYP1976893"
+    },
+    {
+      "serial": 474,
+      "name": "Sujata Namashudra",
+      "father": "Debaraj Namashudra",
+      "age": 25,
+      "gender": "Female",
+      "byp": "BYP1487656"
+    },
+    {
+      "serial": 475,
+      "name": "Papita Namashudra",
+      "father": "Debaraj Namashudra",
+      "age": 21,
+      "gender": "Female",
+      "byp": "BYP1487612"
+    },
+    {
+      "serial": 476,
+      "name": "Priyotosh Namashudra",
+      "father": "Debaraj Namashudra",
+      "age": 21,
+      "gender": "Male",
+      "byp": "BYP1487623"
+    }
+  ],
+
+  "house_71K": [
+    {
+      "serial": 477,
+      "name": "Debaraj Namashudra",
+      "father": "Arun Namashudra",
+      "age": 47,
+      "gender": "Male",
+      "byp": "BYP1487667"
+    }
+  ],
+
+  "house_72": [
+    {
+      "serial": 478,
+      "name": "Sukhendra Namashudra",
+      "father": "Nityananda Namashudra",
+      "age": 48,
+      "gender": "Male",
+      "byp": "BYP1755868"
+    },
+    {
+      "serial": 479,
+      "name": "Jaba Namashudra",
+      "husband": "Sukhendra Namashudra",
+      "age": 44,
+      "gender": "Female",
+      "byp": "BYP1976968"
+    },
+    {
+      "serial": 480,
+      "name": "Sumitra Namashudra",
+      "father": "Sukhendra Namashudra",
+      "age": 21,
+      "gender": "Male",
+      "byp": "BYP1950963"
+    }
+  ],
+  
+  "house_72K": [
+    {
+      "serial": 481,
+      "name": "Bijol Namashudra",
+      "father": "Pulin Namashudra",
+      "age": 26,
+      "gender": "Male",
+      "byp": "BYP1976505"
+    },
+    {
+      "serial": 482,
+      "name": "Kajal Namashudra",
+      "father": "Pulin Namashudra",
+      "age": 35,
+      "gender": "Male",
+      "byp": "BYP0009839"
+    },
+    {
+      "serial": 483,
+      "name": "Sajal Namashudra",
+      "father": "Pulin Namashudra",
+      "age": 29,
+      "gender": "Male",
+      "byp": "BYP0117226"
+    }
+  ],
+
+  "house_73": [
+    {
+      "serial": 484,
+      "name": "Chandra Namashudra",
+      "father": "Nityananda Namashudra",
+      "age": 44,
+      "gender": "Male",
+      "byp": "BYP1487725"
+    },
+    {
+      "serial": 485,
+      "name": "Jaba Namashudra",
+      "husband": "Chandra Namashudra",
+      "age": 42,
+      "gender": "Female",
+      "byp": "BYP1487736"
+    },
+    {
+      "serial": 486,
+      "name": "Rinku Namashudra",
+      "father": "Chandra Namashudra",
+      "age": 26,
+      "gender": "Male",
+      "byp": "BYP0352187"
+    }
+  ],
+
+  "house_74": [
+    {
+      "serial": 487,
+      "name": "Kankalata Namashudra",
+      "husband": "Harendra Namashudra",
+      "age": 66,
+      "gender": "Female",
+      "byp": "BYP1487747"
+    },
+    {
+      "serial": 488,
+      "name": "Shukla Namashudra",
+      "husband": "Babul Namashudra",
+      "age": 41,
+      "gender": "Female",
+      "byp": "BYP0009840"
+    },
+    {
+      "serial": 489,
+      "name": "Jyotish Namashudra",
+      "father": "Harendra Namashudra",
+      "age": 40,
+      "gender": "Male",
+      "byp": "BYP1487758"
+    },
+    {
+      "serial": 490,
+      "name": "Rabindra Namashudra",
+      "father": "Harendra Namashudra",
+      "age": 35,
+      "gender": "Male",
+      "byp": "BYP0543652"
+    },
+    {
+      "serial": 491,
+      "name": "Priyotoma Namashudra",
+      "husband": "Rabindra Namashudra",
+      "age": 24,
+      "gender": "Female",
+      "byp": "BYP1922087"
+    }
+  ],
+
+  "house_74K": [
+    {
+      "serial": 492,
+      "name": "Ruby Namashudra",
+      "husband": "Jyotish Namashudra",
+      "age": 24,
+      "gender": "Female",
+      "byp": "BYP1487769"
+    }
+  ],
+
+  "house_74KH": [
+    {
+      "serial": 493,
+      "name": "Ruby Namashudra",
+      "husband": "Jyotish Namashudra",
+      "age": 24,
+      "gender": "Female",
+      "byp": "BYP1487769"
+    }
+  ],
+
+  "house_75": [
+    {
+      "serial": 494,
+      "name": "Ranjit Namashudra",
+      "father": "Romesh Namashudra",
+      "age": 62,
+      "gender": "Male",
+      "byp": "BYP1487770"
+    },
+    {
+      "serial": 495,
+      "name": "Shrimoti Namashudra",
+      "husband": "Ranjit Namashudra",
+      "age": 57,
+      "gender": "Female",
+      "byp": "BYP1487781"
+    },
+    {
+      "serial": 496,
+      "name": "Rajkumari Namashudra",
+      "husband": "Ranjit Namashudra",
+      "age": 52,
+      "gender": "Female",
+      "byp": "BYP1487816"
+    },
+    {
+      "serial": 497,
+      "name": "Amit Namashudra",
+      "father": "Ranjit Namashudra",
+      "age": 37,
+      "gender": "Male",
+      "byp": "BYP1487805"
+    },
+    {
+      "serial": 498,
+      "name": "Ajit Namashudra",
+      "father": "Ranjit Namashudra",
+      "age": 37,
+      "gender": "Male",
+      "byp": "BYP1487792"
+    },
+    {
+      "serial": 499,
+      "name": "Sumit Namashudra",
+      "father": "Ranjit Namashudra",
+      "age": 34,
+      "gender": "Male",
+      "byp": "BYP0352617"
+    },
+    {
+      "serial": 500,
+      "name": "Archana Roy",
+      "husband": "Amit Namashudra",
+      "age": 32,
+      "gender": "Female",
+      "byp": "BYP1487781"
+    },
+    {
+      "serial": 501,
+      "name": "Indra Namashudra",
+      "father": "Ranjit Namashudra",
+      "age": 31,
+      "gender": "Male",
+      "byp": "BYP0009841"
+    },
+    {
+      "serial": 502,
+      "name": "Jhuma Namashudra",
+      "husband": "Ajit Namashudra",
+      "age": 29,
+      "gender": "Female",
+      "byp": "BYP0529990"
+    },
+    {
+      "serial": 503,
+      "name": "Silpana Namashudra",
+      "husband": "Sumit Namashudra",
+      "age": 29,
+      "gender": "Female",
+      "byp": "BYP1487805"
+    }
+  ],
+
+  "house_76": [
+    {
+      "serial": 505,
+      "name": "Anamika Roy",
+      "father": "Birendra Roy",
+      "age": 32,
+      "gender": "Female",
+      "byp": "BYP1487872"
+    },
+    {
+      "serial": 506,
+      "name": "Suma Roy",
+      "husband": "Sullalit Roy",
+      "age": 26,
+      "gender": "Female",
+      "byp": "BYP0442533"
+    },
+    {
+      "serial": 504,
+      "name": "Sullalit Roy",
+      "father": "Birendra Roy",
+      "age": 37,
+      "gender": "Male",
+      "byp": "BYP1487849"
+    }
+  ],
+
+  "house_76K": [
+    {
+      "serial": 507,
+      "name": "Bonmala Roy",
+      "husband": "Birendra Roy",
+      "age": 51,
+      "gender": "Female",
+      "byp": "BYP1487838"
+    }
+  ],
+
+  "house_77": [
+    {
+      "serial": 509,
+      "name": "Moyna Namashudra",
+      "husband": "Sanjit Namashudra",
+      "age": 47,
+      "gender": "Female",
+      "byp": "BYP1487894"
+    },
+    {
+      "serial": 510,
+      "name": "Sandhu Namashudra",
+      "father": "Sanjit Namashudra",
+      "age": 30,
+      "gender": "Male",
+      "byp": "BYP1755595"
     }
   ]
 }
