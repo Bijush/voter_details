@@ -2,7 +2,7 @@
   "house_183": [
     {
       "serial": 1,
-      "name": "Jamona Bai",
+      "name": "Jamuna Roy",
       "father": null,
       "husband": "Sanjay Roy",
       "age": 30,
@@ -358,6 +358,7 @@
       "gender": "Male",
       "byp": "BYP1484782"
     },
+    
      {
       "serial": 40,
       "name": "Sumit Namashudra",
@@ -365,7 +366,7 @@
       "age": 54,
       "gender": "Male",
       "byp": "BYP1845650"
-    },
+    }
     
   ],
 
@@ -524,7 +525,7 @@
     }
     ],
     
-    "house_7KH"[
+    "house_7KH":[
     {
       "serial": 56,
       "name": "Niranjan Roy",
