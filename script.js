@@ -57,7 +57,26 @@ document.addEventListener("DOMContentLoaded", () => {
     findDuplicateBYP();
     buildHouseNav();
     renderResults(allPeople);
-  }
+
+    // -----------------------------
+    // TOTAL HOUSE COUNT SYSTEM
+    // -----------------------------
+    const totalHouses = Object.keys(voterData).length;
+
+    // Create or update house stat chip
+    let houseChip = document.getElementById("statHouse");
+    if (!houseChip) {
+        houseChip = document.createElement("div");
+        houseChip.className = "stat-chip";
+        houseChip.id = "statHouse";
+        houseChip.innerHTML = `Houses: <span class="value">${totalHouses}</span>`;
+        document.querySelector(".stats-bar").appendChild(houseChip);
+    } else {
+        houseChip.querySelector(".value").textContent = totalHouses;
+    }
+
+    console.log("Total Houses:", totalHouses);
+}
 
 
   // ----------------------------
