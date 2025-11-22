@@ -929,8 +929,7 @@
       "age": 57,
       "gender": "Female",
       "byp": "ΒΥΡ0529719"
-    },
-    
+    }, 
     {
       "serial": 799,
       "name": "Amar Chandra Deb",
@@ -1481,8 +1480,6 @@
       "byp": "BYP0050559"
     }
   ],
-  
-
 
   "house_21": [
      {
@@ -1715,9 +1712,7 @@
       "byp": "WJW0041822"
     }
   ],
-  
-  
-
+ 
   "house_23K": [
   {
       "serial": 177,
