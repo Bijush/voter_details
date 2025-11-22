@@ -373,21 +373,45 @@ document.addEventListener("DOMContentLoaded", () => {
   // ----------------------------
   // SEARCH FUNCTION
   // ----------------------------
-  searchInput.addEventListener("input", () => {
-    const q = searchInput.value.toLowerCase().trim();
+  // ----------------------------
+// ADVANCED SEARCH → SHOW FULL HOUSE OF MATCHES
+// ----------------------------
+searchInput.addEventListener("input", () => {
+  const q = searchInput.value.toLowerCase().trim();
 
-    if (!q) return applyFilters();
+  if (!q) {
+    applyFilters();
+    return;
+  }
 
-    const matches = allPeople.filter(p =>
-      p.name.toLowerCase().includes(q) ||
-      p.house.toLowerCase().includes(q) ||
-      (p.byp || "").toLowerCase().includes(q) ||
-      String(p.serial).includes(q)
-    );
+  // Step 1: find matched people
+  const matchedPeople = allPeople.filter(p =>
+    p.name.toLowerCase().includes(q) ||
+    String(p.serial).includes(q) ||
+    (p.byp || "").toLowerCase().includes(q)
+  );
 
-    renderResults(matches);
-  });
+  if (matchedPeople.length === 0) {
+    renderResults([]); 
+    return;
+  }
 
+  // Step 2: Collect houses of matched people
+  const matchedHouses = new Set(matchedPeople.map(p => p.house));
+
+  // Step 3: Build full list of ALL persons from those houses
+  const finalList = allPeople.filter(p => matchedHouses.has(p.house));
+
+  // Step 4: Render FULL families
+  renderResults(finalList);
+
+  // Clear filters (optional)
+  filterGender.value = "";
+  filterAge.value = "";
+  filterHouse.value = "";
+  filterSort.value = "";
+  filterInitial.value = "";
+});
 
   // ----------------------------
   // BACK TO TOP
