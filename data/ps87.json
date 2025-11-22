@@ -1426,7 +1426,7 @@
       "father": null,
       "husband": "Debanan Roy",
       "age": 26,
-      "gender": "Male",
+      "gender": "Female",
       "byp": "BYP0293423"
     }
   ],
@@ -1450,6 +1450,24 @@
       "gender": "Female",
       "byp": "BYP1485547"
     }
+     {
+      "serial": 151,
+      "name": "Sahanara Begum Barbhuiya",
+      "father": null,
+      "husband":"Manik Hussain Barbhuiya",
+      "age": 36,
+      "gender": "Female",
+      "byp": "BYP1485525"
+    },
+    {
+      "serial": 152,
+      "name": "Kishor Mallik",
+      "father": "Kalyan Mallik",
+      "husband":null,
+      "age": 27,
+      "gender": "Male",
+      "byp": "BYP0051169"
+    }
   ],
 
   "house_20KH": [
@@ -1464,27 +1482,6 @@
     }
   ],
   
-  "house_20K": [
-    {
-      "serial": 151,
-      "name": "Sahanara Begum Barbhuiya",
-      "father": null,
-      "husband":"Manik Hussain Barbhuiya",
-      "age": 36,
-      "gender": "Female",
-      "byp": "BYP1485525"
-    },
-    {
-      "serial": 152,
-      "name": "Kishor Mallik",
-      "father": Kalyan Mallik,
-      "husband":null,
-      "age": 27,
-      "gender": "Male",
-      "byp": "BYP0051169"
-    }
-    
-  ],
 
 
   "house_21": [
