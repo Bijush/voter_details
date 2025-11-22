@@ -1462,9 +1462,40 @@
       "byp": "BYP0050559"
     }
   ],
+  
+  "house_20K": [
+    {
+      "serial": 151,
+      "name": "Sahanara Begum Barbhuiya",
+      "father": null,
+      "husband":"Manik Hussain Barbhuiya",
+      "age": 36,
+      "gender": "Female",
+      "byp": "BYP1485525"
+    },
+    {
+      "serial": 152,
+      "name": "Kishor Mallik",
+      "father": Kalyan Mallik,
+      "husband":null,
+      "age": 27,
+      "gender": "Male",
+      "byp": "BYP0051169"
+    }
+    
+  ],
 
 
   "house_21": [
+     {
+      "serial": 153,
+      "name": "Anjali Roy",
+      "father": null,
+      "husband": "Murali Roy",
+      "age": 51,
+      "gender": "Female",
+      "byp": "BYP1485558"
+    },
     {
       "serial": 154,
       "name": "Nirmal Roy",
@@ -1482,17 +1513,19 @@
       "age": 29,
       "gender": "Female",
       "byp": "BYP1496862"
-    },
-    {
+    }
+  ],
+  "house_21K":[
+        {
       "serial": 156,
       "name": "Parimal Roy",
       "father": "Murli Roy",
       "husband": null,
       "age": 35,
       "gender": "Male",
-      "byp": "BYP1880574"
+      "byp": "BYP0009809"
     }
-  ],
+  ]
 
   "house_22": [
     {
@@ -1550,9 +1583,9 @@
       "byp": "BYP1485605"
     }
   ],
-
-  "house_23": [
-    {
+  
+"house_22K":[
+   {
       "serial": 163,
       "name": "Jaydev Namashudra",
       "father": "Narayan Namashudra",
@@ -1560,7 +1593,11 @@
       "age": 41,
       "gender": "Male",
       "byp": "BYP1485581"
-    },
+    }
+  ],
+  
+  "house_23": [
+   
     {
       "serial": 164,
       "name": "Kabil Ali Laskar",
@@ -1668,10 +1705,7 @@
       "age": 22,
       "gender": "Male",
       "byp": "BYP1485672"
-    }
-  ],
-
-  "house_23K": [
+    },
     {
       "serial": 176,
       "name": "Sujay Namashudra",
@@ -1679,11 +1713,46 @@
       "husband": null,
       "age": 22,
       "gender": "Male",
-      "byp": "BYP0009813"
+      "byp": "WJW0041822"
     }
   ],
+  
+  
+
+  "house_23K": [
+  {
+      "serial": 177,
+      "name": "Bijush Namashudra",
+      "father": "Hari  Namashudra",
+      "husband": null,
+      "age": 31,
+      "gender": "Male",
+      "byp": "BYP0221184"
+    }
+    ],
+    
+    "house_23KH":[
+    {
+      "serial": 178,
+      "name": "Satyaranjan Namashudra",
+      "father": "Hari  Namashudra",
+      "husband": null,
+      "age": 40,
+      "gender": "Male",
+      "byp": "BYP1485605"
+    }
+    ],
 
   "house_24": [
+   {
+      "serial": 179,
+      "name": "Parul Bala Namashudra",
+      "father":null,
+      "husband": "Jagadish Namashudra",
+      "age": 67,
+      "gender": "Female",
+      "byp": "BYP1485672"
+    },
     {
       "serial": 180,
       "name": "Faizul Haque",
@@ -1710,6 +1779,42 @@
       "age": 48,
       "gender": "Female",
       "byp": "BYP0000814"
+    },
+    {
+      "serial": 183,
+      "name": "Bhajan Namashudra",
+      "father": "Jagadish Namashudra",
+      "husband": null,
+      "age": 45,
+      "gender": "Male",
+      "byp": "BYP1485683"
+    },
+    {
+      "serial": 184,
+      "name": "Shanku Sarkar",
+      "father": "Ranjit Sarkar",
+      "husband": null,
+      "age": 24,
+      "gender": "Male",
+      "byp": "BYP0541474"
+    },
+    {
+      "serial": 185,
+      "name": "Runa Begum Laskar",
+      "father": null,
+      "husband": "Komrul Islam Laskar",
+      "age": 23,
+      "gender": "Female",
+      "byp": "BYP0275750"
+    },
+    {
+      "serial": 186,
+      "name": "Rehan Hussain Laskar",
+      "father": "Faizul Haque Laskar",
+      "husband": null,
+      "age": 21,
+      "gender": "Male",
+      "byp": "BYP1910850"
     }
   ],
 
@@ -1937,12 +2042,55 @@
       "byp": "BYP0009820"
     }
   ],
+  
+"house_26KO":[
+{
+      "serial": 211,
+      "name": "Sunali Suklabaidya",
+      "father": "Suna Roy",
+      "husband":null,
+      "age": 25,
+      "gender": "Female",
+      "byp": "BYP2486215"
+    }
+      
+],
 
   "house_26K": [
+  {
+      "serial": 212,
+      "name": "Sujan Roy",
+      "father": "Suna Roy",
+      "husband": null,
+      "age": 21,
+      "gender": "Male",
+      "byp": "BYP2480317"
+    },
     {
+      "serial": 214,
+      "name": "Suna Roy",
+      "father": "Haresh Roy",
+      "husband": null,
+      "age": 44,
+      "gender": "Male",
+      "byp": "BYP1485810"
+    },
+    {
+      "serial": 215,
+      "name": "Gupa Roy",
+      "father": null,
+      "husband": "Suna Roy",
+      "age": 42,
+      "gender": "Female",
+      "byp": "BYP0331645"
+    }
+  ],
+  
+  "house_26KH":[
+        {
       "serial": 213,
       "name": "Chunilal Roy",
-      "father": "Hares Chandra Roy",
+      "father": "Haresh Chandra Roy",
       "husband": null,
       "age": 50,
       "gender": "Male",
@@ -1950,7 +2098,7 @@
     },
     {
       "serial": 216,
-      "name": "Babli Jhua",
+      "name": "Babli Roy",
       "father": null,
       "husband": "Chunilal Roy",
       "age": 37,
@@ -1958,6 +2106,7 @@
       "byp": "BYP0331637"
     }
   ],
+  
 
   "house_27": [
     {
