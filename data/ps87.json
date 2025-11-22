@@ -869,6 +869,24 @@
       "byp": "BYP1755799"
     },
     {
+      "serial": 91,
+      "name": "Alok Deb",
+      "father": "Ashutosh Deb",
+      "husband": null,
+      "age": 42,
+      "gender": "Male",
+      "byp": "BYP1485105"
+    },
+    {
+      "serial": 92,
+      "name": "Poltu Deb",
+      "father": "Ashutosh Deb",
+      "husband": null,
+      "age": 41,
+      "gender": "Male",
+      "byp": "BYP1485138"
+    },
+    {
       "serial": 798,
       "name": "Pinki Deb",
       "husband": "Pallab Deb",
@@ -877,12 +895,69 @@
       "byp": "WJW0050393"
     },
     {
+      "serial": 93,
+      "name": "Anju Deb",
+      "father": "Ashutosh Deb",
+      "husband": null,
+      "age": 39,
+      "gender": "Female",
+      "byp": "BYP1485149"
+    },
+    {
+      "serial": 95,
+      "name": "Akash Deb",
+      "father": "Ashish Deb",
+      "husband": null,
+      "age": 23,
+      "gender": "Male",
+      "byp": "BYP0495358"
+    },
+    {
+      "serial": 96,
+      "name": "Akshay Deb",
+      "father": "Alok Deb",
+      "husband": null,
+      "age": 23,
+      "gender": "Male",
+      "byp": "BYP1934371"
+    },
+    {
+      "serial": 97,
+      "name": "Jharna Deb",
+      "father": null,
+      "husband": "Digendra Kumar Deb",
+      "age": 57,
+      "gender": "Female",
+      "byp": "ΒΥΡ0529719"
+    },
+    
+    {
       "serial": 799,
       "name": "Amar Chandra Deb",
       "father": "Digendra Deb",
       "age": 61,
       "gender": "Male",
       "byp": "BYP0321422"
+    }
+  ],
+  "house_12K":[
+        {
+      "serial": 94,
+      "name": "Poltu Deb",
+      "father": "Ashutosh Deb",
+      "husband": null,
+      "age": 41,
+      "gender": "Male",
+      "byp": "BYP0183020"
+    },
+    {
+      "serial": 99,
+      "name": "Pompi Deb",
+      "father": null,
+      "husband": "Poltu Deb",
+      "age": 36,
+      "gender": "Female",
+      "byp": "BYP0183053"
     }
   ],
 
@@ -969,7 +1044,7 @@
       "byp": "BYP0183053"
     },
     {
-      "serial": 110,
+      "serial": 107,
       "name": "Rohini Mazumdar",
       "father": null,
       "husband": "Radhakanta Mazumdar",
@@ -996,7 +1071,7 @@
       "byp": "BYP1485285"
     },
     {
-      "serial": 113,
+      "serial": 110,
       "name": "Rahul Mazumdar",
       "father": "Radhakanta Mazumdar",
       "husband": null,
@@ -1016,6 +1091,15 @@
   ],
 
   "house_17": [
+    {
+      "serial": 113,
+      "name": "Raju Das",
+      "father": "Nishikanta Das",
+      "husband": null,
+      "age": 42,
+      "gender": "Male",
+      "byp": "BYP1485343"
+    },
     {
       "serial": 114,
       "name": "Reena Rani Das",
@@ -1081,15 +1165,39 @@
     }
   ],
 
-  "house_17K": [
+  
+  "house_17GO": [
     {
-      "serial": 123,
+      "serial": 121,
+      "name": "Bishal Das",
+      "father": "Nishikanta Das",
+      "husband": null,
+      "age": 23,
+      "gender": "Male",
+      "byp": "BYP1831189"
+    }
+  ],
+"house_17GHO": [
+    {
+      "serial": 122,
       "name": "Rajat Das",
       "father": "Nishikanta Das",
       "husband": null,
       "age": 37,
       "gender": "Male",
       "byp": "BYP1485354"
+    }
+  ],
+  
+   "house_17KH": [
+    {
+      "serial": 123,
+      "name": "Bipul Bihari Das",
+      "father": "Nishikanta Das",
+      "husband": null,
+      "age": 54,
+      "gender": "Male",
+      "byp": "BYP1485310"
     }
   ],
 
@@ -1143,6 +1251,19 @@
       "byp": "BYP0272203"
     }
   ],
+  
+  "house_18KH":[
+   {
+      "serial": 130,
+      "name": "Bijit Das",
+      "father": "Runu Das",
+      "husband": null,
+      "age": 39,
+      "gender": "Male",
+      "byp": "BYP1485412"
+    }
+        
+  ],
 
   "house_19": [
     {
@@ -1162,6 +1283,15 @@
       "age": 44,
       "gender": "Female",
       "byp": "BYP1485489"
+    },
+      {
+      "serial": 133,
+      "name": "Karan Das",
+      "father": "Kanai Lal Das",
+      "husband": null,
+      "age": 25,
+      "gender": "Male",
+      "byp": "BYP0272203"
     }
   ],
 
@@ -1176,8 +1306,74 @@
       "byp": "BYP0009806"
     }
   ],
+ 
 
   "house_20": [
+   {
+      "serial": 135,
+      "name": "Aswini Roy",
+      "father": "Girish Roy",
+      "husband": null,
+      "age": 64,
+      "gender": "Male",
+      "byp": "BYP1485467"
+    },
+    {
+      "serial": 136,
+      "name": "Jutsna Roy",
+      "father": null,
+      "husband": "Aswini Roy",
+      "age": 54,
+      "gender": "Female",
+      "byp": "ΒΥΡ1485478"
+    },
+    {
+      "serial": 137,
+      "name": "Taj Uddin Barbhuiya",
+      "father": null,
+      "husband": "Moynul Haqe Barbhuiya",
+      "age": 39,
+      "gender": "Male",
+      "byp": "BYP1485514"
+    },
+    {
+      "serial": 138,
+      "name": "Hiramoti Roy",
+      "father": "Aswini Roy",
+      "husband": null,
+      "age": 39,
+      "gender": "Female",
+      "byp": "BYP1755802"
+    },
+    {
+      "serial": 139,
+      "name": "Upananda Roy",
+      "father": "Aswini Roy",
+      "husband": null,
+      "age": 38,
+      "gender": "Male",
+      "byp": "BYP1485489"
+    },
+    
+    {
+      "serial": 140,
+      "name": "Debojit Roy",
+      "father": "Aswini Roy",
+      "husband": null,
+      "age": 34,
+      "gender": "Male",
+      "byp": "BYP0009805"
+    },
+    {
+      "serial": 141,
+      "name": "Dipa Roy",
+      "father": null,
+      "husband": "Upananda Roy",
+      "age": 34,
+      "gender": "Female",
+      "byp": "BYP0009804"
+    },
+    
     {
       "serial": 142,
       "name": "Anam Uddin Barbhuiya",
@@ -1197,13 +1393,40 @@
       "byp": "BYP0388991"
     },
     {
-      "serial": 141,
-      "name": "Deepa Roy",
+      "serial": 144,
+      "name": "Sahab Uddin Barbhuiya",
+      "father": "Moinul Haque Barbhuiya",
+      "husband": null,
+      "age": 29,
+      "gender": "Male",
+      "byp": "BYP0009808"
+    },
+    {
+      "serial": 145,
+      "name": "Parbin Sultana Laskar",
       "father": null,
-      "husband": "Upananda Roy",
-      "age": 34,
+      "husband": "Sahab Uddin Barbhuiya",
+      "age": 29,
       "gender": "Female",
-      "byp": "BYP1485514"
+      "byp": "BYP0009808"
+    },
+    {
+      "serial": 146,
+      "name": "Debanan Roy",
+      "father": "Aswini Roy",
+      "husband": null,
+      "age": 27,
+      "gender": "Male",
+      "byp": "BYP0293563"
+    },
+     {
+      "serial": 147,
+      "name": "Anamika Roy",
+      "father": null,
+      "husband": "Debanan Roy",
+      "age": 26,
+      "gender": "Male",
+      "byp": "BYP0293423"
     }
   ],
 
