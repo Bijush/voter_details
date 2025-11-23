@@ -276,28 +276,32 @@ document.addEventListener("DOMContentLoaded", () => {
           ? `<span class="toggle-arrow">▼</span>`
           : "";
 
-        card.innerHTML = `
-          <h3 class="card-header-line">
-            <span>
-              ${p.name}
-              <span class="pill">#${p.serial}</span>
-              ${headBadge}
-              ${duplicateBadge}
-            </span>
+        // CONDITIONAL FATHER / HUSBAND
+let fatherLine = p.father ? `<p><strong>Father:</strong> ${p.father}</p>` : "";
+let husbandLine = p.husband ? `<p><strong>Husband:</strong> ${p.husband}</p>` : "";
 
-            <span class="gender-pill ${genderClass}">
-              ${genderLabel}
-            </span>
+card.innerHTML = `
+  <h3 class="card-header-line">
+    <span>
+      ${p.name}
+      <span class="pill">#${p.serial}</span>
+      ${headBadge}
+      ${duplicateBadge}
+    </span>
 
-            ${arrow}
-          </h3>
+    <span class="gender-pill ${genderClass}">
+      ${genderLabel}
+    </span>
 
-          <p><strong>Father:</strong> ${p.father || "-"}</p>
-          <p><strong>Husband:</strong> ${p.husband || "-"}</p>
-          <p><strong>BYP:</strong> ${p.byp}</p>
-          <p><strong>Age:</strong> ${p.age}</p>
-        `;
+    ${arrow}
+  </h3>
 
+  ${fatherLine}
+  ${husbandLine}
+
+  <p><strong>BYP:</strong> ${p.byp}</p>
+  <p><strong>Age:</strong> ${p.age}</p>
+`;
         // If HEAD — put outside + add toggle effect
         if (isHead) {
           card.addEventListener("click", () => {
@@ -548,4 +552,3 @@ toggleSidebarBtn.addEventListener("click", () => {
 });
   
 });
-
