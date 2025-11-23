@@ -2129,36 +2129,36 @@
       "age": 41,
       "gender": "Male",
       "byp": "BYP1485887"
+    },
+     {
+      "serial": 220,
+      "name": "Sirija Begum Barbhuiya",
+      "father": null,
+      "husband": "Abdul Kalam Laskar",
+      "age": 38,
+      "gender": "Female",
+      "byp": "BYP0009821"
+    },
+    {
+      "serial": 221,
+      "name": "Sati Rani Roy",
+      "father": null,
+      "husband": "Shankar Namasudra",
+      "age": 36,
+      "gender": "Female",
+      "byp": "BYP1485876"
     }
   ],
 
-  "house_27K": [
-    {
-      "serial": 223,
-      "name": "Anjali Namashudra",
-      "father": null,
-      "husband": "Meghlal Namashudra",
-      "age": 44,
-      "gender": "Female",
-      "byp": "BYP1485843"
-    },
-    {
-      "serial": 224,
-      "name": "Meghlal Namashudra",
-      "father": "Girimoha Namashudra",
-      "husband": null,
-      "age": 43,
-      "gender": "Male",
-      "byp": "BYP1485912"
-    },
-    {
+"house_27K":[
+{
       "serial": 225,
       "name": "Ruma Namashudra",
       "father": null,
       "husband": "Pannalal Namashudra",
       "age": 42,
       "gender": "Female",
-      "byp": "BYP1485934"
+      "byp": "BYP1485887"
     },
     {
       "serial": 222,
@@ -2168,6 +2168,28 @@
       "age": 45,
       "gender": "Male",
       "byp": "BYP1485898"
+    }
+      
+],
+
+  "house_27KH": [
+    {
+      "serial": 223,
+      "name": "Anjali Namashudra",
+      "father": null,
+      "husband": "Meghlal Namashudra",
+      "age": 44,
+      "gender": "Female",
+      "byp": "BYP1485901"
+    },
+    {
+      "serial": 224,
+      "name": "Meghlal Namashudra",
+      "father": "Girimoha Namashudra",
+      "husband": null,
+      "age": 43,
+      "gender": "Male",
+      "byp": "BYP1485912"
     }
   ],
 
@@ -2237,10 +2259,7 @@
       "age": 50,
       "gender": "Female",
       "byp": "BYP1989623"
-    }
-  ],
-
-  "house_29K": [
+    },
     {
       "serial": 233,
       "name": "Champa Namashudra",
@@ -2248,21 +2267,25 @@
       "husband": "Kuton Namashudra",
       "age": 28,
       "gender": "Female",
-      "byp": "BYP1893452"
+      "byp": "BYP1989623"
     },
     {
       "serial": 234,
-      "name": "Andhita Namashudra",
+      "name": "Anjita Namashudra",
       "father": null,
       "husband": "Deepan Namashudra",
       "age": 21,
       "gender": "Female",
-      "byp": "BYP1485956"
-    },
+      "byp": "BYP2491595"
+    }
+  ],
+
+  "house_29K": [
+    
     {
       "serial": 235,
       "name": "Kuton Namashudra",
-      "father": "Ranj Namashudra",
+      "father": "Ranju Namashudra",
       "husband": null,
       "age": 33,
       "gender": "Male",
@@ -2271,6 +2294,15 @@
   ],
 
   "house_30": [
+  {
+      "serial": 236,
+      "name": "Archana Namashudra",
+      "father": null,
+      "husband": "Ramesh Namashudra",
+      "gender": "Female",
+      "age": 43,
+      "byp": "BYP1485989"
+    },
     {
       "serial": 238,
       "name": "Shilpi Rani Namashudra",
@@ -2278,7 +2310,7 @@
       "husband": "Sajal Namashudra",
       "age": 28,
       "gender": "Female",
-      "byp": "BYP2480408"
+      "byp": "BYP1893452"
     },
     {
       "serial": 237,
@@ -2288,19 +2320,19 @@
       "age": 40,
       "gender": "Male",
       "byp": "BYP1485978"
-    },
-    {
+    }
+  ],
+
+  "house_30K": [
+  {
       "serial": 239,
       "name": "Sarup Namashudra",
       "father": "Dilip Namashudra",
       "husband": null,
       "gender": "Male",
       "age": 20,
-      "byp": "BYP1466302"
-    }
-  ],
-
-  "house_30K": [
+      "byp": "BYP2480408"
+    },
     {
       "serial": 240,
       "name": "Moyna Roy",
@@ -2312,6 +2344,57 @@
     }
   ],
   
+  "house_30KO":[
+  {
+      "serial": 241,
+      "name": "Sabita Roy",
+      "father": "Debender Roy",
+      "husband": null,
+      "gender": "Female",
+      "age": 32,
+      "byp": "BYP0547760"
+    },
+    {
+      "serial": 242,
+      "name": "Jaya Roy",
+      "father": "Debender Roy",
+      "husband": null,
+      "gender": "Female",
+      "age": 31,
+      "byp": "BYP0547737"
+    },
+    {
+      "serial": 243,
+      "name": "Sujit Roy",
+      "father": "Debender Roy",
+      "husband": null,
+      "gender": "Male",
+      "age": 26,
+      "byp": "BYP0547745"
+    }
+  ],
+  
+  "house_30K":[
+   {
+      "serial": 244,
+      "name": "Dilip Namasudra",
+      "father": "Ramesh Namasudra",
+      "husband": null,
+      "gender": "Male",
+      "age": 52,
+      "byp": "BYP1485990"
+    },
+     {
+      "serial": 245,
+      "name": "Sapna Namasudra",
+      "father": null,
+      "husband": "Dilip Namasudra",
+      "gender": "Female",
+      "age": 42,
+      "byp": "BYP0009824"
+    }
+        
+  ],
  
   "house_31": [
     {
@@ -2333,6 +2416,8 @@
       "byp": "BYP1466006"
     }
   ],
+  
+  
 
   "house_32": [
     {
