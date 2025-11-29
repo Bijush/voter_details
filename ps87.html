@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <title>Polling Station 87</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
 <style>
   :root {
@@ -500,6 +501,38 @@ body {
   padding: 16px;
   border-radius: 18px;
 }
+
+/* ------------------ BREADCRUMB WITH ICONS ------------------ */
+
+.breadcrumb {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(12px);
+  padding: 10px 14px;
+  margin: -4px -8px 12px;
+  font-size: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(148,163,184,0.35);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.breadcrumb span {
+  color: #475569;
+}
+
+.breadcrumb strong {
+  color: #111827;
+  font-weight: 600;
+}
+
+.breadcrumb i {
+  font-size: 15px;
+  color: #2563eb;
+}
 </style>
 </head>
 
@@ -521,6 +554,15 @@ body {
   <main class="main">
     <div class="card-main">
       <h1>Polling Station 87</h1>
+
+<div id="breadcrumb" class="breadcrumb">
+  <i class="bi bi-house-door-fill"></i><span>Home</span>
+  <i class="bi bi-chevron-right"></i>
+  <i class="bi bi-geo-alt-fill text-danger"></i><span>Polling Station</span>
+  <i class="bi bi-chevron-right"></i>
+  <i class="bi bi-houses-fill text-primary"></i><strong id="breadcrumbHouse">All Houses</strong>
+</div>
+
       <div class="subtitle">Smart voter list with search, filters & family view</div>
 
       <!-- Sticky glass header -->

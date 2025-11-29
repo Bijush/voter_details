@@ -551,4 +551,31 @@ toggleSidebarBtn.addEventListener("click", () => {
   }
 });
   
+// DYNAMIC BREADCRUMB SYSTEM
+// ----------------------------
+const breadcrumbHouse = document.getElementById("breadcrumbHouse");
+
+function updateBreadcrumbOnScroll() {
+  const sections = document.querySelectorAll(".house-section");
+
+  let current = "All Houses"; // default
+
+  sections.forEach(sec => {
+    const rect = sec.getBoundingClientRect();
+
+    // If section is in view
+    if (rect.top <= 150 && rect.bottom >= 150) {
+      current = sec.querySelector(".house-title span").textContent.replace("House: ", "");
+    }
+  });
+
+  breadcrumbHouse.textContent = current;
+}
+
+window.addEventListener("scroll", updateBreadcrumbOnScroll);
+
+function setBreadcrumbHouse(num) {
+  breadcrumbHouse.textContent = num;
+}
+
 });
