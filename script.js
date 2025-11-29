@@ -209,7 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
  // Photo mismatch function
 
-
+/*
 function cleanName(name) {
   return name
     .trim()                     // extra space remove
@@ -218,6 +218,7 @@ function cleanName(name) {
     .replace(/[^a-z0-9 ]/g, "") // special char remove
     .replace(/ /g, "-");        // space → hyphen (for photo file)
 }
+*/
   // ----------------------------
   // RENDER RESULTS (MAIN)
   // ----------------------------
@@ -268,8 +269,11 @@ function cleanName(name) {
       housePeople.forEach(p => {
         const card = document.createElement("div");
         card.className = "card";
-const clean = cleanName(p.name);
-const photoPath = `photos/${clean}.jpg`;
+//const clean = cleanName(p.name);
+
+// PHOTO BY SERIAL NUMBER
+
+const photoPath = `photos/${p.serial}.jpg`;
 
 
         const isHead = p.serial === houseHead.serial;
