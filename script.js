@@ -207,7 +207,17 @@ document.addEventListener("DOMContentLoaded", () => {
     statDup.textContent = dupSet.size;
   }
 
+ // Photo mismatch function
 
+
+function cleanName(name) {
+  return name
+    .trim()                     // extra space remove
+    .toLowerCase()              // lowercase convert
+    .replace(/\s+/g, " ")       // multiple space → single space
+    .replace(/[^a-z0-9 ]/g, "") // special char remove
+    .replace(/ /g, "-");        // space → hyphen (for photo file)
+}
   // ----------------------------
   // RENDER RESULTS (MAIN)
   // ----------------------------
@@ -258,6 +268,9 @@ document.addEventListener("DOMContentLoaded", () => {
       housePeople.forEach(p => {
         const card = document.createElement("div");
         card.className = "card";
+const clean = cleanName(p.name);
+const photoPath = `photos/${clean}.jpg`;
+
 
         const isHead = p.serial === houseHead.serial;
 
@@ -281,6 +294,7 @@ let fatherLine = p.father ? `<p><strong>Father:</strong> ${p.father}</p>` : "";
 let husbandLine = p.husband ? `<p><strong>Husband:</strong> ${p.husband}</p>` : "";
 
 card.innerHTML = `
+  <img src="${photoPath}" class="voter-photo" onclick="openPhoto(this.src)">
   <h3 class="card-header-line">
     <span>
       ${p.name}
@@ -288,11 +302,9 @@ card.innerHTML = `
       ${headBadge}
       ${duplicateBadge}
     </span>
-
     <span class="gender-pill ${genderClass}">
       ${genderLabel}
     </span>
-
     ${arrow}
   </h3>
 
@@ -302,6 +314,7 @@ card.innerHTML = `
   <p><strong>BYP:</strong> ${p.byp}</p>
   <p><strong>Age:</strong> ${p.age}</p>
 `;
+
         // If HEAD — put outside + add toggle effect
         if (isHead) {
           card.addEventListener("click", () => {

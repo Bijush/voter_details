@@ -533,6 +533,19 @@ body {
   font-size: 15px;
   color: #2563eb;
 }
+.voter-photo {
+  width: 90px;              /* fix size like FB */
+  height: 90px;
+  border-radius: 50%;       /* round profile */
+  object-fit: cover;        /* center crop */
+  display: block;
+  margin: 8px auto;         /* center */
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+
+ border: 3px solid #fff;
+
+}
 </style>
 </head>
 
@@ -656,7 +669,7 @@ body {
 </div>
 
 <button id="backToTop">↑ Top</button>
-  
+ 
   <button id="dupJumpBtn" style="
     position: fixed;
     right: 14px;
@@ -673,6 +686,28 @@ body {
   🔁
   </button>
 
+<div id="photoViewer" onclick="closePhoto()" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.9);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;">
+  
+  <img id="fullPhoto" style="max-width: 90%; max-height: 90%; border-radius: 10px;">
+</div>
+
+<script>
+function openPhoto(src) {
+  document.getElementById("fullPhoto").src = src;
+  document.getElementById("photoViewer").style.display = "flex";
+}
+function closePhoto() {
+  document.getElementById("photoViewer").style.display = "none";
+}
+</script>
 <script>
   window.PS_JSON = "data/ps87.json";
 </script>
