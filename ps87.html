@@ -533,18 +533,46 @@ body {
   font-size: 15px;
   color: #2563eb;
 }
+/*
 .voter-photo {
   width: 90px;              /* fix size like FB */
+/*
   height: 90px;
-  border-radius: 50%;       /* round profile */
+  border-radius: 50%;       /* round profile 
+*/
+/*
   object-fit: cover;        /* center crop */
+/*
   display: block;
   margin: 8px auto;         /* center */
+/*
   cursor: pointer;
   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 
  border: 3px solid #fff;
 
+}
+*/
+.voter-photo {
+  width: 90px;
+  height: 90px;
+  border-radius: 10px;     /* square with soft edges */
+  object-fit: cover;
+  float: left;
+  margin-right: 12px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+border: 3px solid #fff;
+
+}
+.card {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.card-content {
+  flex: 1;
 }
 </style>
 </head>

@@ -299,24 +299,27 @@ let husbandLine = p.husband ? `<p><strong>Husband:</strong> ${p.husband}</p>` : 
 
 card.innerHTML = `
   <img src="${photoPath}" class="voter-photo" onclick="openPhoto(this.src)">
-  <h3 class="card-header-line">
-    <span>
-      ${p.name}
-      <span class="pill">#${p.serial}</span>
-      ${headBadge}
-      ${duplicateBadge}
-    </span>
-    <span class="gender-pill ${genderClass}">
-      ${genderLabel}
-    </span>
-    ${arrow}
-  </h3>
 
-  ${fatherLine}
-  ${husbandLine}
+  <div class="card-content">
+    <h3 class="card-header-line">
+      <span>
+        ${p.name}
+        <span class="pill">#${p.serial}</span>
+        ${headBadge}
+        ${duplicateBadge}
+      </span>
+      <span class="gender-pill ${genderClass}">
+        ${genderLabel}
+      </span>
+      ${arrow}
+    </h3>
 
-  <p><strong>BYP:</strong> ${p.byp}</p>
-  <p><strong>Age:</strong> ${p.age}</p>
+    ${fatherLine}
+    ${husbandLine}
+
+    <p><strong>BYP:</strong> ${p.byp}</p>
+    <p><strong>Age:</strong> ${p.age}</p>
+  </div>
 `;
 
         // If HEAD — put outside + add toggle effect
