@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+startConfetti();
   // ----------------------------
   // CASTE AUTO-DETECT RULES
   // ----------------------------
@@ -284,6 +285,7 @@ document.addEventListener("DOMContentLoaded", () => {
           card.addEventListener("click", () => {
             card.style.boxShadow = "0 0 0 3px rgba(37,99,235,.4)";
             setTimeout(() => { card.style.boxShadow = "0 4px 14px rgba(0,0,0,.08)"; }, 250);
+startConfetti();
           });
 
           const img = document.createElement("img");
@@ -526,4 +528,71 @@ document.addEventListener("DOMContentLoaded", () => {
 
   statDup.addEventListener("click", jumpToNextDuplicate);
   dupJumpBtn.addEventListener("click", jumpToNextDuplicate);
+
+// -----------------------------
+// PREMIUM CONFETTI SYSTEM 🎉
+// -----------------------------
+function startConfetti() {
+  const confettiCount = 120;
+  const defaults = {
+    spread: 60,
+    ticks: 60,
+    gravity: 0.9,
+    decay: 0.92,
+    startVelocity: 35
+  };
+
+  const canvas = document.createElement("canvas");
+  canvas.style.position = "fixed";
+  canvas.style.left = "0";
+  canvas.style.top = "0";
+  canvas.style.width = "100%";
+  canvas.style.height = "100%";
+  canvas.style.pointerEvents = "none";
+  canvas.style.zIndex = "999999";
+
+  document.body.appendChild(canvas);
+
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width = innerWidth;
+  const h = canvas.height = innerHeight;
+
+  const confetti = [];
+
+  for (let i = 0; i < confettiCount; i++) {
+    confetti.push({
+      x: Math.random() * w,
+      y: Math.random() * h - h,
+      r: Math.random() * 6 + 4,
+      d: Math.random() * confettiCount,
+      color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+      tilt: Math.random() * 10 - 10
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+
+    confetti.forEach((c, i) => {
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+      ctx.fillStyle = c.color;
+      ctx.fill();
+
+      c.y += Math.cos(c.d) + 1 + c.r / 2;
+      c.x += Math.sin(c.d);
+
+      if (c.y > h) confetti[i] = { ...c, y: -10, x: Math.random() * w };
+    });
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+
+  setTimeout(() => {
+    canvas.remove();
+  }, 2500);
+}
+
 });
