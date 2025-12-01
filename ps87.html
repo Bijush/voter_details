@@ -320,55 +320,45 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
 <body>
 
 <div class="page">
-  <!-- SIDEBAR: House quick jump -->
-  <div id="sidebarOverlay" class="sidebar-overlay"></div>
-  
-  <aside class="sidebar">
-  <button class="sidebar-close-btn">✖</button>
-  <h2 class="sidebar-title">Houses</h2>
-  <div id="houseNav" class="house-nav"></div>
-</aside>
 
-<button id="toggleSidebarBtn" class="sidebar-toggle-btn">☰ Houses</button>
+  <!-- Overlay for mobile -->
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <button class="sidebar-close-btn">✖</button>
+    <h2 class="sidebar-title">Houses</h2>
+    <div id="houseNav" class="house-nav"></div>
+  </aside>
+
+  <!-- Toggle -->
+  <button id="toggleSidebarBtn" class="sidebar-toggle-btn">☰ Houses</button>
 
   <!-- MAIN -->
   <main class="main">
     <div class="card-main">
+
       <h1>Polling Station 87</h1>
+      <div class="subtitle">Smart voter list with search, filters, stats & family view</div>
 
-<div id="breadcrumb" class="breadcrumb">
-  <i class="bi bi-house-door-fill"></i><span>Home</span>
-  <i class="bi bi-chevron-right"></i>
-  <i class="bi bi-geo-alt-fill text-danger"></i><span>Polling Station</span>
-  <i class="bi bi-chevron-right"></i>
-  <i class="bi bi-houses-fill text-primary"></i><strong id="breadcrumbHouse">All Houses</strong>
-</div>
-
-      <div class="subtitle">Smart voter list with search, filters & family view</div>
-
-      <!-- Sticky glass header -->
+      <!-- ⭐ STICKY GLASS HEADER (ALL INSIDE HERE) -->
       <div class="sticky-header">
 
-        <!-- SEARCH -->
-        <div class="search-wrapper">
-          <input
-            id="search"
-            type="text"
-            placeholder="Search by name / house / serial / BYP…"
-            autocomplete="off"
-          >
+        <!-- BREADCRUMB -->
+        <div id="breadcrumb" class="breadcrumb">
+          <i class="bi bi-house-door-fill"></i><span>Home</span>
+          <i class="bi bi-chevron-right"></i>
+          <i class="bi bi-geo-alt-fill"></i><span>Polling Station</span>
+          <i class="bi bi-chevron-right"></i>
+          <i class="bi bi-houses-fill"></i>
+          <strong id="breadcrumbHouse">All Houses</strong>
         </div>
-</div><!-- /sticky-header -->
-      
+
+        <!-- SEARCH -->
+        <input id="search" type="text" placeholder="Search by name / house / serial / BYP…">
+
         <!-- FILTERS -->
         <div class="filter-bar">
-            <!--
-          <select id="filterGender">
-            <option value="">Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
--->
           <select id="filterAge">
             <option value="">Age</option>
             <option value="18-25">18–25</option>
@@ -380,144 +370,52 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
           <select id="filterHouse">
             <option value="">House</option>
           </select>
-<!--
-          <select id="filterSort">
-            <option value="">Sort</option>
-            <option value="name">Name (A–Z)</option>
-            <option value="serial">Serial</option>
-            <option value="age">Age</option>
-            <option value="house">House</option>
-            <option value="byp">BYP</option>
-            <option value="nameLength">Name length</option>
-          </select>
-
-          <select id="filterInitial">
-            <option value="">A–Z</option>
-            <option value="A">A</option><option value="B">B</option>
-            <option value="C">C</option><option value="D">D</option>
-            <option value="E">E</option><option value="F">F</option>
-            <option value="G">G</option><option value="H">H</option>
-            <option value="I">I</option><option value="J">J</option>
-            <option value="K">K</option><option value="L">L</option>
-            <option value="M">M</option><option value="N">N</option>
-            <option value="O">O</option><option value="P">P</option>
-            <option value="Q">Q</option><option value="R">R</option>
-            <option value="S">S</option><option value="T">T</option>
-            <option value="U">U</option><option value="V">V</option>
-            <option value="W">W</option><option value="X">X</option>
-            <option value="Y">Y</option><option value="Z">Z</option>
-            <option value="#">Other</option>
-          </select>
-         -->
         </div>
 
         <!-- STATS -->
         <div class="stats-bar">
-          <div class="stat-chip">
-            Total voters: <span id="statTotal" class="value">0</span>
-          </div>
-          <div class="stat-chip">
-            Male: <span id="statMale" class="value">0</span>
-          </div>
-          <div class="stat-chip">
-            Female: <span id="statFemale" class="value">0</span>
-          </div>
+          <div class="stat-chip">Total: <span id="statTotal" class="value">0</span></div>
+          <div class="stat-chip">Male: <span id="statMale" class="value">0</span></div>
+          <div class="stat-chip">Female: <span id="statFemale" class="value">0</span></div>
 
-<div class="stat-chip">SC: <span id="statSC">0</span></div>
-<div class="stat-chip">OBC: <span id="statOBC">0</span></div>
-<div class="stat-chip">ST: <span id="statST">0</span></div>
-<div class="stat-chip">Muslim: <span id="statMuslim">0</span></div>
-          <div class="stat-chip">
-            Duplicate BYP: 
-<span id="statDup" class="value" style="cursor:pointer; text-decoration:underline;">
-  0
-</span>
-          </div>
-</div>
+          <div class="stat-chip">SC: <span id="statSC">0</span></div>
+          <div class="stat-chip">OBC: <span id="statOBC">0</span></div>
+          <div class="stat-chip">ST: <span id="statST">0</span></div>
+          <div class="stat-chip">Muslim: <span id="statMuslim">0</span></div>
 
-      
+          <div class="stat-chip">Duplicate: <span id="statDup" class="value">0</span></div>
+        </div>
+
+      </div>
+      <!-- ⭐ / sticky-header ends -->
 
       <!-- RESULTS -->
       <div id="results"></div>
+
     </div>
   </main>
 </div>
 
+<!-- Back buttons -->
 <button id="backToTop">↑ Top</button>
- 
-  <button id="dupJumpBtn" style="
-    position: fixed;
-    right: 14px;
-    bottom: 70px;
-    padding: 10px 14px;
-    border-radius: 50%;
-    border: 1px solid #d1d5db;
-    background: white;
-    font-size: 16px;
-    cursor: pointer;
-    display: none;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-">
-  🔁
-  </button>
+<button id="dupJumpBtn">🔁</button>
 
-<div id="photoViewer" onclick="closePhoto()" style="
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.9);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;">
-  
-  <img id="fullPhoto" style="max-width: 90%; max-height: 90%; border-radius: 10px;">
+<!-- Photo viewer -->
+<div id="photoViewer" onclick="closePhoto()">
+  <img id="fullPhoto">
 </div>
 
 <script>
-function openPhoto(src) {
-  document.getElementById("fullPhoto").src = src;
-  document.getElementById("photoViewer").style.display = "flex";
+function openPhoto(src){
+  fullPhoto.src=src;
+  photoViewer.style.display="flex";
 }
-function closePhoto() {
-  document.getElementById("photoViewer").style.display = "none";
+function closePhoto(){
+  photoViewer.style.display="none";
 }
 </script>
-<script>
-  window.PS_JSON = "data/ps87.json";
-</script>
-  <script>
-document.addEventListener("DOMContentLoaded", () => {
 
-  const sidebar = document.querySelector(".sidebar");
-  const overlay = document.getElementById("sidebarOverlay");
-  const btn     = document.getElementById("toggleSidebarBtn");
-  const closeBtn = document.querySelector(".sidebar-close-btn");
-
-  function openSidebar() {
-    sidebar.classList.add("open");
-    overlay.style.display = "block";
-    document.body.style.overflow = "hidden";   // lock scroll
-  }
-
-  function closeSidebar() {
-    sidebar.classList.remove("open");
-    overlay.style.display = "none";
-    document.body.style.overflow = "auto";     // unlock scroll
-  }
-
-  btn.addEventListener("click", () => {
-    if (sidebar.classList.contains("open")) {
-      closeSidebar();
-    } else {
-      openSidebar();
-    }
-  });
-closeBtn.addEventListener("click", closeSidebar);
-  overlay.addEventListener("click", closeSidebar);
-
-});
-</script>
+<script>window.PS_JSON="data/ps87.json";</script>
 <script src="script.js"></script>
 
 </body>
