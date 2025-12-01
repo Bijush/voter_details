@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-startConfetti();
+
   // ----------------------------
   // CASTE AUTO-DETECT RULES
   // ----------------------------
@@ -7,59 +7,49 @@ startConfetti();
     if (!nameRaw) return "General";
     const name = (" " + nameRaw.toLowerCase() + " ");
 
-    const MUSLIM = [
-      " laskar"," uddin"," hussain"," hossain"," ali"," ahmed"," ahmad",
-      " begum"," khatun"," barbhuiya"," choudhury"," chowdhury"," mia "
-    ];
-    const SC  = [" das "," namashudra"," namasudra"," namsudra"," sarkar"," debnath"];
-    const ST  = [" majhi "," tudu "," hansda "," murmu "," basumatary "];
-    const OBC = [" roy "," mallick "," mallik "," dey "," sukla "," suklabaidya"," bhadra"," deb "];
+    const MUSLIM = [" laskar"," uddin"," hussain"," hossain"," ali"," ahmed"," ahmad"," begum"," khatun"," barbhuiya"," mia"];
+    const SC     = ["roy"," das ", " namashudra"," namasudra"," namsudra"," sarkar"," debnath"];
+    const ST     = [" majhi ", " tudu ", " hansda ", " murmu ", " basumatary "];
+    const OBC    = [" mallick ", " mallik ", " dey ", " sukla ", " suklabaidya", " bhadra", " deb "];
 
     if (MUSLIM.some(k => name.includes(k))) return "Muslim";
     if (SC.some(k => name.includes(k)))     return "SC";
     if (ST.some(k => name.includes(k)))     return "ST";
     if (OBC.some(k => name.includes(k)))    return "OBC";
+
     return "General";
   }
 
   // ----------------------------
   // DOM ELEMENTS
   // ----------------------------
-  const searchInput   = document.getElementById("search");
-  const resultsDiv    = document.getElementById("results");
+  const searchInput    = document.getElementById("search");
+  const resultsDiv     = document.getElementById("results");
+  const filterAge      = document.getElementById("filterAge");
+  const filterHouse    = document.getElementById("filterHouse");
 
-  const filterAge     = document.getElementById("filterAge");
-  const filterHouse   = document.getElementById("filterHouse");
+  const statTotal  = document.getElementById("statTotal");
+  const statMale   = document.getElementById("statMale");
+  const statFemale = document.getElementById("statFemale");
+  const statDup    = document.getElementById("statDup");
 
-  const backToTop     = document.getElementById("backToTop");
-  const houseNav      = document.getElementById("houseNav");
-  const dupJumpBtn    = document.getElementById("dupJumpBtn");
+  const statSC  = document.getElementById("statSC");
+  const statOBC = document.getElementById("statOBC");
+  const statST  = document.getElementById("statST");
+  const statMus = document.getElementById("statMuslim");
 
-  const statTotal     = document.getElementById("statTotal");
-  const statMale      = document.getElementById("statMale");
-  const statFemale    = document.getElementById("statFemale");
-  const statDup       = document.getElementById("statDup");
-
-  const statSC        = document.getElementById("statSC");
-  const statOBC       = document.getElementById("statOBC");
-  const statST        = document.getElementById("statST");
-  const statMus       = document.getElementById("statMuslim");
-
+  const houseNav = document.getElementById("houseNav");
   const breadcrumbHouse = document.getElementById("breadcrumbHouse");
+  const dupBtn = document.getElementById("dupJumpBtn");
+  const backToTop = document.getElementById("backToTop"); // ✅ FIX: backToTop defined
 
-  // DATA
-  let voterData   = {};
-  let allPeople   = [];
-  let colors      = {};
+  let voterData = {};
+  let allPeople = [];
+  let colors = {};
   let duplicateBYPs = new Set();
 
-  // For duplicate jumping
-  let duplicateCards = [];
-  let duplicateIndex = 0;
-
-  // For lazy loading
-  let lazyImages = [];
-  let observer   = null;
+  let dupCycle = [];     // one-by-one cycle list
+  let dupIndex = 0;      // pointer
 
   const JSON_FILE = window.PS_JSON || "data/master.json";
 
@@ -71,10 +61,6 @@ startConfetti();
     .then(data => {
       voterData = data;
       processData();
-    })
-    .catch(err => {
-      console.error(err);
-      resultsDiv.innerHTML = `<p style="color:red;">Failed to load voter list.</p>`;
     });
 
   // ----------------------------
@@ -98,59 +84,40 @@ startConfetti();
     findDuplicateBYP();
     buildHouseNav();
     renderResults(allPeople);
-    updateHouseCountChip();
+
+    buildDuplicateCycle(); // NEW
   }
 
-  function updateHouseCountChip() {
-    const totalHouses = Object.keys(voterData).length;
-    let houseChip = document.getElementById("statHouse");
-    if (!houseChip) {
-      houseChip = document.createElement("div");
-      houseChip.className = "stat-chip";
-      houseChip.id = "statHouse";
-      houseChip.innerHTML = `Houses: <span class="value">${totalHouses}</span>`;
-      document.querySelector(".stats-bar").appendChild(houseChip);
-    } else {
-      houseChip.querySelector(".value").textContent = totalHouses;
-    }
+  function normalizeGender(g) {
+    if (!g) return "";
+    g = g.trim();
+    if (["Male"].includes(g)) return "Male";
+    if (["Female"].includes(g)) return "Female";
+    return g;
   }
 
-  // ----------------------------
-  // DUPLICATE BYP
-  // ----------------------------
   function findDuplicateBYP() {
     const map = {};
     allPeople.forEach(p => {
       if (!p.byp) return;
       map[p.byp] = (map[p.byp] || 0) + 1;
     });
-    duplicateBYPs = new Set(
-      Object.keys(map).filter(b => map[b] > 1)
-    );
+    duplicateBYPs = new Set(Object.keys(map).filter(b => map[b] > 1));
   }
 
-  // ----------------------------
-  // SORT HOUSE
-  // ----------------------------
-  const sortHouseASC = (a, b) =>
-    parseInt(a.replace("house_", "")) - parseInt(b.replace("house_", ""));
+  function sortHouseASC(a, b) {
+    return parseInt(a.replace("house_", "")) - parseInt(b.replace("house_", ""));
+  }
 
-  // ----------------------------
-  // COLORS PER HOUSE
-  // ----------------------------
   function generateColors() {
     const houses = [...new Set(allPeople.map(p => p.house))].sort(sortHouseASC);
     houses.forEach((h, i) => {
-      colors[h] = `hsla(${(i * 47) % 360}, 78%, 92%, 1)`;
+      colors[h] = `hsla(${(i * 40) % 360}, 70%, 92%, 1)`;
     });
   }
 
-  // ----------------------------
-  // HOUSE DROPDOWN
-  // ----------------------------
   function fillHouseDropdown() {
-    const houses = Object.keys(voterData).sort(sortHouseASC);
-    houses.forEach(h => {
+    Object.keys(voterData).sort(sortHouseASC).forEach(h => {
       const op = document.createElement("option");
       op.value = h;
       op.textContent = "House " + h.replace("house_", "");
@@ -159,7 +126,7 @@ startConfetti();
   }
 
   // ----------------------------
-  // LEFT NAV HOUSE LIST
+  // BUILD LEFT HOUSE NAV
   // ----------------------------
   function buildHouseNav() {
     houseNav.innerHTML = "";
@@ -168,17 +135,14 @@ startConfetti();
     houses.forEach(h => {
       const btn = document.createElement("button");
       btn.className = "house-nav-item";
-      btn.dataset.house = h;
       btn.textContent = h.replace("house_", "");
 
       btn.addEventListener("click", () => {
-        document
-          .querySelectorAll(".house-nav-item")
-          .forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".house-nav-item").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
 
         const sec = document.getElementById("house-section-" + h);
-        if (sec) sec.scrollIntoView({ behavior:"smooth", block:"start" });
+        if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
       });
 
       houseNav.appendChild(btn);
@@ -186,48 +150,28 @@ startConfetti();
   }
 
   // ----------------------------
-  // NORMALIZE GENDER
-  // ----------------------------
-  function normalizeGender(g) {
-    if (!g) return "";
-    g = g.trim();
-    if (["Male","পুরুষ"].includes(g)) return "Male";
-    if (["Female","মহিলা","নারী"].includes(g)) return "Female";
-    return g;
-  }
-
-  // ----------------------------
   // UPDATE STATS
   // ----------------------------
   function updateStats(list) {
-    const total = list.length;
+    statTotal.textContent  = list.length;
+    statMale.textContent   = list.filter(p => normalizeGender(p.gender) === "Male").length;
+    statFemale.textContent = list.filter(p => normalizeGender(p.gender) === "Female").length;
+    statDup.textContent    = list.filter(p => duplicateBYPs.has(p.byp)).length;
 
-    statTotal.textContent  = total;
-    statMale.textContent   = list.filter(p => normalizeGender(p.gender)==="Male").length;
-    statFemale.textContent = list.filter(p => normalizeGender(p.gender)==="Female").length;
-
-    const dupSet = new Set(list.filter(p => duplicateBYPs.has(p.byp)).map(p => p.byp));
-    statDup.textContent = dupSet.size;
-
-    statSC.textContent  = list.filter(p => p.caste==="SC").length;
-    statOBC.textContent = list.filter(p => p.caste==="OBC").length;
-    statST.textContent  = list.filter(p => p.caste==="ST").length;
-    statMus.textContent = list.filter(p => p.caste==="Muslim").length;
+    statSC.textContent  = list.filter(p => p.caste === "SC").length;
+    statOBC.textContent = list.filter(p => p.caste === "OBC").length;
+    statST.textContent  = list.filter(p => p.caste === "ST").length;
+    statMus.textContent = list.filter(p => p.caste === "Muslim").length;
   }
 
   // ----------------------------
   // RENDER RESULTS
   // ----------------------------
   function renderResults(list) {
-    resultsDiv.innerHTML = "";
-    lazyImages = [];
-    duplicateCards = [];
-    duplicateIndex = 0;
 
+    resultsDiv.innerHTML = "";
     if (!list.length) {
       resultsDiv.innerHTML = "<p>No results found.</p>";
-      updateStats([]);
-      updateDuplicateUI();
       return;
     }
 
@@ -235,364 +179,313 @@ startConfetti();
 
     const grouped = {};
     list.forEach(p => {
-      (grouped[p.house] ||= []).push(p);
+      if (!grouped[p.house]) grouped[p.house] = [];
+      grouped[p.house].push(p);
     });
 
-    Object.keys(grouped)
-      .sort(sortHouseASC)
-      .forEach(h => {
-        const housePeople = grouped[h].sort((a,b) => a.serial - b.serial);
-        const houseNumber = h.replace("house_","");
+    Object.keys(grouped).sort(sortHouseASC).forEach(h => {
 
-        const houseSection = document.createElement("div");
-        houseSection.className = "house-section";
-        houseSection.id = "house-section-" + h;
-        houseSection.style.background = colors[h];
+      const housePeople = grouped[h].sort((a,b) => a.serial - b.serial);
+      const houseNumber = h.replace("house_", "");
 
-        const header = document.createElement("div");
-        header.className = "house-title";
-        header.innerHTML = `
-          <span>House: ${houseNumber}</span>
-          <small>${housePeople.length} voters</small>
-        `;
-        houseSection.appendChild(header);
+      const section = document.createElement("div");
+      section.className = "house-section";
+      section.id = "house-section-" + h;
+      section.style.background = colors[h];
 
-        const houseContent = document.createElement("div");
-        houseContent.className = "house-content";
-        houseContent.style.overflow = "hidden";
-        houseContent.style.transition = "max-height 0.3s ease, opacity 0.3s ease";
-        houseContent.style.opacity = "1";
+      const header = document.createElement("div");
+      header.className = "house-title";
+      header.innerHTML = `
+        <span>
+          House: ${houseNumber}
+          <i class="bi bi-chevron-up collapse-icon"></i>
+        </span>
+        <small>${housePeople.length} voters</small>
+      `;
 
-        // Toggle collapse on header click
-        let collapsed = false;
-        header.style.cursor = "pointer";
-        header.addEventListener("click", () => {
-          collapsed = !collapsed;
-          if (collapsed) {
-            houseContent.style.maxHeight = "0px";
-            houseContent.style.opacity = "0";
-          } else {
-            houseContent.style.maxHeight = houseContent.scrollHeight + "px";
-            houseContent.style.opacity = "1";
-          }
-        });
+      const content = document.createElement("div");
+      content.className = "house-content";
+      content.style.maxHeight = "unset";
 
-        housePeople.forEach(p => {
-          const card = document.createElement("div");
-          card.className = "card";
+      let collapsed = false;
+      const arrow = header.querySelector(".collapse-icon");
 
-          // small click highlight effect
-          card.addEventListener("click", () => {
-            card.style.boxShadow = "0 0 0 3px rgba(37,99,235,.4)";
-            setTimeout(() => { card.style.boxShadow = "0 4px 14px rgba(0,0,0,.08)"; }, 250);
-startConfetti();
-          });
+      header.style.cursor = "pointer";
 
-          const img = document.createElement("img");
-          img.className = "voter-photo";
-          img.alt = p.name || "";
-          img.dataset.src = `photos/${p.serial}.jpg`;
-          img.loading = "lazy";
-          img.addEventListener("click", e => {
-            e.stopPropagation();
-            if (typeof openPhoto === "function") openPhoto(img.src || img.dataset.src);
-          });
+      header.addEventListener("click", () => {
+        collapsed = !collapsed;
 
-          const duplicateBadge = duplicateBYPs.has(p.byp)
-            ? `<span class="dup-badge">DUPLICATE</span>`
-            : "";
+        if (collapsed) {
+          content.style.maxHeight = "0px";
+          content.style.opacity = "0";
+          arrow.classList.add("rotate");
+        } else {
+          content.style.maxHeight = content.scrollHeight + "px";
+          content.style.opacity = "1";
+          arrow.classList.remove("rotate");
+        }
+        startConfetti();
+      });
 
-          const genderLabel = normalizeGender(p.gender);
-          const genderClass = genderLabel === "Male" ? "male" : "female";
+      // Add Voters
+      housePeople.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "card";
 
-          const casteColor = getCasteColor(p.caste);
+        const photoPath = `photos/${p.serial}.jpg`;
 
-          const fatherLine  = p.father  ? `<p><strong>Father:</strong> ${p.father}</p>`   : "";
-          const husbandLine = p.husband ? `<p><strong>Husband:</strong> ${p.husband}</p>` : "";
+        const duplicateBadge = duplicateBYPs.has(p.byp)
+          ? `<span class="dup-badge" data-byp="${p.byp}">DUPLICATE</span>`
+          : "";
 
-          const content = document.createElement("div");
-          content.className = "card-content";
-          content.innerHTML = `
+        card.innerHTML = `
+          <img src="${photoPath}" class="voter-photo" onclick="openPhoto(this.src)">
+          <div class="card-content">
             <h3 class="card-header-line">
               <span>
-                ${p.name}
-                <span class="pill">#${p.serial}</span>
+                ${p.name} <span class="pill">#${p.serial}</span> 
                 ${duplicateBadge}
               </span>
-              <span class="gender-pill ${genderClass}">${genderLabel}</span>
-            </h3>
-            ${fatherLine}
-            ${husbandLine}
-            <p><strong>BYP:</strong> ${p.byp}</p>
-            <p><strong>Age:</strong> ${p.age}</p>
-            <p><strong>Caste:</strong> 
-              <span class="pill caste-pill" style="background:${casteColor.bg};color:${casteColor.text};">
-                ${p.caste}
+              <span class="gender-pill ${normalizeGender(p.gender).toLowerCase()}">
+                ${normalizeGender(p.gender)}
               </span>
-            </p>
-          `;
+            </h3>
 
-          card.appendChild(img);
-          card.appendChild(content);
-          houseContent.appendChild(card);
+            ${p.father ? `<p><strong>Father:</strong> ${p.father}</p>` : ""}
+            ${p.husband ? `<p><strong>Husband:</strong> ${p.husband}</p>` : ""}
 
-          lazyImages.push(img);
-          if (duplicateBYPs.has(p.byp)) {
-            duplicateCards.push(card);
-          }
-        });
+            <p class="byp-field"><strong>BYP:</strong> ${p.byp}</p>
+            <p><strong>Age:</strong> ${p.age}</p>
 
-        // set initial maxHeight for animation
-        requestAnimationFrame(() => {
-          houseContent.style.maxHeight = houseContent.scrollHeight + "px";
-        });
+            <p><strong>Caste:</strong> <span class="pill">${p.caste}</span></p>
+          </div>
+        `;
 
-        houseSection.appendChild(houseContent);
-        resultsDiv.appendChild(houseSection);
+        content.appendChild(card);
       });
 
-    setupLazyLoading();
-    updateDuplicateUI();
+      section.appendChild(header);
+      section.appendChild(content);
+      resultsDiv.appendChild(section);
+    });
   }
 
   // ----------------------------
-  // CASTE COLOR MAP
-  // ----------------------------
-  function getCasteColor(caste) {
-    switch (caste) {
-      case "Muslim": return { bg:"#bbf7d0", text:"#166534" };
-      case "SC":     return { bg:"#fee2e2", text:"#b91c1c" };
-      case "ST":     return { bg:"#fef3c7", text:"#92400e" };
-      case "OBC":    return { bg:"#dbeafe", text:"#1d4ed8" };
-      default:       return { bg:"#e5e7ff", text:"#111827" };
-    }
-  }
-
-  // ----------------------------
-  // LAZY LOAD IMAGES
-  // ----------------------------
-  function setupLazyLoading() {
-    if ("IntersectionObserver" in window) {
-      observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const img = entry.target;
-            if (img.dataset.src && !img.src) {
-              img.src = img.dataset.src;
-            }
-            observer.unobserve(img);
-          }
-        });
-      },{
-        root:null,
-        rootMargin:"100px",
-        threshold:0.01
-      });
-
-      lazyImages.forEach(img => observer.observe(img));
-    } else {
-      // fallback: load all
-      lazyImages.forEach(img => {
-        if (img.dataset.src) img.src = img.dataset.src;
-      });
-    }
-  }
-
-  // ----------------------------
-  // FILTERS (Age + House)
+  // FILTERS
   // ----------------------------
   function applyFilters() {
     let filtered = [...allPeople];
 
-    const ageVal   = filterAge.value;
-    const houseVal = filterHouse.value;
-
-    if (houseVal) {
-      filtered = filtered.filter(p => p.house === houseVal);
-    }
-
-    if (ageVal) {
-      const [min, max] = ageVal.split("-").map(Number);
+    if (filterAge.value) {
+      const [min, max] = filterAge.value.split("-").map(Number);
       filtered = filtered.filter(p => p.age >= min && p.age <= max);
     }
 
+    if (filterHouse.value) {
+      filtered = filtered.filter(p => p.house === filterHouse.value);
+    }
+
     renderResults(filtered);
+    buildDuplicateCycle();
   }
 
-  filterAge.onchange   = applyFilters;
+  filterAge.onchange = applyFilters;
   filterHouse.onchange = applyFilters;
 
   // ----------------------------
-  // SEARCH (debounced, includes caste)
+  // SEARCH
   // ----------------------------
-  let searchTimer = null;
-
-  function handleSearch() {
+  searchInput.addEventListener("input", () => {
     const q = searchInput.value.toLowerCase().trim();
-
     if (!q) {
-      applyFilters();
+      renderResults(allPeople);
+      buildDuplicateCycle();
       return;
     }
 
     const matched = allPeople.filter(p =>
-      (p.name || "").toLowerCase().includes(q) ||
-      (p.caste || "").toLowerCase().includes(q) ||
+      p.name.toLowerCase().includes(q) ||
       String(p.serial).includes(q) ||
-      (p.byp || "").toLowerCase().includes(q)
+      (p.byp || "").toLowerCase().includes(q) ||
+      p.caste.toLowerCase().includes(q)
     );
 
-    if (!matched.length) {
-      renderResults([]);
-      return;
-    }
-
-    const houses = new Set(matched.map(p => p.house));
-    const list = allPeople.filter(p => houses.has(p.house));
-
-    renderResults(list);
-
-    filterAge.value = "";
-    filterHouse.value = "";
-  }
-
-  searchInput.addEventListener("input", () => {
-    clearTimeout(searchTimer);
-    searchTimer = setTimeout(handleSearch, 150);  // instant feel
+    renderResults(matched);
+    buildDuplicateCycle();
   });
 
   // ----------------------------
   // BACK TO TOP
   // ----------------------------
   window.addEventListener("scroll", () => {
+    if (!backToTop) return;
     backToTop.style.display = window.scrollY > 200 ? "block" : "none";
-    updateBreadcrumbAndNav();
   });
 
-  backToTop.addEventListener("click", () => {
-    window.scrollTo({ top:0, behavior:"smooth" });
-  });
+  if (backToTop) {
+    backToTop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   // ----------------------------
-  // BREADCRUMB + HOUSE NAV ACTIVE
+  // BREADCRUMB UPDATE
   // ----------------------------
-  function updateBreadcrumbAndNav() {
+  function updateBreadcrumbOnScroll() {
     const sections = document.querySelectorAll(".house-section");
     let current = "All Houses";
-    let currentHouseKey = null;
 
     sections.forEach(sec => {
-      const rect = sec.getBoundingClientRect();
-      if (rect.top <= 140 && rect.bottom >= 140) {
-        const titleSpan = sec.querySelector(".house-title span");
-        if (titleSpan) {
-          current = titleSpan.textContent.replace("House: ","");
-          currentHouseKey = sec.id.replace("house-section-","");
-        }
+      const r = sec.getBoundingClientRect();
+      if (r.top <= 130 && r.bottom >= 130) {
+        current = sec.querySelector(".house-title span").textContent.replace("House: ", "");
       }
     });
 
     breadcrumbHouse.textContent = current;
-
-    // nav active
-    document.querySelectorAll(".house-nav-item").forEach(btn => {
-      if (currentHouseKey && btn.dataset.house === currentHouseKey) {
-        btn.classList.add("active");
-      } else {
-        btn.classList.remove("active");
-      }
-    });
   }
 
+  window.addEventListener("scroll", updateBreadcrumbOnScroll);
+
   // ----------------------------
-  // DUPLICATE UI (button + stat click)
+  // PREMIUM CONFETTI SYSTEM
   // ----------------------------
-  function updateDuplicateUI() {
-    if (duplicateCards.length > 0) {
-      dupJumpBtn.style.display = "block";
-    } else {
-      dupJumpBtn.style.display = "none";
+  function startConfetti() {
+    const confettiCount = 120;
+    const canvas = document.createElement("canvas");
+    canvas.style.position = "fixed";
+    canvas.style.left = 0;
+    canvas.style.top = 0;
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.pointerEvents = "none";
+    canvas.style.zIndex = "999999";
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width = innerWidth;
+    const h = canvas.height = innerHeight;
+
+    const conf = [];
+    for (let i = 0; i < confettiCount; i++) {
+      conf.push({
+        x: Math.random() * w,
+        y: Math.random() * h - h,
+        r: Math.random() * 6 + 4,
+        d: Math.random() * confettiCount,
+        color: `hsl(${Math.random()*360},100%,60%)`
+      });
     }
+
+    function draw() {
+      ctx.clearRect(0,0,w,h);
+      conf.forEach((c,i)=>{
+        ctx.beginPath();
+        ctx.arc(c.x,c.y,c.r,0,Math.PI*2);
+        ctx.fillStyle=c.color;
+        ctx.fill();
+        c.y+=Math.cos(c.d)+1+c.r/2;
+        c.x+=Math.sin(c.d);
+        if(c.y>h) conf[i]={...c,y:-10,x:Math.random()*w};
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+
+    setTimeout(()=>canvas.remove(),2000);
   }
 
-  function jumpToNextDuplicate() {
-    if (!duplicateCards.length) return;
-    const card = duplicateCards[duplicateIndex];
-    duplicateIndex = (duplicateIndex + 1) % duplicateCards.length;
+  // ----------------------------------------------------
+  // 🔁 DUPLICATE SYSTEM — FINAL FIXED VERSION
+  // ----------------------------------------------------
 
-    card.scrollIntoView({ behavior:"smooth", block:"center" });
-    const oldShadow = card.style.boxShadow;
-    card.style.boxShadow = "0 0 0 3px #f97316";
-    setTimeout(() => { card.style.boxShadow = oldShadow || "0 4px 14px rgba(0,0,0,.08)"; }, 1500);
+  function buildDuplicateCycle() {
+    dupCycle = [...duplicateBYPs];
+    dupIndex = 0;
+    dupBtn.style.display = dupCycle.length ? "block" : "none";
   }
 
-  statDup.addEventListener("click", jumpToNextDuplicate);
-  dupJumpBtn.addEventListener("click", jumpToNextDuplicate);
+  // Jump Button (one-by-one)
+  dupBtn.addEventListener("click", () => {
+    if (!dupCycle.length) return;
 
-// -----------------------------
-// PREMIUM CONFETTI SYSTEM 🎉
-// -----------------------------
-function startConfetti() {
-  const confettiCount = 120;
-  const defaults = {
-    spread: 60,
-    ticks: 60,
-    gravity: 0.9,
-    decay: 0.92,
-    startVelocity: 35
-  };
+    const bypID = dupCycle[dupIndex];
+    scrollToDuplicate(bypID);
 
-  const canvas = document.createElement("canvas");
-  canvas.style.position = "fixed";
-  canvas.style.left = "0";
-  canvas.style.top = "0";
-  canvas.style.width = "100%";
-  canvas.style.height = "100%";
-  canvas.style.pointerEvents = "none";
-  canvas.style.zIndex = "999999";
+    dupIndex = (dupIndex + 1) % dupCycle.length;
+  });
 
-  document.body.appendChild(canvas);
+  // Badge click → highlight + show all duplicates
+  document.addEventListener("click", e => {
+    if (e.target.classList.contains("dup-badge")) {
+      const bypID = e.target.dataset.byp;
 
-  const ctx = canvas.getContext("2d");
-  const w = canvas.width = innerWidth;
-  const h = canvas.height = innerHeight;
+      // Reset cycle index so next button click works correctly
+      const idx = dupCycle.indexOf(bypID);
+      if (idx !== -1) dupIndex = idx;
 
-  const confetti = [];
+      scrollToDuplicate(bypID);
+    }
+  });
 
-  for (let i = 0; i < confettiCount; i++) {
-    confetti.push({
-      x: Math.random() * w,
-      y: Math.random() * h - h,
-      r: Math.random() * 6 + 4,
-      d: Math.random() * confettiCount,
-      color: `hsl(${Math.random() * 360}, 100%, 60%)`,
-      tilt: Math.random() * 10 - 10
-    });
-  }
+  // Scroll function
+  function scrollToDuplicate(bypID) {
 
-  function draw() {
-    ctx.clearRect(0, 0, w, h);
+    const cards = [...document.querySelectorAll(".card")].filter(card => {
+      const bypField = card.querySelector(".byp-field"); // ✅ FIX: not nth-of-type
+      if (!bypField) return false;
 
-    confetti.forEach((c, i) => {
-      ctx.beginPath();
-      ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
-      ctx.fillStyle = c.color;
-      ctx.fill();
-
-      c.y += Math.cos(c.d) + 1 + c.r / 2;
-      c.x += Math.sin(c.d);
-
-      if (c.y > h) confetti[i] = { ...c, y: -10, x: Math.random() * w };
+      const text = bypField.innerText.replace("BYP:", "").trim().toLowerCase();
+      return text === String(bypID).toLowerCase();
     });
 
-    requestAnimationFrame(draw);
+    if (!cards.length) return;
+
+    // Highlight ALL duplicates
+    cards.forEach(card => {
+      card.style.boxShadow = "0 0 0 4px #ff8800";
+      setTimeout(() => card.style.boxShadow = "", 1500);
+    });
+
+    // Scroll to first duplicate
+    cards[0].scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
   }
+// CLICK ANY DUPLICATE CARD → JUMP TO ITS OTHER DUPLICATES
+document.addEventListener("click", e => {
+  const card = e.target.closest(".card");
+  if (!card) return;
 
-  draw();
+  const bypField = card.querySelector(".byp-field");
+  if (!bypField) return;
 
-  setTimeout(() => {
-    canvas.remove();
-  }, 2500);
-}
+  const bypID = bypField.innerText.replace("BYP:", "").trim();
+
+  if (!duplicateBYPs.has(bypID)) return; // Not duplicate → do nothing
+
+  // Find all duplicate cards
+  const cards = [...document.querySelectorAll(".card")].filter(c => {
+    const f = c.querySelector(".byp-field");
+    if (!f) return false;
+    return f.innerText.replace("BYP:", "").trim() === bypID;
+  });
+
+  if (cards.length < 2) return;
+
+  const currentIndex = cards.indexOf(card);
+  const nextCard = cards[(currentIndex + 1) % cards.length];
+
+  // Highlight all duplicates
+  cards.forEach(c => {
+    c.style.boxShadow = "0 0 0 4px #ff8800";
+    setTimeout(() => c.style.boxShadow = "", 1500);
+  });
+
+  // Scroll to the next duplicate
+  nextCard.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+});
 
 });
