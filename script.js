@@ -4,21 +4,24 @@ document.addEventListener("DOMContentLoaded", () => {
   // CASTE AUTO-DETECT RULES
   // ----------------------------
   function detectCaste(nameRaw) {
-    if (!nameRaw) return "General";
-    const name = (" " + nameRaw.toLowerCase() + " ");
+  if (!nameRaw) return "General";
 
-    const MUSLIM = [" laskar"," uddin"," hussain"," hossain"," ali"," ahmed"," ahmad"," begum"," khatun"," barbhuiya"," mia"];
-    const SC     = ["roy"," das ", " namashudra"," namasudra"," namsudra"," sarkar"," debnath"];
-    const ST     = [" majhi ", " tudu ", " hansda ", " murmu ", " basumatary "];
-    const OBC    = [" mallick ", " mallik ", " dey ", " sukla ", " suklabaidya", " bhadra", " deb "];
+  const name = nameRaw.trim().toLowerCase();
+  const parts = name.split(/\s+/);
+  const last = " " + parts[parts.length - 1] + " "; // last name only
 
-    if (MUSLIM.some(k => name.includes(k))) return "Muslim";
-    if (SC.some(k => name.includes(k)))     return "SC";
-    if (ST.some(k => name.includes(k)))     return "ST";
-    if (OBC.some(k => name.includes(k)))    return "OBC";
+  const MUSLIM = [" laskar "," uddin "," hussain "," hossain "," ali "," ahmed "," ahmad "," begum "," khatun "," barbhuiya "," mia "];
+  const SC     = [" roy "," das "," namashudra "," namasudra "," namsudra "," sarkar "," debnath "];
+  const ST     = [" majhi "," tudu "," hansda "," murmu "," basumatary "];
+  const OBC    = [" mallick "," mallik "," dey "," sukla "," suklabaidya "," bhadra "," deb "];
 
-    return "General";
-  }
+  if (MUSLIM.some(k => last.includes(k))) return "Muslim";
+  if (SC.some(k => last.includes(k)))     return "SC";
+  if (ST.some(k => last.includes(k)))     return "ST";
+  if (OBC.some(k => last.includes(k)))    return "OBC";
+
+  return "General";
+}
 
   // ----------------------------
   // DOM ELEMENTS
