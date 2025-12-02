@@ -259,6 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             <p class="byp-field"><strong>BYP:</strong> ${p.byp}</p>
             <p><strong>Age:</strong> ${p.age}</p>
+            ${p.mobile ? `<p><strong>Mobile:</strong> ${p.mobile}</p>` : ""}
 
             <p><strong>Caste:</strong> <span class="pill">${p.caste}</span></p>
           </div>
