@@ -329,6 +329,24 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
   overflow: hidden;
   transition: max-height .3s ease, opacity .25s ease;
 }
+  /* FULL PHOTO VIEWER */
+#photoViewer{
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.85);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999999;
+}
+
+#photoViewer img{
+  max-width:92%;
+  max-height:92%;
+  border-radius:12px;
+  box-shadow:0 0 25px rgba(255,255,255,0.5);
+}
 </style>
 </head>
 
