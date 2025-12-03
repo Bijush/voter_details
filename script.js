@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const last = " " + parts[parts.length - 1] + " "; // last name only
 
   const MUSLIM = [" laskar "," uddin "," hussain "," hossain "," ali "," ahmed "," ahmad "," begum "," khatun "," barbhuiya "," mia "];
-  const SC     = [" roy "," das "," namashudra "," namasudra "," namsudra "," sarkar "," debnath "];
+  const SC     = [" roy ","ray"," das "," namashudra "," namasudra "," namsudra ","nomosudra","nomasudra","namosudra"," sarkar "," debnath "];
   const ST     = [" majhi "," tudu "," hansda "," murmu "," basumatary "];
   const OBC    = [" mallick "," mallik "," dey "," sukla "," suklabaidya "," bhadra "," deb "];
 
@@ -43,9 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const houseNav = document.getElementById("houseNav");
   const breadcrumbHouse = document.getElementById("breadcrumbHouse");
-
-const statHouses = document.getElementById("statHouses");
-
   const dupBtn = document.getElementById("dupJumpBtn");
   const backToTop = document.getElementById("backToTop"); // ✅ FIX: backToTop defined
 
@@ -158,11 +155,10 @@ const statHouses = document.getElementById("statHouses");
   // ----------------------------
   // UPDATE STATS
   // ----------------------------
-  function 
-updateStats(list) {
-
-statHouses.textContent = new Set(list.map(p => p.house)).size;
-
+  function updateStats(list) {
+  
+  statHouses.textContent = new Set(list.map(p => p.house)).size;
+  
     statTotal.textContent  = list.length;
     statMale.textContent   = list.filter(p => normalizeGender(p.gender) === "Male").length;
     statFemale.textContent = list.filter(p => normalizeGender(p.gender) === "Female").length;
@@ -214,11 +210,15 @@ statHouses.textContent = new Set(list.map(p => p.house)).size;
       `;
 
       const content = document.createElement("div");
-      content.className = "house-content";
-      content.style.maxHeight = "unset";
+content.className = "house-content";
 
-      let collapsed = false;
-      const arrow = header.querySelector(".collapse-icon");
+/* 🔥 Default collapsed when loading */
+content.style.maxHeight = "0px";
+content.style.opacity = "0";
+
+let collapsed = true; // default CLOSED
+const arrow = header.querySelector(".collapse-icon");
+arrow.classList.add("rotate"); // arrow down
 
       header.style.cursor = "pointer";
 
@@ -247,6 +247,14 @@ statHouses.textContent = new Set(list.map(p => p.house)).size;
         const duplicateBadge = duplicateBYPs.has(p.byp)
           ? `<span class="dup-badge" data-byp="${p.byp}">DUPLICATE</span>`
           : "";
+          
+          // new Adding
+          
+          const photoExists = (p.photo !== false && p.photo !== "no" && p.photo !== "" && p.photo !== null);
+          
+          const photoBadge = photoExists 
+  ? "" 
+  : `<span class="dup-badge" style="background:#dc2626">NO PHOTO</span>`;
 
         card.innerHTML = `
           <img src="${photoPath}" class="voter-photo" onclick="openPhoto(this.src)">
@@ -254,7 +262,8 @@ statHouses.textContent = new Set(list.map(p => p.house)).size;
             <h3 class="card-header-line">
               <span>
                 ${p.name} <span class="pill">#${p.serial}</span> 
-                ${duplicateBadge}
+               ${duplicateBadge}
+               ${photoBadge}
               </span>
               <span class="gender-pill ${normalizeGender(p.gender).toLowerCase()}">
                 ${normalizeGender(p.gender)}
@@ -266,9 +275,10 @@ statHouses.textContent = new Set(list.map(p => p.house)).size;
 
             <p class="byp-field"><strong>BYP:</strong> ${p.byp}</p>
             <p><strong>Age:</strong> ${p.age}</p>
-            ${p.mobile ? `<p><strong>Mobile:</strong> ${p.mobile}</p>` : ""}
 
-            <p><strong>Caste:</strong> <span class="pill">${p.caste}</span></p>
+<p><strong>Caste:</strong> <span class="pill">${p.caste}</span></p>
+
+${p.mobile ? `<p><strong>Mobile:</strong> <a href="tel:${p.mobile}" style="color:#2563eb;font-weight:600">${p.mobile} 📞</a></p>` : ""}
           </div>
         `;
 
@@ -499,11 +509,7 @@ document.addEventListener("click", e => {
   });
 });
 
-// Side Bar Code
-// ----------------------------
-// SIDEBAR TOGGLE SYSTEM
-// ----------------------------
-
+// Side bar Code
 const sidebar = document.querySelector(".sidebar");
 const sidebarOverlay = document.getElementById("sidebarOverlay");
 const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
@@ -526,5 +532,6 @@ sidebarOverlay.addEventListener("click", () => {
   sidebar.classList.remove("open");
   sidebarOverlay.style.display = "none";
 });
+
 
 });
