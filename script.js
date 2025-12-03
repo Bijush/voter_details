@@ -43,6 +43,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const houseNav = document.getElementById("houseNav");
   const breadcrumbHouse = document.getElementById("breadcrumbHouse");
+
+const statHouses = document.getElementById("statHouses");
+
   const dupBtn = document.getElementById("dupJumpBtn");
   const backToTop = document.getElementById("backToTop"); // ✅ FIX: backToTop defined
 
@@ -155,7 +158,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // ----------------------------
   // UPDATE STATS
   // ----------------------------
-  function updateStats(list) {
+  function 
+updateStats(list) {
+
+statHouses.textContent = new Set(list.map(p => p.house)).size;
+
     statTotal.textContent  = list.length;
     statMale.textContent   = list.filter(p => normalizeGender(p.gender) === "Male").length;
     statFemale.textContent = list.filter(p => normalizeGender(p.gender) === "Female").length;
@@ -490,6 +497,34 @@ document.addEventListener("click", e => {
     behavior: "smooth",
     block: "center"
   });
+});
+
+// Side Bar Code
+// ----------------------------
+// SIDEBAR TOGGLE SYSTEM
+// ----------------------------
+
+const sidebar = document.querySelector(".sidebar");
+const sidebarOverlay = document.getElementById("sidebarOverlay");
+const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
+const sidebarCloseBtn = document.querySelector(".sidebar-close-btn");
+
+// Open sidebar
+toggleSidebarBtn.addEventListener("click", () => {
+  sidebar.classList.add("open");
+  sidebarOverlay.style.display = "block";
+});
+
+// Close sidebar
+sidebarCloseBtn.addEventListener("click", () => {
+  sidebar.classList.remove("open");
+  sidebarOverlay.style.display = "none";
+});
+
+// Click outside → close sidebar
+sidebarOverlay.addEventListener("click", () => {
+  sidebar.classList.remove("open");
+  sidebarOverlay.style.display = "none";
 });
 
 });
