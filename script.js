@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const last = " " + parts[parts.length - 1] + " "; // last name only
 
   const MUSLIM = [" laskar "," uddin "," hussain "," hossain "," ali "," ahmed "," ahmad "," begum "," khatun "," barbhuiya "," mia "];
-  const SC     = [" roy ","ray"," das "," namashudra "," namasudra "," namsudra ","nomosudra","nomasudra","namosudra"," sarkar "," debnath "];
+  const SC     = [" roy "," das "," namashudra "," namasudra "," namsudra "," sarkar "," debnath "];
   const ST     = [" majhi "," tudu "," hansda "," murmu "," basumatary "];
   const OBC    = [" mallick "," mallik "," dey "," sukla "," suklabaidya "," bhadra "," deb "];
 
@@ -213,12 +213,13 @@ document.addEventListener("DOMContentLoaded", () => {
 content.className = "house-content";
 
 /* 🔥 Default collapsed when loading */
-content.style.maxHeight = "0px";
-content.style.opacity = "0";
+content.style.maxHeight = "unset";
+content.style.opacity = "1";
 
-let collapsed = true; // default CLOSED
+let collapsed = false; // default CLOSED
 const arrow = header.querySelector(".collapse-icon");
-arrow.classList.add("rotate"); // arrow down
+arrow.classList.remove("rotate");
+ // arrow down
 
       header.style.cursor = "pointer";
 
