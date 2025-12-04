@@ -50,6 +50,15 @@
       "age": 32,
       "gender": "Female",
       "byp": "BYP1484599"
+    },
+    {
+      "serial": 835,
+      "name": "Chayan Das",
+      "father": "Chandan Das",
+      "age": 19,
+      "gender": "Male",
+      "byp": "WJW0136036",
+      "mobile": "7035309030"
     }
     
   ],
@@ -447,6 +456,14 @@
       "age": 30,
       "gender": "Male",
       "byp": "BYP0177055"
+    },
+    {
+      "serial": 827,
+      "name": "Purba Namashudra",
+      "husband": "Jhontu Namashudra",
+      "age": 21,
+      "gender": "Female",
+      "byp": "WJW0114702"
     }
   ],
 
@@ -1119,6 +1136,16 @@
       "age": 37,
       "gender": "Female",
       "byp": "BYP1490068"
+    },
+     {
+      "serial": 851,
+      "name": "Pushpanjali Mazumdar",
+      "father": "Radhakanta Mazumdar",
+      "husband": null,
+      "age": 28,
+      "gender": "Female",
+      "byp": "WJW0152637",
+      "mobile": "9954056064"
     }
   ],
 
@@ -1527,6 +1554,16 @@
       "age": 47,
       "gender": "Female",
       "byp": "BYP0050559"
+    },
+     {
+      "serial": 850,
+      "name": "Jahid Hussain Barbhuiya",
+      "father": "Abdul Kadir",
+      "husband": null,
+      "age": 22,
+      "gender": "Male",
+      "byp": "WJW0152355",
+      "mobile": "7099253233"
     }
   ],
 
@@ -1759,7 +1796,29 @@
       "age": 22,
       "gender": "Male",
       "byp": "WJW0041822"
+    },
+    {
+      "serial": 841,
+      "name": "Jubair Ahmed Laskar",
+      "father": "Jariful Ali Laskar",
+      "age": 18,
+      "gender": "Male",
+      "byp": "WJW0141135",
+      "mobile": "9387332456"
     }
+  ],
+  
+  "house_23CH":[
+  {
+      "serial": 842,
+      "name": "Chameli Namashudra",
+      "husband": "Rajen Namashudra",
+      "age": 22,
+      "gender": "Female",
+      "byp": "WJW0141754",
+      "mobile": "9101436538"
+    }
+      
   ],
  
   "house_23K": [
@@ -1785,6 +1844,7 @@
       "byp": "BYP1485605"
     }
     ],
+    
 
   "house_24": [
    {
@@ -2265,6 +2325,24 @@
       "age": 43,
       "gender": "Male",
       "byp": "BYP1485912"
+    },
+     {
+      "serial": 837,
+      "name": "Nibaron Namashudra",
+      "father": "Meghlal Namashudra",
+      "age": 20,
+      "gender": "Male",
+      "byp": "WJW0136937",
+      "mobile": "9387332456"
+    },
+    {
+      "serial": 838,
+      "name": "Samiran Namashudra",
+      "mother": "Anjali Namashudra",
+      "age": 22,
+      "gender": "Male",
+      "byp": "WJW0136994",
+      "mobile": "9387332456"
     }
   ],
 
@@ -2619,6 +2697,14 @@
       "age": 50,
       "gender": "Male",
       "byp": "BYP0419747"
+    },
+    {
+      "serial": 834,
+      "name": "Mousumi Das",
+      "father": "Nipesh Das",
+      "age": 22,
+      "gender": "Female",
+      "byp": "WJW0135467"
     }
   ],
 
@@ -2749,6 +2835,15 @@
       "age": 34,
       "gender": "Male",
       "byp": "BYP1486266"
+    },
+    {
+      "serial": 836,
+      "name": "Samrat Namashudra",
+      "father": "Nantu Namashudra",
+      "age": 18,
+      "gender": "Male",
+      "byp": "WJW0136390",
+      "mobile": "7099143501"
     }
   ],
   
@@ -2814,6 +2909,16 @@
       "age": 31,
       "gender": "Male",
       "byp": "BYP0009826"
+    },
+     {
+      "serial": 854,
+      "name": "Biplab Roy",
+      "father": "Shankar Roy",
+      "husband": null,
+      "age": 20,
+      "gender": "Male",
+      "byp": "WJW0155952",
+      "mobile": "6000303767"
     }
     
   ],
@@ -2827,6 +2932,16 @@
       "age": 30,
       "gender": "Male",
       "byp": "BYP0082347"
+    },
+      {
+      "serial": 853,
+      "name": "Bijoy Roy",
+      "father": "Shankar Roy",
+      "husband": null,
+      "age": 18,
+      "gender": "Male",
+      "byp": "WJW0155960",
+      "mobile": "6000303767"
     }
    
   ],
@@ -3102,6 +3217,14 @@
       "father": "Sukumar Namashudra",
       "age": 31,
       "gender": "Male"
+    },
+    {
+      "serial": 829,
+      "name": "Shilpi Namashudra",
+      "husband": "Abhijit Namashudra",
+      "age": 22,
+      "gender": "Female",
+      "byp": "WJW0127241"
     }
       
   ],
@@ -3603,6 +3726,15 @@
       "husband": "pritom Namashudra",
       "age": 28,
       "gender": "Female"
+    },
+    {
+      "serial": 839,
+      "name": "Rumi Roy",
+      "husband": "Probhin Namagunda",
+      "age": 20,
+      "gender": "Female",
+      "byp": "WJW0137026",
+      "mobile": "6901181512"
     }
     
    
@@ -3872,6 +4004,14 @@
       "father": "Lakhi Charan Roy",
       "age": 40,
       "gender": "Male"
+    },
+    {
+      "serial": 830,
+      "name": "Madhu Roy",
+      "father": "Jatindra Roy",
+      "age": 18,
+      "gender": "Male",
+      "byp": "WJW0131144"
     }
   ],
 
@@ -4188,6 +4328,16 @@
       "age": 33,
       "gender": "Female",
       "byp": "GGZ3141353"
+    },
+     {
+      "serial": 864,
+      "name": "Seema Roy",
+      "father": null,
+      "husband": "Sudhan Roy",
+      "age": 21,
+      "gender": "Female",
+      "byp": "WJW0165340",
+      "mobile": "8861292298"
     }
   ],
 
@@ -4396,6 +4546,15 @@
       "age": 27,
       "gender": "Male",
       "byp": "BYP1934231"
+    },
+    {
+      "serial": 845,
+      "name": "Sudip Namashudra",
+      "father": "Shanti Kumar Namashudra",
+      "age": 18,
+      "gender": "Male",
+      "byp": "WJW0150573",
+      "mobile": "9357332301"
     }
   ],
 
@@ -4742,6 +4901,15 @@
       "age": 29,
       "gender": "Male",
       "byp": "BYP0117226"
+    },
+    {
+      "serial": 840,
+      "name": "Sujata Namashudra",
+      "husband": "Bijoy Namashudra",
+      "age": 32,
+      "gender": "Female",
+      "byp": "WJW0139501",
+      "mobile": "9101718887"
     }
   ],
 
@@ -5053,6 +5221,16 @@
       "age": 22,
       "gender": "Male",
       "byp": "BYP1485904"
+    },
+    {
+      "serial": 855,
+      "name": "Supriya Roy",
+      "father": null,
+      "husband": "Sudip Namashudra",
+      "age": 20,
+      "gender": "Female",
+      "byp": "WJW0157081",
+      "mobile": "6900205089"
     }
   ],
 
@@ -5296,6 +5474,32 @@
       "gender": "Female"
     }
   ],
+  
+  "house_82CH": [
+    {
+      "serial": 662,
+      "name": "Bijit Namashudra",
+      "father": "Bhuban Namasudra",
+      "husband": null,
+      "age": 33,
+      "gender": "Male",
+      "byp": "WJW0164822",
+      "mobile": "6901480635"
+    }
+    ],
+    
+     "house_82J": [
+    {
+      "serial": 563,
+      "name": "Bikram Namashudra",
+      "father": "Bhuban Namasudra",
+      "husband": null,
+      "age": 29,
+      "gender": "Male",
+      "byp": "WJW0164830",
+      "mobile": "9343464120"
+    }
+    ],
 
   "house_83": [
     {
@@ -5793,6 +5997,16 @@
       "husband": "Ramkrishna Dey",
       "age": 35,
       "gender": "Female"
+    },
+    {
+      "serial": 852,
+      "name": "Papia Biswas",
+      "father": null,
+      "husband": "Sumitra Namasudra",
+      "age": 20,
+      "gender": "Female",
+      "byp": "WJW0155861",
+      "mobile": "9394446480"
     }
   ],
 
@@ -5938,6 +6152,16 @@
       "age": 50,
       "gender": "Female",
       "byp": "BYP1488739"
+    },
+     {
+      "serial": 857,
+      "name": "Sujata Namashudra",
+      "father": null,
+      "husband": "Babla Dey",
+      "age": 22,
+      "gender": "Female",
+      "byp": "WJW0161398",
+      "mobile": "8257907621"
     }
   ],
 
@@ -6734,6 +6958,15 @@
       "father": "Rabindra Chandra Das",
       "age": 36,
       "gender": "Male"
+    },
+    {
+      "serial": 844,
+      "name": "Pallabi Das",
+      "husband": "Sambhu Das",
+      "age": 20,
+      "gender": "Female",
+      "byp": "WJW0148429",
+      "mobile": "9954912355"
     }
   ],
 
@@ -6859,7 +7092,20 @@
       "gender": "Female"
     }
   ],
-
+  
+ "house_117K": [
+    {
+      "serial": 861,
+      "name": "Lakhi Namashudra",
+      "father": null,
+      "husband": "Mohanlal Namasudra",
+      "age": 33,
+      "gender": "Female",
+      "byp": "WJW0164517",
+      "mobile": "9101169045"
+    }
+  ],
+  
   "house_118": [
     {
       "serial": 727,
@@ -6908,6 +7154,22 @@
       "father": "Harendra Namashudra",
       "age": 31,
       "gender": "Male"
+    },
+    {
+      "serial": 831,
+      "name": "Rajen Namashudra",
+      "father": "Jayanti Namashudra",
+      "age": 20,
+      "gender": "Male",
+      "byp": "WJW0132159"
+    },
+    {
+      "serial": 832,
+      "name": "Krishna Mohan Namashudra",
+      "mother": "Jayanti Namashudra",
+      "age": 23,
+      "gender": "Male",
+      "byp": "WJW0132167"
     }
   ],
 
@@ -6994,6 +7256,16 @@
       "husband": "Pintu Roy",
       "age": 23,
       "gender": "Female"
+    },
+    {
+      "serial": 858,
+      "name": "Lokesh Roy",
+      "father": "Jyotish Roy",
+      "husband": null,
+      "age": 32,
+      "gender": "Male",
+      "byp": "WJW0162875",
+      "mobile": "9387785959"
     }
   ],
 
@@ -7024,6 +7296,15 @@
       "father": "Ratan Majhi",
       "age": 44,
       "gender": "Male"
+    },
+    {
+      "serial": 843,
+      "name": "Ashababu Majhi",
+      "father": "Meghnath Majhi",
+      "age": 18,
+      "gender": "Male",
+      "byp": "WJW0148403",
+      "mobile": "9678054795"
     }
   ],
 
@@ -7566,6 +7847,82 @@
       "gender": "Female",
       "byp": "BYP1504467"
     }
-  ]
+  ],
   
+  "house_196K": [
+    {
+      "serial": 828,
+      "name": "Jhontu Das",
+      "father": "Nityananda Das",
+      "age": 24,
+      "gender": "Male",
+      "byp": "BYP0159954"
+    }
+  ],
+   "house_391": [
+    {
+      "serial": 846,
+      "name": "Ranjana Roy",
+      "husband": "Sattya Roy",
+      "age": 41,
+      "gender": "Female",
+      "byp": "BYP0525519"
+    },
+    {
+      "serial": 847,
+      "name": "Satya Ranjan Roy",
+      "father": "Harendra Roy",
+      "husband": null,
+      "age": 51,
+      "gender": "Female",
+      "byp": "BYP7937919"
+    }
+  ],
+  "house_392": [
+    {
+      "serial": 848,
+      "name": "Harmoni Roy",
+      "father": "Dinmoni Roy",
+      "husband": null,
+      "age": 43,
+      "gender": "Male",
+      "byp": "BYP4437530",
+      "mobile": "9613793530"
+    },
+    {
+      "serial": 849,
+      "name": "Arpana Roy",
+      "father": "Harmoni Roy",
+      "husband": null,
+      "age": 52,
+      "gender": "Female",
+      "byp": "BYP4437563"
+    }
+  ],
+  
+  "house_317": [
+    {
+      "serial": 856,
+      "name": "Samar Das",
+      "father": "Nilima Das",
+      "husband": null,
+      "age": 18,
+      "gender": "Male",
+      "byp": "WJW0159756",
+      "mobile": "7628939783"
+    }
+  ],
+  
+   "house_158": [
+    {
+      "serial": 859,
+      "name": "Anjali Roy",
+      "father": null,
+      "husband": "Asim Roy",
+      "age": 25,
+      "gender": "Female",
+      "byp": "WJWD163907",
+      "mobile": "9101169048"
+    }
+  ] 
 }
