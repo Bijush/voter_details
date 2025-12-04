@@ -390,22 +390,36 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
 
         <!-- SEARCH -->
         <input id="search" type="text" placeholder="Search by name / house / serial / BYP…">
-
+<button onclick="showMissingSerials()" 
+        style="padding:8px 12px;border-radius:8px;border:1px solid #888;margin:6px 0;">
+  🔍 Show Missing Serials
+</button>
         <!-- FILTERS -->
         <div class="filter-bar">
-          <select id="filterAge">
-            <option value="">Age</option>
-            <option value="18-25">18–25</option>
-            <option value="26-40">26–40</option>
-            <option value="41-60">41–60</option>
-            <option value="60-200">60+</option>
-          </select>
+    <select id="filterAge">
+      <option value="">Age</option>
+      <option value="18-25">18–25</option>
+      <option value="26-40">26–40</option>
+      <option value="41-60">41–60</option>
+      <option value="60-200">60+</option>
+    </select>
 
-          <select id="filterHouse">
-            <option value="">House</option>
-          </select>
-        </div>
+    <select id="filterHouse">
+      <option value="">House</option>
+    </select>
 
+    <select id="filterMobile">
+      <option value="">Mobile</option>
+      <option value="has">Has Mobile</option>
+      <option value="none">No Mobile</option>
+    </select>
+
+    <!-- ⭐ NEW: SORT DROPDOWN -->
+    <select id="sortBy">
+      <option value="default">Sort</option>
+      <option value="serial">Serial (Low → High)</option>
+    </select>
+</div>
         <!-- STATS -->
         <div class="stats-bar">
           <div class="stat-chip">Total: <span id="statTotal" class="value">0</span></div>

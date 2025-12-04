@@ -26,6 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // ----------------------------
   // DOM ELEMENTS
   // ----------------------------
+  const sortBy = document.getElementById("sortBy");
+let sortMode = "default";
+
   const searchInput    = document.getElementById("search");
   const resultsDiv     = document.getElementById("results");
   const filterAge      = document.getElementById("filterAge");
@@ -44,6 +47,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const houseNav = document.getElementById("houseNav");
   const breadcrumbHouse = document.getElementById("breadcrumbHouse");
   const dupBtn = document.getElementById("dupJumpBtn");
+  
+  const filterMobile = document.getElementById("filterMobile");
+  
   const backToTop = document.getElementById("backToTop"); // ✅ FIX: backToTop defined
 
   let voterData = {};
@@ -70,15 +76,18 @@ document.addEventListener("DOMContentLoaded", () => {
   // PROCESS DATA
   // ----------------------------
   function processData() {
+  
     allPeople = [];
 
     Object.keys(voterData).forEach(h => {
       voterData[h].forEach(p => {
         allPeople.push({
-          house: h,
-          ...p,
-          caste: detectCaste(p.name)
-        });
+  house: h,
+  ...p,
+  age: Number(p.age) || 0,   // ⭐ auto-fix null/empty age
+  caste: detectCaste(p.name)
+});
+        
       });
     });
 
@@ -170,127 +179,138 @@ document.addEventListener("DOMContentLoaded", () => {
     statMus.textContent = list.filter(p => p.caste === "Muslim").length;
   }
 
+
+// Helper Function 
+function createVoterCard(p) {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  const photoPath = `photos/${p.serial}.jpg`;
+
+  const duplicateBadge = duplicateBYPs.has(p.byp)
+    ? `<span class="dup-badge" data-byp="${p.byp}">DUPLICATE</span>`
+    : "";
+    
+  const photoExists = (p.photo !== false && p.photo !== "no" && p.photo !== "" && p.photo !== null);
+
+  const photoBadge = photoExists 
+    ? "" 
+    : `<span class="dup-badge" style="background:#dc2626">NO PHOTO</span>`;
+
+  card.innerHTML = `
+    <img src="${photoPath}" class="voter-photo" onclick="openPhoto(this.src)">
+    <div class="card-content">
+      <h3 class="card-header-line">
+        <span>
+          ${p.name} <span class="pill">#${p.serial}</span>
+          ${duplicateBadge}
+          ${photoBadge}
+        </span>
+        <span class="gender-pill ${p.gender.toLowerCase()}">${p.gender}</span>
+      </h3>
+
+      ${p.father ? `<p><strong>Father:</strong> ${p.father}</p>` : ""}
+      ${p.husband ? `<p><strong>Husband:</strong> ${p.husband}</p>` : ""}
+      <p class="byp-field"><strong>BYP:</strong> ${p.byp}</p>
+      <p><strong>Age:</strong> ${p.age}</p>
+      <p><strong>Caste:</strong> <span class="pill">${p.caste}</span></p>
+
+      ${p.mobile ? `<p><strong>Mobile:</strong> <a href="tel:${p.mobile}" style="color:#2563eb;font-weight:600">${p.mobile} 📞</a></p>` : ""}
+    </div>
+  `;
+
+  return card;
+}
   // ----------------------------
   // RENDER RESULTS
   // ----------------------------
   function renderResults(list) {
 
-    resultsDiv.innerHTML = "";
-    if (!list.length) {
-      resultsDiv.innerHTML = "<p>No results found.</p>";
-      return;
-    }
+  resultsDiv.innerHTML = "";
 
-    updateStats(list);
-
-    const grouped = {};
-    list.forEach(p => {
-      if (!grouped[p.house]) grouped[p.house] = [];
-      grouped[p.house].push(p);
-    });
-
-    Object.keys(grouped).sort(sortHouseASC).forEach(h => {
-
-      const housePeople = grouped[h].sort((a,b) => a.serial - b.serial);
-      const houseNumber = h.replace("house_", "");
-
-      const section = document.createElement("div");
-      section.className = "house-section";
-      section.id = "house-section-" + h;
-      section.style.background = colors[h];
-
-      const header = document.createElement("div");
-      header.className = "house-title";
-      header.innerHTML = `
-        <span>
-          House: ${houseNumber}
-          <i class="bi bi-chevron-up collapse-icon"></i>
-        </span>
-        <small>${housePeople.length} voters</small>
-      `;
-
-      const content = document.createElement("div");
-content.className = "house-content";
-
-/* 🔥 Default collapsed when loading */
-content.style.maxHeight = "unset";
-content.style.opacity = "1";
-
-let collapsed = false; // default CLOSED
-const arrow = header.querySelector(".collapse-icon");
-arrow.classList.remove("rotate");
- // arrow down
-
-      header.style.cursor = "pointer";
-
-      header.addEventListener("click", () => {
-        collapsed = !collapsed;
-
-        if (collapsed) {
-          content.style.maxHeight = "0px";
-          content.style.opacity = "0";
-          arrow.classList.add("rotate");
-        } else {
-          content.style.maxHeight = content.scrollHeight + "px";
-          content.style.opacity = "1";
-          arrow.classList.remove("rotate");
-        }
-        startConfetti();
-      });
-
-      // Add Voters
-      housePeople.forEach(p => {
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const photoPath = `photos/${p.serial}.jpg`;
-
-        const duplicateBadge = duplicateBYPs.has(p.byp)
-          ? `<span class="dup-badge" data-byp="${p.byp}">DUPLICATE</span>`
-          : "";
-          
-          // new Adding
-          
-          const photoExists = (p.photo !== false && p.photo !== "no" && p.photo !== "" && p.photo !== null);
-          
-          const photoBadge = photoExists 
-  ? "" 
-  : `<span class="dup-badge" style="background:#dc2626">NO PHOTO</span>`;
-
-        card.innerHTML = `
-          <img src="${photoPath}" class="voter-photo" onclick="openPhoto(this.src)">
-          <div class="card-content">
-            <h3 class="card-header-line">
-              <span>
-                ${p.name} <span class="pill">#${p.serial}</span> 
-               ${duplicateBadge}
-               ${photoBadge}
-              </span>
-              <span class="gender-pill ${normalizeGender(p.gender).toLowerCase()}">
-                ${normalizeGender(p.gender)}
-              </span>
-            </h3>
-
-            ${p.father ? `<p><strong>Father:</strong> ${p.father}</p>` : ""}
-            ${p.husband ? `<p><strong>Husband:</strong> ${p.husband}</p>` : ""}
-
-            <p class="byp-field"><strong>BYP:</strong> ${p.byp}</p>
-            <p><strong>Age:</strong> ${p.age}</p>
-
-<p><strong>Caste:</strong> <span class="pill">${p.caste}</span></p>
-
-${p.mobile ? `<p><strong>Mobile:</strong> <a href="tel:${p.mobile}" style="color:#2563eb;font-weight:600">${p.mobile} 📞</a></p>` : ""}
-          </div>
-        `;
-
-        content.appendChild(card);
-      });
-
-      section.appendChild(header);
-      section.appendChild(content);
-      resultsDiv.appendChild(section);
-    });
+  if (!list.length) {
+    resultsDiv.innerHTML = "<p>No results found.</p>";
+    return;
   }
+
+  updateStats(list);
+
+  // ⭐ SERIAL SORT MODE → show full list without house grouping
+  if (sortMode === "serial") {
+
+    list.sort((a, b) => a.serial - b.serial);
+
+    list.forEach(p => {
+      const card = createVoterCard(p);
+      resultsDiv.appendChild(card);
+    });
+
+    return;  // stop here
+  }
+
+  // ⭐ DEFAULT MODE → HOUSE GROUPING WORKS
+  const grouped = {};
+  list.forEach(p => {
+    if (!grouped[p.house]) grouped[p.house] = [];
+    grouped[p.house].push(p);
+  });
+
+  Object.keys(grouped).sort(sortHouseASC).forEach(h => {
+
+    const housePeople = grouped[h].sort((a, b) => a.serial - b.serial);
+    const houseNumber = h.replace("house_", "");
+
+    const section = document.createElement("div");
+    section.className = "house-section";
+    section.id = "house-section-" + h;
+    section.style.background = colors[h];
+
+    const header = document.createElement("div");
+    header.className = "house-title";
+    header.innerHTML = `
+      <span>
+        House: ${houseNumber}
+        <i class="bi bi-chevron-up collapse-icon"></i>
+      </span>
+      <small>${housePeople.length} voters</small>
+    `;
+
+    const content = document.createElement("div");
+    content.className = "house-content";
+    content.style.maxHeight = "unset";
+    content.style.opacity = "1";
+
+    let collapsed = false;
+    const arrow = header.querySelector(".collapse-icon");
+    arrow.classList.remove("rotate");
+
+    header.style.cursor = "pointer";
+    header.addEventListener("click", () => {
+      collapsed = !collapsed;
+
+      if (collapsed) {
+        content.style.maxHeight = "0px";
+        content.style.opacity = "0";
+        arrow.classList.add("rotate");
+      } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+        content.style.opacity = "1";
+        arrow.classList.remove("rotate");
+      }
+      startConfetti();
+    });
+
+    // Add voters inside section
+    housePeople.forEach(p => {
+      const card = createVoterCard(p);
+      content.appendChild(card);
+    });
+
+    section.appendChild(header);
+    section.appendChild(content);
+    resultsDiv.appendChild(section);
+  });
+}
 
   // ----------------------------
   // FILTERS
@@ -306,6 +326,14 @@ ${p.mobile ? `<p><strong>Mobile:</strong> <a href="tel:${p.mobile}" style="color
     if (filterHouse.value) {
       filtered = filtered.filter(p => p.house === filterHouse.value);
     }
+    
+    if (filterMobile.value === "has") {
+  filtered = filtered.filter(p => p.mobile && p.mobile.trim() !== "");
+}
+
+if (filterMobile.value === "none") {
+  filtered = filtered.filter(p => !p.mobile || p.mobile.trim() === "");
+}
 
     renderResults(filtered);
     buildDuplicateCycle();
@@ -313,6 +341,7 @@ ${p.mobile ? `<p><strong>Mobile:</strong> <a href="tel:${p.mobile}" style="color
 
   filterAge.onchange = applyFilters;
   filterHouse.onchange = applyFilters;
+  filterMobile.onchange = applyFilters;
 
   // ----------------------------
   // SEARCH
@@ -534,5 +563,22 @@ sidebarOverlay.addEventListener("click", () => {
   sidebarOverlay.style.display = "none";
 });
 
+sortBy.addEventListener("change", () => {
+    sortMode = sortBy.value;
+    renderResults(allPeople);
+});
 
+// 🔍 SHOW MISSING SERIALS IN ALERT — MOBILE FRIENDLY
+window.showMissingSerials = function () {
+  const serials = allPeople.map(p => Number(p.serial));
+  const maxSerial = Math.max(...serials);
+  const serialSet = new Set(serials);
+
+  const missing = [];
+  for (let i = 1; i <= maxSerial; i++) {
+    if (!serialSet.has(i)) missing.push(i);
+  }
+
+  alert("Missing Serials (" + missing.length + "):\n\n" + missing.join(", "));
+};
 });
