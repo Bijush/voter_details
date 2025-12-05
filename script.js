@@ -98,6 +98,9 @@ document.addEventListener("DOMContentLoaded", () => {
     buildHouseNav();
     renderResults(allPeople);
     buildDuplicateCycle();
+    calculateSurveyReport();
+    renderDailyNewVoterNames();
+    renderDailyShiftVoterList();
   }
 
   function normalizeGender(g) {
@@ -576,4 +579,274 @@ if (filterHouse.value.trim() !== "") {
 
     alert("Missing Serials (" + missing.length + "):\n\n" + missing.join(", "));
   };
+  
+  
+  function isNewVoter(p) {
+  return !p.byp || p.byp.trim() === "";
+}
+  
+  // Survey Report 
+  function calculateSurveyReport() {
+
+  // Total Houses
+  const totalHouses = new Set(allPeople.map(p => p.house)).size;
+
+  // Total Voters
+  const totalVoters = allPeople.length;
+
+  // ⭐ NEW VOTERS (localStorage)
+  const store = JSON.parse(localStorage.getItem("daily_new_voters") || "{}");
+  const today = new Date().toLocaleDateString("en-GB");
+  const todayList = store[today] || [];
+  const newVoterCount = todayList.length;
+
+  // ⭐ SHIFT VOTERS (ONLY LOCALSTORAGE — user entered)
+  const shiftStore = JSON.parse(localStorage.getItem("daily_shift_voters") || "{}");
+  const shiftTodayList = shiftStore[today] || [];
+  const shiftVoterCount = shiftTodayList.length;
+
+  // Put in UI
+  document.getElementById("rptHouse").textContent = totalHouses;
+  document.getElementById("rptVoters").textContent = totalVoters;
+  document.getElementById("rptNew").textContent = newVoterCount;
+  document.getElementById("rptShift").textContent = shiftVoterCount;
+}
+// New Voter count
+
+
+// New Voter popup open / close
+// New Voter popup open / close
+document.getElementById("addNewVoterBtn").onclick = () => {
+  document.getElementById("newVoterPopup").style.display = "flex";
+};
+document.getElementById("newVoterPopup").onclick = e => {
+  if (e.target.id === "newVoterPopup") {
+    e.target.style.display = "none";
+  }
+};
+
+// ⭐ MAKE GLOBAL so HTML onclick can see it
+window.saveNewVoter = function () {
+
+  let name = nvName.value.trim();
+  let house = nvHouse.value.trim();
+  let father = nvFather.value.trim();
+
+  if (!name || !house || !father) {
+    alert("Please fill all fields: Name, House, Father/Husband");
+    return;
+  }
+
+  const today = new Date().toLocaleDateString("en-GB");
+
+  let all = JSON.parse(localStorage.getItem("daily_new_voters") || "{}");
+
+  if (!all[today]) all[today] = [];
+
+  all[today].push({
+    name: name,
+    house: house,
+    father: father
+  });
+
+  localStorage.setItem("daily_new_voters", JSON.stringify(all));
+
+  alert("New voter added!");
+  document.getElementById("newVoterPopup").style.display = "none";
+
+  nvName.value = "";
+  nvHouse.value = "";
+  nvFather.value = "";
+
+  renderDailyNewVoterNames();
+  calculateSurveyReport();
+};
+
+// Edit a new voter name
+window.editNewVoter = function (date, index) {
+  let all = JSON.parse(localStorage.getItem("daily_new_voters") || "{}");
+
+  let item = all[date][index];
+
+  let newName = prompt("Edit Name:", item.name);
+  if (!newName) return;
+
+  let newHouse = prompt("Edit House Number:", item.house);
+  if (!newHouse) return;
+
+  let newFather = prompt("Edit Father/Husband:", item.father);
+  if (!newFather) return;
+
+  all[date][index] = {
+    name: newName.trim(),
+    house: newHouse.trim(),
+    father: newFather.trim()
+  };
+
+  localStorage.setItem("daily_new_voters", JSON.stringify(all));
+
+  renderDailyNewVoterNames();
+  calculateSurveyReport();
+};
+// Delete a new voter
+window.deleteNewVoter = function (date, index) {
+  if (!confirm("Delete this entry?")) return;
+
+  let all = JSON.parse(localStorage.getItem("daily_new_voters") || "{}");
+
+  all[date].splice(index, 1);
+
+  // If that date is empty → remove the date entry
+  if (all[date].length === 0) {
+    delete all[date];
+  }
+
+  localStorage.setItem("daily_new_voters", JSON.stringify(all));
+
+  renderDailyNewVoterNames();
+  calculateSurveyReport();
+};
+
+// ⭐ MUST BE OUTSIDE saveNewVoter — FIXED POSITION
+function renderDailyNewVoterNames() {
+  const box = document.getElementById("dailyReportList");
+  let all = JSON.parse(localStorage.getItem("daily_new_voters") || "{}");
+  box.innerHTML = "";
+
+  Object.keys(all).forEach(date => {
+    const entries = all[date];
+
+    // Date Header
+    let liHeader = document.createElement("li");
+    liHeader.style.fontWeight = "700";
+    liHeader.style.marginTop = "8px";
+    liHeader.textContent = `📅 ${date}:`;
+    box.appendChild(liHeader);
+
+    entries.forEach((item, index) => {
+      let row = document.createElement("li");
+      row.style.marginLeft = "15px";
+      row.style.display = "flex";
+      row.style.justifyContent = "space-between";
+      row.style.padding = "3px 0";
+
+      row.innerHTML = `
+        <span>
+          • ${item.name}  
+          (House: ${item.house}, Father/Husband: ${item.father})
+        </span>
+
+        <span style="display:flex;gap:10px;">
+          <button onclick="editNewVoter('${date}', ${index})"
+            style="border:none;background:none;color:#2563eb;">✏️</button>
+          <button onclick="deleteNewVoter('${date}', ${index})"
+            style="border:none;background:none;color:#dc2626;">🗑️</button>
+        </span>
+      `;
+
+      box.appendChild(row);
+    });
+  });
+}
+
+// Shift Voters
+// ------------------------------
+// SHIFT VOTER SYSTEM (ONLY NAME)
+// ------------------------------
+
+// ⭐ SHIFT VOTER POPUP OPEN
+document.getElementById("addShiftVoterBtn").onclick = () => {
+    document.getElementById("shiftVoterPopup").style.display = "flex";
+};
+
+// ⭐ CLOSE POPUP WHEN CLICK OUTSIDE
+document.getElementById("shiftVoterPopup").onclick = (e) => {
+    if (e.target.id === "shiftVoterPopup") {
+        document.getElementById("shiftVoterPopup").style.display = "none";
+    }
+};
+
+// Save shift voter
+window.saveShiftVoter = function () {
+  let name = svName.value.trim();
+  if (!name) {
+    alert("Enter name");
+    return;
+  }
+
+  const today = new Date().toLocaleDateString("en-GB");
+
+  let all = JSON.parse(localStorage.getItem("daily_shift_voters") || "{}");
+
+  if (!all[today]) all[today] = [];
+
+  all[today].push(name);
+
+  localStorage.setItem("daily_shift_voters", JSON.stringify(all));
+
+  alert("Shift voter added!");
+  document.getElementById("shiftVoterPopup").style.display = "none";
+
+  renderDailyShiftVoterList();
+  calculateSurveyReport();
+};
+
+// Render shift voter daily list
+function renderDailyShiftVoterList() {
+  const box = document.getElementById("dailyShiftList");
+  let all = JSON.parse(localStorage.getItem("daily_shift_voters") || "{}");
+
+  box.innerHTML = "";
+
+  Object.keys(all).forEach(date => {
+    const names = all[date];
+
+    let liHeader = document.createElement("li");
+    liHeader.style.fontWeight = "700";
+    liHeader.style.marginTop = "6px";
+    liHeader.textContent = `${date}:`;
+    box.appendChild(liHeader);
+
+    names.forEach((n, index) => {
+      let li = document.createElement("li");
+      li.style.marginLeft = "12px";
+
+      li.innerHTML = `
+        • <span>${n}</span>
+        <button style="margin-left:10px;color:blue" onclick="editShiftVoter('${date}', ${index})">Edit</button>
+        <button style="margin-left:5px;color:red" onclick="deleteShiftVoter('${date}', ${index})">X</button>
+      `;
+      box.appendChild(li);
+    });
+  });
+}
+
+// Edit shift voter
+window.editShiftVoter = function(date, index) {
+  let all = JSON.parse(localStorage.getItem("daily_shift_voters") || "{}");
+  let currentName = all[date][index];
+
+  let newName = prompt("Edit name:", currentName);
+  if (!newName) return;
+
+  all[date][index] = newName.trim();
+  localStorage.setItem("daily_shift_voters", JSON.stringify(all));
+
+  renderDailyShiftVoterList();
+  calculateSurveyReport();
+};
+
+// Delete shift voter
+window.deleteShiftVoter = function(date, index) {
+  let all = JSON.parse(localStorage.getItem("daily_shift_voters") || "{}");
+
+  all[date].splice(index, 1);
+  if (all[date].length === 0) delete all[date];
+
+  localStorage.setItem("daily_shift_voters", JSON.stringify(all));
+
+  renderDailyShiftVoterList();
+  calculateSurveyReport();
+};
+
 });
