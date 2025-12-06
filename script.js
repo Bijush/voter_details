@@ -766,7 +766,7 @@ function renderDailyNewVoterNames() {
       row.style.border = "1px solid #e2e8f0";
 
       row.innerHTML = `
-        <span>• ${obj.name} (House: ${obj.house || "-"}, Father/Husband: ${obj.father || "-"})</span>
+        <span>• <b>${obj.name}</b>, Voters : <b>${obj.house || "-"}</b>,<br> Total: <b>${obj.father || "-"}</b></span>
       `;
 
       // ACTION BUTTONS WRAPPER
