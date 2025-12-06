@@ -1,4 +1,29 @@
 document.addEventListener("DOMContentLoaded", () => {
+// AUTO-FIX: remove duplicate shift popup if exists
+document.addEventListener("DOMContentLoaded", () => {
+  const popups = document.querySelectorAll("#shiftVoterPopup");
+  if (popups.length > 1) {
+    // keep first, remove others
+    for (let i = 1; i < popups.length; i++) {
+      popups[i].remove();
+    }
+  }
+});
+
+
+// ⭐ REPORT SECTION TOGGLE
+const rptBtn = document.getElementById("toggleReportBtn");
+const rptBox = document.getElementById("reportSection");
+
+rptBtn.addEventListener("click", () => {
+    if (rptBox.style.display === "none") {
+        rptBox.style.display = "block";
+        rptBtn.textContent = "📊 Hide Report";
+    } else {
+        rptBox.style.display = "none";
+        rptBtn.textContent = "📊 Show Report";
+    }
+});
 
   // ----------------------------
   // CASTE AUTO-DETECT RULES
@@ -732,8 +757,8 @@ function renderDailyNewVoterNames() {
 
       row.innerHTML = `
         <span>
-          • ${item.name}  
-          (House: ${item.house}, Father/Husband: ${item.father})
+          •<span style="color:green;"> ${item.name}</span>,Voters form,
+         <br> Number: ${item.house},Total: ${item.father}
         </span>
 
         <span style="display:flex;gap:10px;">

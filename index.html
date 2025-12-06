@@ -449,6 +449,14 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
 
         <!-- SEARCH -->
         <input id="search" type="text" placeholder="Search by name / house / serial / BYP…">
+        
+        <!-- Report Showing buttong -->
+        <button id="toggleReportBtn" 
+        style="margin-top:10px;padding:8px 12px;
+        border-radius:8px;border:1px solid #444;">
+📊 Show Report
+</button>
+
 <button onclick="showMissingSerials()" 
         style="padding:8px 12px;border-radius:8px;border:1px solid #888;margin:6px 0;">
   🔍 Show Missing Serials
@@ -499,7 +507,7 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
       
       <!-- ⭐ / sticky-header ends -->
       
-      
+      <div id="reportSection" style="display:none;">
       <div id="surveyReportBox" style="
   background:#fff;
   margin-top:10px;
@@ -536,7 +544,7 @@ style="padding:10px 12px;border-radius:8px;border:1px solid #888;margin-top:10px
   ➕ Add Shift Voter
 </button>
       
-
+</div>
       <!-- RESULTS -->
       <div id="results"></div>
 
