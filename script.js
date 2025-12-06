@@ -736,44 +736,80 @@ window.deleteNewVoter = function (date, index) {
 function renderDailyNewVoterNames() {
   const box = document.getElementById("dailyReportList");
   let all = JSON.parse(localStorage.getItem("daily_new_voters") || "{}");
+
   box.innerHTML = "";
 
   Object.keys(all).forEach(date => {
-    const entries = all[date];
+    const items = all[date];
 
-    // Date Header
+    // DATE HEADER
     let liHeader = document.createElement("li");
     liHeader.style.fontWeight = "700";
-    liHeader.style.marginTop = "8px";
-    liHeader.textContent = `📅 ${date}:`;
+    liHeader.style.marginTop = "12px";
+    liHeader.style.fontSize = "15px";
+    liHeader.style.color = "#1e293b";
+    liHeader.textContent = `${date}:`;
     box.appendChild(liHeader);
 
-    entries.forEach((item, index) => {
+    // EACH ENTRY
+    items.forEach((obj, index) => {
       let row = document.createElement("li");
-      row.style.marginLeft = "15px";
+      row.style.marginLeft = "12px";
       row.style.display = "flex";
       row.style.justifyContent = "space-between";
-      row.style.padding = "3px 0";
+      row.style.alignItems = "center";
+      row.style.padding = "10px 12px";
+      row.style.borderRadius = "10px";
+      row.style.background = "#f8fafc";
+      row.style.marginTop = "6px";
+      row.style.boxShadow = "0 2px 6px rgba(0,0,0,0.08)";
+      row.style.border = "1px solid #e2e8f0";
 
       row.innerHTML = `
-        <span>
-          •<span style="color:green;"> ${item.name}</span>,Voters form,
-         <br> Number: ${item.house},Total: ${item.father}
-        </span>
-
-        <span style="display:flex;gap:10px;">
-          <button onclick="editNewVoter('${date}', ${index})"
-            style="border:none;background:none;color:#2563eb;">✏️</button>
-          <button onclick="deleteNewVoter('${date}', ${index})"
-            style="border:none;background:none;color:#dc2626;">🗑️</button>
-        </span>
+        <span>• ${obj.name} (House: ${obj.house || "-"}, Father/Husband: ${obj.father || "-"})</span>
       `;
 
+      // ACTION BUTTONS WRAPPER
+      let actions = document.createElement("span");
+      actions.style.display = "flex";
+      actions.style.gap = "10px";
+
+      // EDIT ICON
+      let edit = document.createElement("span");
+      edit.innerHTML = "✏️";
+      edit.style.padding = "6px 10px";
+      edit.style.borderRadius = "50%";
+      edit.style.background = "#dbeafe";
+      edit.style.border = "1px solid #93c5fd";
+      edit.style.cursor = "pointer";
+      edit.style.transition = "0.2s";
+
+      edit.onmouseover = () => edit.style.background = "#bfdbfe";
+      edit.onmouseout = () => edit.style.background = "#dbeafe";
+      edit.onclick = () => editNewVoter(date, index);
+
+      // DELETE ICON
+      let del = document.createElement("span");
+      del.innerHTML = "🗑️";
+      del.style.padding = "6px 10px";
+      del.style.borderRadius = "50%";
+      del.style.background = "#fee2e2";
+      del.style.border = "1px solid #fecaca";
+      del.style.cursor = "pointer";
+      del.style.transition = "0.2s";
+
+      del.onmouseover = () => del.style.background = "#fecaca";
+      del.onmouseout = () => del.style.background = "#fee2e2";
+      del.onclick = () => deleteNewVoter(date, index);
+
+      actions.appendChild(edit);
+      actions.appendChild(del);
+
+      row.appendChild(actions);
       box.appendChild(row);
     });
   });
 }
-
 // Shift Voters
 // ------------------------------
 // SHIFT VOTER SYSTEM (ONLY NAME)
@@ -826,26 +862,93 @@ function renderDailyShiftVoterList() {
   Object.keys(all).forEach(date => {
     const names = all[date];
 
+    // DATE HEADER
     let liHeader = document.createElement("li");
     liHeader.style.fontWeight = "700";
-    liHeader.style.marginTop = "6px";
+    liHeader.style.marginTop = "12px";
+    liHeader.style.fontSize = "15px";
+    liHeader.style.color = "#1e293b";
     liHeader.textContent = `${date}:`;
     box.appendChild(liHeader);
 
-    names.forEach((n, index) => {
-      let li = document.createElement("li");
-      li.style.marginLeft = "12px";
+    // EACH ENTRY
+    names.forEach((name, index) => {
+      let row = document.createElement("li");
+      row.style.marginLeft = "12px";
+      row.style.display = "flex";
+      row.style.justifyContent = "space-between";
+      row.style.alignItems = "center";
+      row.style.padding = "10px 12px";
+      row.style.borderRadius = "10px";
+      row.style.background = "#f8fafc";
+      row.style.marginTop = "6px";
+      row.style.boxShadow = "0 2px 6px rgba(0,0,0,0.08)";
+      row.style.border = "1px solid #e2e8f0";
 
-      li.innerHTML = `
-        • <span>${n}</span>
-        <button style="margin-left:10px;color:blue" onclick="editShiftVoter('${date}', ${index})">Edit</button>
-        <button style="margin-left:5px;color:red" onclick="deleteShiftVoter('${date}', ${index})">X</button>
-      `;
-      box.appendChild(li);
+      // TEXT
+      let nameSpan = document.createElement("span");
+      nameSpan.style.fontSize = "15px";
+      nameSpan.style.color = "#0f172a";
+      nameSpan.textContent = `• ${name}`;
+
+      // ACTION BUTTONS WRAPPER
+      let actionWrap = document.createElement("span");
+      actionWrap.style.display = "flex";
+      actionWrap.style.gap = "10px";
+
+      // EDIT BUTTON
+      let editBtn = document.createElement("span");
+      editBtn.innerHTML = "✏️";
+      editBtn.style.padding = "6px 10px";
+      editBtn.style.borderRadius = "50%";
+      editBtn.style.background = "#dbeafe";
+      editBtn.style.border = "1px solid #93c5fd";
+      editBtn.style.cursor = "pointer";
+      editBtn.style.transition = "0.2s";
+      editBtn.title = "Edit";
+
+      editBtn.onmouseover = () => {
+        editBtn.style.background = "#bfdbfe";
+      };
+      editBtn.onmouseout = () => {
+        editBtn.style.background = "#dbeafe";
+      };
+
+      editBtn.onclick = () => editShiftVoter(date, index);
+
+      // DELETE BUTTON
+      let delBtn = document.createElement("span");
+      delBtn.innerHTML = "🗑️";
+      delBtn.style.padding = "6px 10px";
+      delBtn.style.borderRadius = "50%";
+      delBtn.style.background = "#fee2e2";
+      delBtn.style.border = "1px solid #fecaca";
+      delBtn.style.cursor = "pointer";
+      delBtn.style.transition = "0.2s";
+      delBtn.title = "Delete";
+
+      delBtn.onmouseover = () => {
+        delBtn.style.background = "#fecaca";
+      };
+      delBtn.onmouseout = () => {
+        delBtn.style.background = "#fee2e2";
+      };
+
+      delBtn.onclick = () => deleteShiftVoter(date, index);
+
+      // APPEND BUTTONS
+      actionWrap.appendChild(editBtn);
+      actionWrap.appendChild(delBtn);
+
+      // APPEND TO ROW
+      row.appendChild(nameSpan);
+      row.appendChild(actionWrap);
+
+      // ADD ROW TO UI
+      box.appendChild(row);
     });
   });
 }
-
 // Edit shift voter
 window.editShiftVoter = function(date, index) {
   let all = JSON.parse(localStorage.getItem("daily_shift_voters") || "{}");

@@ -7,22 +7,18 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 
 <style>
-  :root {
+  /* ============================================
+   GLOBAL THEME
+============================================ */
+:root {
   --bg-body:#f3f4f6;
-  --bg-card:#fff;
+  --bg-card:#ffffff;
   --border:#d1d5db;
   --accent:#2563eb;
   --accent-soft:#e5edff;
   --text:#111827;
 }
 
-
-
-#dailyReportList {
-  max-height: 220px;
-  overflow-y: auto;
-}
-/* RESET */
 *{box-sizing:border-box;}
 body{
   margin:0;
@@ -33,7 +29,9 @@ body{
   line-height:1.45;
 }
 
-/* LAYOUT */
+/* ============================================
+   PAGE LAYOUT
+============================================ */
 .page{
   max-width:1200px;
   margin:auto;
@@ -45,7 +43,9 @@ body{
 
 .main{flex:1;}
 
-/* SIDEBAR */
+/* ============================================
+   SIDEBAR
+============================================ */
 .sidebar{
   width:220px;
   background:#fff;
@@ -54,13 +54,38 @@ body{
   border-radius:12px;
   max-height:calc(100vh - 80px);
   overflow-y:auto;
+  position:fixed;
+  left:-240px;
+  top:0;
+  height:100vh;
+  z-index:9999;
+  box-shadow:2px 0 8px rgba(0,0,0,.2);
+  transition:.3s;
 }
+
+.sidebar.open{left:0;}
+
 .sidebar-title{
   text-align:center;
   font-size:12px;
   font-weight:600;
   margin-bottom:6px;
 }
+
+.sidebar-close-btn{
+  display:none;
+  position:absolute;
+  right:10px;top:10px;
+  width:32px;height:32px;
+  border-radius:50%;
+  border:1px solid var(--border);
+  background:#eee;
+  cursor:pointer;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+}
+
 .house-nav{display:flex;flex-direction:column;gap:4px;}
 .house-nav-item{
   padding:4px 0;
@@ -80,7 +105,6 @@ body{
   font-weight:600;
 }
 
-/* MOBILE SIDEBAR */
 .sidebar-overlay{
   position:fixed;
   top:0;left:0;
@@ -89,31 +113,7 @@ body{
   display:none;
   z-index:9998;
 }
-.sidebar{
-  position:fixed;
-  left:-240px;
-  top:0;
-  height:100vh;
-  z-index:9999;
-  box-shadow:2px 0 8px rgba(0,0,0,.2);
-  transition:.3s;
-}
-.sidebar.open{left:0;}
-.sidebar-close-btn{
-  display:none;
-  position:absolute;
-  right:10px;top:10px;
-  width:32px;height:32px;
-  border-radius:50%;
-  border:1px solid var(--border);
-  background:#eee;
-  cursor:pointer;
-  align-items:center;
-  justify-content:center;
-  font-size:18px;
-}
 
-/* Toggle button */
 .sidebar-toggle-btn{
   margin:8px 0 0 5px;
   padding:0 14px;
@@ -129,28 +129,28 @@ body{
 /* MOBILE */
 @media(max-width:768px){
   .page{flex-direction:column;}
-
-  .sidebar{
-    width:220px;
-  }
+  .sidebar{width:220px;}
   .sidebar-close-btn{display:flex;}
 }
 
-/* MAIN CARD */
-.card-main {
-  background: var(--bg-card);
-  padding: 12px 12px 20px;
-  border-radius: 18px;
-  box-shadow: 0 6px 18px rgba(0,0,0,.08);
-  position: relative;
-  overflow: visible;
-  
-   /* ⭐ ADD THIS */
+
+/* ============================================
+   MAIN CARD
+============================================ */
+.card-main{
+  background:var(--bg-card);
+  padding:12px 12px 20px;
+  border-radius:18px;
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
 }
+
 h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
 .subtitle{text-align:center;font-size:12px;color:#6b7280;margin-bottom:6px;}
 
-/* STICKY HEADER */
+
+/* ============================================
+   STICKY SEARCH / HEADER
+============================================ */
 .sticky-header{
   position:sticky;
   top:0;
@@ -162,6 +162,7 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
   backdrop-filter:blur(14px);
   border:1px solid rgba(148,163,184,.45);
 }
+
 #search{
   width:100%;
   padding:12px;
@@ -175,14 +176,18 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
   box-shadow:0 0 0 2px rgba(37,99,235,.18);
 }
 
-/* FILTERS */
+
+/* ============================================
+   FILTER BAR
+============================================ */
 .filter-bar{
   margin:8px 0;
   display:flex;
   gap:6px;
   flex-wrap:wrap;
 }
-.filter-bar select{
+.filter-bar select,
+#filterHouse{
   flex:1 1 120px;
   min-width:110px;
   padding:7px 9px;
@@ -192,7 +197,10 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
   font-size:12px;
 }
 
-/* STATS */
+
+/* ============================================
+   STATS BAR
+============================================ */
 .stats-bar{
   display:flex;
   gap:6px;
@@ -207,7 +215,10 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
 }
 .stat-chip .value{font-weight:700;color:var(--accent);}
 
-/* RESULTS */
+
+/* ============================================
+   HOUSE SECTION
+============================================ */
 .house-section{
   padding:16px;
   border-radius:18px;
@@ -221,7 +232,25 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
   align-items:center;
 }
 
-/* CARD */
+.collapse-icon {
+  font-size: 17px;
+  cursor: pointer;
+  transition: transform .25s ease;
+}
+
+.collapse-icon.rotate {
+  transform: rotate(180deg);
+}
+
+.house-content {
+  overflow: hidden;
+  transition: max-height .3s ease, opacity .25s ease;
+}
+
+
+/* ============================================
+   VOTER CARD
+============================================ */
 .card{
   display:flex;
   gap:14px;
@@ -245,7 +274,6 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
   border:3px solid #fff;
 }
 
-/* LABELS */
 .card-header-line{
   display:flex;
   justify-content:space-between;
@@ -259,16 +287,6 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
   background:var(--accent-soft);
   font-size:12px;
 }
-.head-pill{background:var(--accent);color:#fff;}
-.dup-badge{
-  background:#f97316;
-  color:#fff;
-  padding:3px 10px;
-  border-radius:12px;
-  font-size:12px;
-}
-
-/* GENDER */
 .gender-pill{
   padding:4px 10px;
   border-radius:12px;
@@ -278,23 +296,22 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
 .gender-pill.male{background:#d9e8ff;color:#144fc6;}
 .gender-pill.female{background:#ffe1e1;color:#c62828;}
 
-/* BACK TO TOP */
-#backToTop{
-  position:fixed;
-  right:14px;bottom:18px;
-  padding:8px 12px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  background:#fff;
-  display:none;
-  cursor:pointer;
-  box-shadow:0 2px 8px rgba(0,0,0,.25);
+.dup-badge{
+  background:#f97316;
+  color:#fff;
+  padding:3px 10px;
+  border-radius:12px;
+  font-size:12px;
 }
 
-/* DUP BUTTON */
+
+/* ============================================
+   BACK-TO-TOP & DUPLICATE-JUMP
+============================================ */
+#backToTop,
 #dupJumpBtn{
   position:fixed;
-  right:14px;bottom:70px;
+  right:14px;
   padding:10px 14px;
   border-radius:50%;
   border:1px solid var(--border);
@@ -304,59 +321,34 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
   cursor:pointer;
   box-shadow:0 2px 8px rgba(0,0,0,.25);
 }
+#backToTop{bottom:18px;}
+#dupJumpBtn{bottom:70px;}
 
-/* BREADCRUMB */
-.breadcrumb{
-  position:sticky;
-  top:0;
-  z-index:80;
-  background:rgba(255,255,255,.88);
-  backdrop-filter:blur(12px);
-  padding:10px 14px;
-  border-radius:12px;
-  border:1px solid rgba(148,163,184,.35);
-  margin:-4px -8px 12px;
-  display:flex;
-  gap:6px;
-  font-size:14px;
-  align-items:center;
-}
-.breadcrumb strong{color:#111827;font-weight:600;}
-.breadcrumb i{color:var(--accent);}
 
-.collapse-icon {
-  font-size: 17px;
-  cursor: pointer;
-  transition: transform .25s ease;
-}
-
-.collapse-icon.rotate {
-  transform: rotate(180deg);
-}
-
-.house-content {
-  overflow: hidden;
-  transition: max-height .3s ease, opacity .25s ease;
-}
-
-/* FULL PHOTO VIEWER */
+/* ============================================
+   PHOTO VIEWER
+============================================ */
 #photoViewer{
   position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
+  top:0;left:0;
+  width:100%;height:100%;
   background:rgba(0,0,0,0.85);
   display:none;
   align-items:center;
   justify-content:center;
   z-index:999999;
 }
-
 #photoViewer img{
   max-width:92%;
   max-height:92%;
   border-radius:12px;
   box-shadow:0 0 25px rgba(255,255,255,0.5);
 }
+
+
+/* ============================================
+   POPUP FORMS
+============================================ */
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -369,7 +361,6 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
   align-items: center;
   z-index: 999999;
 }
-
 .popup-box {
   background: #fff;
   padding: 20px;
@@ -377,7 +368,6 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
   width: 85%;
   max-width: 350px;
 }
-
 .popup-input {
   width: 100%;
   padding: 10px;
@@ -385,13 +375,6 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
   border: 1px solid #ddd;
   border-radius: 6px;
 }
-
-.popup-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}
-
 .popup-btn {
   flex: 1;
   padding: 10px;
@@ -401,12 +384,89 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
   color: #fff;
   border: none;
 }
-
 .popup-btn.close {
   background: #aaa;
 }
 
 
+/* ============================================
+   MODERN REPORT STYLE (NEW)
+============================================ */
+.report-card {
+  background: #ffffff;
+  margin-top: 10px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.report-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 0 0 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.report-icons i {
+  font-size: 18px;
+  margin-left: 8px;
+  cursor: pointer;
+  color: #2563eb;
+}
+.report-icons i:hover {color:#1d4ed8;}
+
+.report-list {
+  list-style: none;
+  padding-left: 0;
+}
+.report-list li {
+  margin: 6px 0;
+  font-size: 15px;
+}
+
+.report-subtitle {
+  margin-top: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+/* Styled voter lists */
+.styled-list li {
+  background: #f1f5ff;
+  border: 1px solid #dbeafe;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.styled-list li:hover {background:#e0ecff;}
+
+.shift-list li {
+  background:#fff7ed;
+  border-color:#fed7aa;
+}
+.shift-list li:hover {background:#ffedd5;}
+
+.styled-add-btn {
+  width:100%;
+  padding:10px;
+  margin-top:10px;
+  border-radius:8px;
+  border:1px solid #888;
+  background:#2563eb;
+  color:#fff;
+  font-weight:700;
+  font-size:15px;
+}
+.styled-add-btn:hover {background:#1d4ed8;}
 </style>
 </head>
 
@@ -507,43 +567,47 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
       
       <!-- ⭐ / sticky-header ends -->
       
-      <div id="reportSection" style="display:none;">
-      <div id="surveyReportBox" style="
-  background:#fff;
-  margin-top:10px;
-  padding:10px;
-  border-radius:12px;
-  border:1px solid #ddd;
-">
-  <h3 style="font-size:16px;margin:0 0 6px;">📊 Survey Report</h3>
+      <!-- ⭐ REPORT SECTION -->
+<div id="reportSection" style="display:none;">
 
-  <ul style="padding-left:18px;margin:0;list-style:none;font-size:15px;">
-    <li>🏠 Total Houses: <strong id="rptHouse">0</strong></li>
-    <li>🧑‍🤝‍🧑 Total Voters: <strong id="rptVoters">0</strong></li>
-    <li>🆕 New Voters Today: <strong id="rptNew">0</strong></li>
-    <li>🔄 Shift Voters: <strong id="rptShift">0</strong></li>
-  </ul>
-  <h3 style="margin-top:12px;font-size:16px;">🆕 Daily New Voter List</h3>
-<ul id="dailyReportList" 
-    style="padding-left:12px;margin:0;
-           background:#fff;border:1px solid #ddd;
-           border-radius:8px;max-height:200px;
-           overflow-y:auto;">
-</ul>
-</div>
-<button id="addNewVoterBtn" 
-style="padding:10px 12px;border-radius:8px;border:1px solid #888;margin-top:10px;">
-➕ Add New Voter
-</button>
+  <!-- 📊 Survey Report Box -->
+  <div id="surveyReportBox" class="report-card">
+    <h3 class="report-title">
+      📊 Survey Report
+      <span class="report-icons">
+        <i class="bi bi-pencil-square"></i>
+        <i class="bi bi-trash3"></i>
+      </span>
+    </h3>
 
-<h3 style="margin-top:15px;">🔁 Daily Shift Voter List</h3>
-<ul id="dailyShiftList" style="margin-left:10px;"></ul>
+    <ul class="report-list">
+      <li>🏠 Total Houses: <strong id="rptHouse">0</strong></li>
+      <li>🧑‍🤝‍🧑 Total Voters: <strong id="rptVoters">0</strong></li>
+      <li>🆕 New Voters Today: <strong id="rptNew">0</strong></li>
+      <li>🔄 Shift Voters: <strong id="rptShift">0</strong></li>
+    </ul>
 
-<button id="addShiftVoterBtn" class="new-btn"
-  style="padding:10px 12px;border-radius:8px;border:1px solid #888;margin-top:10px;">
-  ➕ Add Shift Voter
-</button>
-      
+    <h3 class="report-subtitle">🆕 Daily New Voter List</h3>
+    <ul id="dailyReportList" class="styled-list"></ul>
+  </div>
+
+  <!-- ➕ Add New Voter Button -->
+  <button id="addNewVoterBtn" class="styled-add-btn">
+    ➕ Add New Voter
+  </button>
+
+  <!-- 🔁 Shift Voter Section -->
+  <h3 class="report-subtitle" style="margin-top:15px;">
+    🔁 Daily Shift Voter List
+  </h3>
+
+  <ul id="dailyShiftList" class="styled-list shift-list"></ul>
+
+  <!-- ➕ Add Shift Voter Button -->
+  <button id="addShiftVoterBtn" class="styled-add-btn">
+    ➕ Add Shift Voter
+  </button>
+
 </div>
       <!-- RESULTS -->
       <div id="results"></div>
