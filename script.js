@@ -126,6 +126,7 @@ rptBtn.addEventListener("click", () => {
     calculateSurveyReport();
     renderDailyNewVoterNames();
     renderDailyShiftVoterList();
+    renderCharts();
   }
 
   function normalizeGender(g) {
@@ -244,87 +245,92 @@ rptBtn.addEventListener("click", () => {
   // RENDER RESULTS
   // ----------------------------
   function renderResults(list) {
-    resultsDiv.innerHTML = "";
+  resultsDiv.innerHTML = "";
 
-    if (!list.length) {
-      resultsDiv.innerHTML = "<p>No results found.</p>";
-      updateStats(list);
-      return;
-    }
-
+  if (!list.length) {
+    resultsDiv.innerHTML = "<p>No results found.</p>";
     updateStats(list);
-
-    // ⭐ SERIAL SORT MODE → show full list without house grouping
-    if (sortMode === "serial") {
-      list.sort((a, b) => a.serial - b.serial);
-      list.forEach(p => {
-        const card = createVoterCard(p);
-        resultsDiv.appendChild(card);
-      });
-      return;
-    }
-
-    // ⭐ DEFAULT MODE → HOUSE GROUPING WORKS
-    const grouped = {};
-    list.forEach(p => {
-      if (!grouped[p.house]) grouped[p.house] = [];
-      grouped[p.house].push(p);
-    });
-
-    Object.keys(grouped).sort(sortHouseASC).forEach(h => {
-      const housePeople = grouped[h].sort((a, b) => a.serial - b.serial);
-      const houseNumber = h.replace("house_", "");
-
-      const section = document.createElement("div");
-      section.className = "house-section";
-      section.id = "house-section-" + h;
-      section.style.background = colors[h];
-
-      const header = document.createElement("div");
-      header.className = "house-title";
-      header.innerHTML = `
-        <span>
-          House: ${houseNumber}
-          <i class="bi bi-chevron-up collapse-icon"></i>
-        </span>
-        <small>${housePeople.length} voters</small>
-      `;
-
-      const content = document.createElement("div");
-      content.className = "house-content";
-      content.style.maxHeight = "unset";
-      content.style.opacity = "1";
-
-      let collapsed = false;
-      const arrow = header.querySelector(".collapse-icon");
-      arrow.classList.remove("rotate");
-
-      header.style.cursor = "pointer";
-      header.addEventListener("click", () => {
-        collapsed = !collapsed;
-
-        if (collapsed) {
-          content.style.maxHeight = "0px";
-          content.style.opacity = "0";
-          arrow.classList.add("rotate");
-        } else {
-          content.style.maxHeight = content.scrollHeight + "px";
-          content.style.opacity = "1";
-          arrow.classList.remove("rotate");
-        }
-        startConfetti();
-      });
-
-      housePeople.forEach(p => {
-        const card = createVoterCard(p);
-        content.appendChild(card);
-      });
-
-      section.appendChild(header);
-      section.appendChild(content);
-      resultsDiv.appendChild(section);
-    });
+    return;
   }
+
+  updateStats(list);
+
+  // ⭐ SERIAL SORT MODE — FLAT LIST
+  if (sortMode === "serial") {
+    list.sort((a, b) => a.serial - b.serial);
+
+    const frag = document.createDocumentFragment();
+    list.forEach(p => frag.appendChild(createVoterCard(p)));
+    resultsDiv.appendChild(frag);
+
+    return;
+  }
+
+  // ⭐ DEFAULT MODE — GROUP BY HOUSE
+  const grouped = {};
+  list.forEach(p => {
+    if (!grouped[p.house]) grouped[p.house] = [];
+    grouped[p.house].push(p);
+  });
+
+  const frag = document.createDocumentFragment();
+
+  Object.keys(grouped).sort(sortHouseASC).forEach(h => {
+    const housePeople = grouped[h].sort((a, b) => a.serial - b.serial);
+    const houseNumber = h.replace("house_", "");
+
+    const section = document.createElement("div");
+    section.className = "house-section";
+    section.id = "house-section-" + h;
+    section.style.background = colors[h];
+
+    const header = document.createElement("div");
+    header.className = "house-title";
+    header.innerHTML = `
+      <span>
+        House: ${houseNumber}
+        <i class="bi bi-chevron-up collapse-icon"></i>
+      </span>
+      <small>${housePeople.length} voters</small>
+    `;
+
+    const content = document.createElement("div");
+    content.className = "house-content";
+    content.style.maxHeight = "unset";
+    content.style.opacity = "1";
+
+    let collapsed = false;
+    const arrow = header.querySelector(".collapse-icon");
+    arrow.classList.remove("rotate");
+
+    header.style.cursor = "pointer";
+    header.addEventListener("click", () => {
+      collapsed = !collapsed;
+      if (collapsed) {
+        content.style.maxHeight = "0px";
+        content.style.opacity = "0";
+        arrow.classList.add("rotate");
+      } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+        content.style.opacity = "1";
+        arrow.classList.remove("rotate");
+      }
+      startConfetti();
+    });
+
+    // Add voter cards fast
+    const cardFrag = document.createDocumentFragment();
+    housePeople.forEach(p => cardFrag.appendChild(createVoterCard(p)));
+    content.appendChild(cardFrag);
+
+    section.appendChild(header);
+    section.appendChild(content);
+
+    frag.appendChild(section);
+  });
+
+  resultsDiv.appendChild(frag);
+}
 
   // ----------------------------
   // FILTERS
@@ -636,6 +642,8 @@ if (filterHouse.value.trim() !== "") {
   document.getElementById("rptNew").textContent = newVoterCount;
   document.getElementById("rptShift").textContent = shiftVoterCount;
 }
+
+
 // New Voter count
 
 
@@ -976,5 +984,73 @@ window.deleteShiftVoter = function(date, index) {
   renderDailyShiftVoterList();
   calculateSurveyReport();
 };
+let genderChart, ageChart, casteChart;
 
+function renderCharts() {
+
+  // ==== Gender Count ====
+  const totalM = allPeople.filter(p => p.gender === "Male").length;
+  const totalF = allPeople.filter(p => p.gender === "Female").length;
+
+  // ==== Age Count ====
+  const age18 = allPeople.filter(p => p.age >= 18 && p.age <= 25).length;
+  const age26 = allPeople.filter(p => p.age >= 26 && p.age <= 40).length;
+  const age41 = allPeople.filter(p => p.age >= 41 && p.age <= 60).length;
+  const age60 = allPeople.filter(p => p.age > 60).length;
+
+  // ==== Caste Count ====
+  const totalSC     = allPeople.filter(p => p.caste === "SC").length;
+  const totalOBC    = allPeople.filter(p => p.caste === "OBC").length;
+  const totalST     = allPeople.filter(p => p.caste === "ST").length;
+  const totalMuslim = allPeople.filter(p => p.caste === "Muslim").length;
+  const totalGeneral = allPeople.filter(p => p.caste === "General").length;
+
+  // ==== Destroy old charts to avoid duplicate ====
+  if (genderChart) genderChart.destroy();
+  if (ageChart) ageChart.destroy();
+  if (casteChart) casteChart.destroy();
+
+  // =========================
+  // 1️⃣ GENDER CHART
+  // =========================
+  genderChart = new Chart(document.getElementById("genderChart"), {
+    type: "pie",
+    data: {
+      labels: ["Male", "Female"],
+      datasets: [{
+        data: [totalM, totalF]
+      }]
+    }
+  });
+
+  // =========================
+  // 2️⃣ AGE CHART
+  // =========================
+  ageChart = new Chart(document.getElementById("ageChart"), {
+    type: "bar",
+    data: {
+      labels: ["18–25", "26–40", "41–60", "60+"],
+      datasets: [{
+        label: "Voters",
+        data: [age18, age26, age41, age60]
+      }]
+    },
+    options: {
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  // =========================
+  // 3️⃣ CASTE CHART
+  // =========================
+  casteChart = new Chart(document.getElementById("casteChart"), {
+    type: "pie",
+    data: {
+      labels: ["SC", "OBC", "ST", "Muslim", "General"],
+      datasets: [{
+        data: [totalSC, totalOBC, totalST, totalMuslim, totalGeneral]
+      }]
+    }
+  });
+}
 });
