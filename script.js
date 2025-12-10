@@ -1,14 +1,20 @@
-document.addEventListener("DOMContentLoaded", () => {
+
+
+// ✅ FIREBASE IMPORT (TOP OF FILE)
+import { ref, onValue, push, update, remove }
+from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+const db = window.db;
+
 // AUTO-FIX: remove duplicate shift popup if exists
 document.addEventListener("DOMContentLoaded", () => {
   const popups = document.querySelectorAll("#shiftVoterPopup");
   if (popups.length > 1) {
-    // keep first, remove others
     for (let i = 1; i < popups.length; i++) {
       popups[i].remove();
     }
   }
-});
+
 
 
 // ⭐ REPORT SECTION TOGGLE
@@ -89,17 +95,13 @@ rptBtn.addEventListener("click", () => {
   let dupCycle = [];     // one-by-one cycle list
   let dupIndex = 0;      // pointer
 
-  const JSON_FILE = window.PS_JSON || "data/master.json";
-
   // ----------------------------
-  // LOAD DATA
-  // ----------------------------
-  fetch(JSON_FILE)
-    .then(res => res.json())
-    .then(data => {
-      voterData = data;
-      processData();
-    });
+// ✅ LOAD DATA FROM FIREBASE (LIVE)
+// ----------------------------
+onValue(ref(db, "voters"), snapshot => {
+  voterData = snapshot.val() || {};
+  processData();
+});
 
   // ----------------------------
   // PROCESS DATA
@@ -108,15 +110,16 @@ rptBtn.addEventListener("click", () => {
     allPeople = [];
 
     Object.keys(voterData).forEach(h => {
-      voterData[h].forEach(p => {
-        allPeople.push({
-          house: h,
-          ...p,
-          age: Number(p.age) || 0,   // ⭐ auto-fix null/empty age
-          caste: detectCaste(p.name)
-        });
-      });
-    });
+  Object.entries(voterData[h]).forEach(([key, p]) => {
+  allPeople.push({
+    key: key,          // ✅ Firebase key
+    house: h,
+    ...p,
+    age: Number(p.age) || 0,
+    caste: detectCaste(p.name)
+  });
+});
+});
 
     generateColors();
     findDuplicateBYP();
@@ -201,46 +204,65 @@ rptBtn.addEventListener("click", () => {
   // CARD BUILDER
   // ----------------------------
   function createVoterCard(p) {
-    const card = document.createElement("div");
-    card.className = "card";
+  const card = document.createElement("div");
+  card.className = "card";
 
-    const photoPath = `photos/${p.serial}.jpg`;
+  const photoPath = `photos/${p.serial}.jpg`;
 
-    const duplicateBadge = duplicateBYPs.has(p.byp)
-      ? `<span class="dup-badge" data-byp="${p.byp}">DUPLICATE</span>`
-      : "";
-    
-    const photoExists = (p.photo !== false && p.photo !== "no" && p.photo !== "" && p.photo !== null);
+  const duplicateBadge = duplicateBYPs.has(p.byp)
+    ? `<span class="dup-badge" data-byp="${p.byp}">DUPLICATE</span>`
+    : "";
 
-    const photoBadge = photoExists 
-      ? "" 
-      : `<span class="dup-badge" style="background:#dc2626">NO PHOTO</span>`;
+  const photoExists = (p.photo !== false && p.photo !== "no" && p.photo !== "" && p.photo !== null);
 
-    card.innerHTML = `
-      <img src="${photoPath}" class="voter-photo" onclick="openPhoto(this.src)">
-      <div class="card-content">
-        <h3 class="card-header-line">
-          <span>
-            ${p.name} <span class="pill">#${p.serial}</span>
-            ${duplicateBadge}
-            ${photoBadge}
-          </span>
-          <span class="gender-pill ${p.gender.toLowerCase()}">${p.gender}</span>
-        </h3>
+  const photoBadge = photoExists
+    ? ""
+    : `<span class="dup-badge" style="background:#dc2626">NO PHOTO</span>`;
 
-        ${p.father ? `<p><strong>Father:</strong> ${p.father}</p>` : ""}
-        ${p.husband ? `<p><strong>Husband:</strong> ${p.husband}</p>` : ""}
-        <p class="byp-field"><strong>BYP:</strong> ${p.byp}</p>
-        <p><strong>Age:</strong> ${p.age}</p>
-        <p><strong>Caste:</strong> <span class="pill">${p.caste}</span></p>
+  card.innerHTML = `
+    <img src="${photoPath}" class="voter-photo" onclick="openPhoto(this.src)">
+    <div class="card-content">
+      <h3 class="card-header-line">
+        <span>
+          ${p.name} <span class="pill">#${p.serial}</span>
+          ${duplicateBadge}
+          ${photoBadge}
+        </span>
+        <span class="gender-pill ${(p.gender || "").toLowerCase()}">
+  ${p.gender || "—"}
+</span>
+      </h3>
 
-        ${p.mobile ? `<p><strong>Mobile:</strong> <a href="tel:${p.mobile}" style="color:#2563eb;font-weight:600">${p.mobile} 📞</a></p>` : ""}
+      ${p.father ? `<p><strong>Father:</strong> ${p.father}</p>` : ""}
+      ${p.husband ? `<p><strong>Husband:</strong> ${p.husband}</p>` : ""}
+      <p class="byp-field"><strong>BYP:</strong> ${p.byp}</p>
+      <p><strong>Age:</strong> ${p.age}</p>
+      <p><strong>Caste:</strong> <span class="pill">${p.caste}</span></p>
+
+      ${p.mobile ? `<p><strong>Mobile:</strong>
+        <a href="tel:${p.mobile}" style="color:#2563eb;font-weight:600">
+          ${p.mobile} 📞
+        </a></p>` : ""}
+
+      <!-- ✅ EDIT / DELETE BUTTONS -->
+      <div style="display:flex;gap:10px;margin-top:10px;">
+        <button
+          style="flex:1;padding:6px;border-radius:8px;border:1px solid #93c5fd;background:#dbeafe;cursor:pointer;"
+          onclick="editVoter('${p.house}','${p.key}')">
+          ✏️ Edit
+        </button>
+
+        <button
+          style="flex:1;padding:6px;border-radius:8px;border:1px solid #fecaca;background:#fee2e2;cursor:pointer;"
+          onclick="deleteVoter('${p.house}','${p.key}')">
+          🗑️ Delete
+        </button>
       </div>
-    `;
+    </div>
+  `;
 
-    return card;
-  }
-
+  return card;
+}
   // ----------------------------
   // RENDER RESULTS
   // ----------------------------
@@ -682,6 +704,16 @@ window.saveNewVoter = function () {
     father: father
   });
 
+ 
+ // ✅ ADD TO FIREBASE ALSO
+push(ref(db, "voters/house_" + house), {
+  name: name,
+  father: father,
+  age: 0,
+  gender: "",
+  byp: ""
+});
+ 
   localStorage.setItem("daily_new_voters", JSON.stringify(all));
 
   alert("New voter added!");
@@ -1053,4 +1085,134 @@ function renderCharts() {
     }
   });
 }
+
+window.editVoter = function(house, key) {
+
+  const voter = allPeople.find(p => p.key === key);
+  if (!voter) return;
+
+  // ✅ SERIAL EDIT
+  const serial = Number(prompt("Serial Number:", voter.serial));
+  if (!serial) return alert("Serial required");
+
+  // ❌ DUPLICATE SERIAL CHECK (except current voter)
+  const duplicate = allPeople.some(p =>
+    Number(p.serial) === serial && p.key !== key
+  );
+  if (duplicate) {
+    alert("❌ This serial number already exists!");
+    return;
+  }
+
+  const name = prompt("Name:", voter.name);
+  if (!name) return;
+
+  const father  = prompt("Father Name (blank if not):", voter.father || "");
+  const husband = prompt("Husband Name (blank if not):", voter.husband || "");
+  const age     = Number(prompt("Age:", voter.age || "")) || 0;
+  const gender  = prompt("Gender (Male/Female):", voter.gender || "");
+  const byp     = prompt("BYP:", voter.byp || "");
+  const mobile  = prompt("Mobile Number:", voter.mobile || "");
+
+  // ✅ UPDATE FIREBASE
+  update(ref(db, `voters/${house}/${key}`), {
+    serial,
+    name: name.trim(),
+    father: father.trim(),
+    husband: husband.trim(),
+    age,
+    gender,
+    byp,
+    mobile
+  });
+
+  alert("✅ Voter updated successfully");
+};
+
+window.deleteVoter = function(house, key) {
+
+  // ✅ SECRET CONFIRMATION
+  const secret = prompt("Type SECRET word to delete voter:");
+
+  if (secret !== "bijush") {
+    alert("❌ Wrong secret word. Delete cancelled.");
+    return;
+  }
+
+  // ✅ FINAL CONFIRM
+  if (!confirm("⚠️ Are you sure? This voter will be deleted permanently.")) {
+    return;
+  }
+
+  // ✅ DELETE FROM FIREBASE
+  remove(ref(db, `voters/${house}/${key}`));
+
+  alert("✅ Voter deleted successfully");
+};
+
+// ✅ OPEN ADD VOTER POPUP (MAIN GREEN BUTTON)
+document.getElementById("openAddVoter").onclick = () => {
+  document.getElementById("addVoterPopup").style.display = "flex";
+};
+
+// ✅ CLOSE ADD VOTER POPUP
+window.closeAddVoter = function () {
+  document.getElementById("addVoterPopup").style.display = "none";
+};
+
+// ✅ SAVE NEW VOTER (MANUAL SERIAL)
+window.saveAddVoter = function () {
+
+  const serial  = Number(avSerial.value);
+  const house   = avHouse.value.trim();
+  const name    = avName.value.trim();
+  const father  = avFather.value.trim();
+  const husband = avHusband.value.trim();
+  const age     = Number(avAge.value) || 0;
+  const gender  = avGender.value.trim();
+  const byp     = avBYP.value.trim();
+  const mobile  = avMobile.value.trim();
+
+  // ✅ BASIC VALIDATION
+  if (!serial || !house || !name) {
+    alert("Serial, House & Name are required");
+    return;
+  }
+
+  // ✅ DUPLICATE SERIAL CHECK
+  const exists = allPeople.some(p => Number(p.serial) === serial);
+  if (exists) {
+    alert("❌ This serial number already exists!");
+    return;
+  }
+
+  // ✅ PUSH TO FIREBASE
+  push(ref(db, "voters/house_" + house), {
+    serial,
+    name,
+    father: father || "",
+    husband: husband || "",
+    age,
+    gender,
+    byp,
+    mobile
+  });
+
+  // ✅ CLEAR FORM
+  avSerial.value = "";
+  avHouse.value = "";
+  avName.value = "";
+  avFather.value = "";
+  avHusband.value = "";
+  avAge.value = "";
+  avGender.value = "";
+  avBYP.value = "";
+  avMobile.value = "";
+
+  closeAddVoter();
+
+  alert("✅ Voter added with Serial #" + serial);
+};
+
+
 });
