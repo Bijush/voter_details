@@ -718,6 +718,33 @@ align-items:center;justify-content:center;z-index:99999;">
   </div>
 </div>
 
+<!-- EDIT VOTER POPUP -->
+<div id="editVoterPopup" style="
+display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);
+align-items:center;justify-content:center;z-index:99999;">
+
+  <div style="background:#fff;padding:20px;border-radius:16px;width:320px;">
+    <h3 style="margin-bottom:10px;">✏️ Edit Voter</h3>
+
+    <input id="evSerial" placeholder="Serial Number" type="number"
+           style="width:100%;margin-bottom:6px">
+    <input id="evHouse" placeholder="House Number" style="width:100%;margin-bottom:6px" disabled>
+    <input id="evName" placeholder="Name" style="width:100%;margin-bottom:6px">
+    <input id="evFather" placeholder="Father Name" style="width:100%;margin-bottom:6px">
+    <input id="evHusband" placeholder="Husband Name" style="width:100%;margin-bottom:6px">
+    <input id="evAge" placeholder="Age" type="number" style="width:100%;margin-bottom:6px">
+    <input id="evGender" placeholder="Gender (Male/Female)" style="width:100%;margin-bottom:6px">
+    <input id="evBYP" placeholder="BYP" style="width:100%;margin-bottom:6px">
+    <input id="evMobile" placeholder="Mobile Number" style="width:100%;margin-bottom:10px">
+
+    <div style="display:flex;gap:10px;">
+      <button onclick="saveEditVoter()" style="flex:1;background:#2563eb;color:#fff;border:none;padding:8px;border-radius:10px;">Update</button>
+      <button onclick="closeEditVoter()" style="flex:1;background:#e5e7eb;border:none;padding:8px;border-radius:10px;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
 <script>
 function openPhoto(src){
   fullPhoto.src=src;
