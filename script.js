@@ -1128,51 +1128,34 @@ let editKey = null;
 
 window.editVoter = function (house, key) {
 
-  const voter = allPeople.find(p =>
-  String(p.key) === String(key) &&
-  String(p.house) === String(house)
-);
-
-// If above fails → fallback by SERIAL (always unique)
-if (!voter) {
-  const fallback = allPeople.find(p =>
-    Number(p.serial) === Number(evSerial.value)
+  let voter = allPeople.find(p =>
+    String(p.key) === String(key) &&
+    String(p.house) === String(house)
   );
 
-  if (fallback) {
-    editHouse = fallback.house;
-    editKey   = fallback.key;
-    loadEditForm(fallback);
+  // fallback find by serial — but DO NOT override again!
+  if (!voter) {
+    voter = allPeople.find(p => Number(p.serial) === Number(evSerial.value));
+  }
+
+  if (!voter) {
+    alert("❌ Voter not found!");
     return;
   }
 
-  alert("❌ Voter not found. Something mismatched.");
-  return;
-}
-  if (!voter) return;
+  // ⭐ Set correct house + key exactly from voter
+  editHouse = voter.house;   // ALWAYS correct "house_22"
+  editKey   = voter.key;
 
-  editHouse = house;
-  editKey = key;
-
-  // Pre-fill data
-  evSerial.value = voter.serial;
-  evHouse.value  = voter.house.replace("house_", "");
-  evName.value   = voter.name;
-  evFather.value = voter.father || "";
-  evHusband.value = voter.husband || "";
-  evAge.value    = voter.age;
-  evGender.value = voter.gender;
-  evBYP.value    = voter.byp;
-  evMobile.value = voter.mobile || "";
-
-  document.getElementById("editVoterPopup").style.display = "flex";
+  loadEditForm(voter);
 };
 
+  
 window.closeEditVoter = function () {
   document.getElementById("editVoterPopup").style.display = "none";
 };
 
-window.saveEditVoter = function () {
+window.saveEditVoter = async function () {
 
   const serial  = Number(evSerial.value);
   const name    = evName.value.trim();
@@ -1182,6 +1165,7 @@ window.saveEditVoter = function () {
   const gender  = evGender.value.trim();
   const byp     = evBYP.value.trim();
   const mobile  = evMobile.value.trim();
+  const newHouse = evHouse.value.trim();   // ⭐ NEW HOUSE VALUE
 
   if (!serial || !name) {
     alert("Serial & Name required");
@@ -1197,15 +1181,38 @@ window.saveEditVoter = function () {
     return;
   }
 
-  // Firebase update
-  update(ref(db, `voters/${editHouse}/${editKey}`), {
+  // -----------------------------
+  // ⭐ CHECK IF HOUSE CHANGED
+  // -----------------------------
+  const oldHouse = editHouse.replace("house_", "");
+  const oldPath  = `voters/${editHouse}/${editKey}`;
+  const newPath  = `voters/house_${newHouse}/${editKey}`;
+
+  if (oldHouse !== newHouse) {
+
+    // 1️⃣ Remove from OLD house
+    await remove(ref(db, oldPath));
+
+    // 2️⃣ Add to NEW house
+    await update(ref(db, newPath), {
+      serial, name, father, husband, age, gender, byp, mobile
+    });
+
+    alert("🏠 House updated & voter moved successfully!");
+    document.getElementById("editVoterPopup").style.display = "none";
+    return;
+  }
+
+  // -----------------------------
+  // ⭐ IF HOUSE SAME → NORMAL UPDATE
+  // -----------------------------
+  update(ref(db, oldPath), {
     serial, name, father, husband, age, gender, byp, mobile
   });
 
-  document.getElementById("editVoterPopup").style.display = "none";
   alert("✅ Voter updated successfully");
+  document.getElementById("editVoterPopup").style.display = "none";
 };
-
 // ✅ OPEN ADD VOTER POPUP (MAIN GREEN BUTTON)
 document.getElementById("openAddVoter").onclick = () => {
   document.getElementById("addVoterPopup").style.display = "flex";

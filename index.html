@@ -719,6 +719,7 @@ align-items:center;justify-content:center;z-index:99999;">
 </div>
 
 <!-- EDIT VOTER POPUP -->
+
 <div id="editVoterPopup" style="
 display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);
 align-items:center;justify-content:center;z-index:99999;">
@@ -726,24 +727,57 @@ align-items:center;justify-content:center;z-index:99999;">
   <div style="background:#fff;padding:20px;border-radius:16px;width:320px;">
     <h3 style="margin-bottom:10px;">✏️ Edit Voter</h3>
 
-    <input id="evSerial" placeholder="Serial Number" type="number"
-           style="width:100%;margin-bottom:6px">
-    <input id="evHouse" placeholder="House Number" style="width:100%;margin-bottom:6px" disabled>
-    <input id="evName" placeholder="Name" style="width:100%;margin-bottom:6px">
-    <input id="evFather" placeholder="Father Name" style="width:100%;margin-bottom:6px">
-    <input id="evHusband" placeholder="Husband Name" style="width:100%;margin-bottom:6px">
-    <input id="evAge" placeholder="Age" type="number" style="width:100%;margin-bottom:6px">
-    <input id="evGender" placeholder="Gender (Male/Female)" style="width:100%;margin-bottom:6px">
-    <input id="evBYP" placeholder="BYP" style="width:100%;margin-bottom:6px">
-    <input id="evMobile" placeholder="Mobile Number" style="width:100%;margin-bottom:10px">
+
+    <label style="font-size:13px;font-weight:600;color:#374151;">Serial Number</label>
+    <input id="evSerial" type="number" placeholder="Serial Number"
+           style="width:100%;margin-bottom:8px">
+
+    <label style="font-size:13px;font-weight:600;color:#374151;">House Number</label>
+    <input id="evHouse" placeholder="House Number"
+           style="width:100%;margin-bottom:8px">
+
+    <label style="font-size:13px;font-weight:600;color:#374151;">Full Name</label>
+    <input id="evName" placeholder="Name"
+           style="width:100%;margin-bottom:8px">
+
+    <label style="font-size:13px;font-weight:600;color:#374151;">Father Name</label>
+    <input id="evFather" placeholder="Father Name"
+           style="width:100%;margin-bottom:8px">
+
+    <label style="font-size:13px;font-weight:600;color:#374151;">Husband Name</label>
+    <input id="evHusband" placeholder="Husband Name"
+           style="width:100%;margin-bottom:8px">
+
+    <label style="font-size:13px;font-weight:600;color:#374151;">Age</label>
+    <input id="evAge" type="number" placeholder="Age"
+           style="width:100%;margin-bottom:8px">
+
+    <label style="font-size:13px;font-weight:600;color:#374151;">Gender</label>
+    <input id="evGender" placeholder="Male / Female"
+           style="width:100%;margin-bottom:8px">
+
+    <label style="font-size:13px;font-weight:600;color:#374151;">BYP Number</label>
+    <input id="evBYP" placeholder="BYP"
+           style="width:100%;margin-bottom:8px">
+
+    <label style="font-size:13px;font-weight:600;color:#374151;">Mobile Number</label>
+    <input id="evMobile" placeholder="Mobile Number"
+           style="width:100%;margin-bottom:12px">
 
     <div style="display:flex;gap:10px;">
-      <button onclick="saveEditVoter()" style="flex:1;background:#2563eb;color:#fff;border:none;padding:8px;border-radius:10px;">Update</button>
-      <button onclick="closeEditVoter()" style="flex:1;background:#e5e7eb;border:none;padding:8px;border-radius:10px;">Cancel</button>
+      <button onclick="saveEditVoter()" 
+        style="flex:1;background:#2563eb;color:#fff;border:none;padding:8px;border-radius:10px;">
+        Update
+      </button>
+
+      <button onclick="closeEditVoter()" 
+        style="flex:1;background:#e5e7eb;border:none;padding:8px;border-radius:10px;">
+        Cancel
+      </button>
     </div>
+
   </div>
 </div>
-
 
 <script>
 function openPhoto(src){
