@@ -1270,5 +1270,37 @@ window.saveAddVoter = function () {
   alert("✅ Voter added with Serial #" + serial);
 };
 
+// 🔥 SECURE DELETE — secret code required
+window.deleteVoter = function (house, key) {
+
+  // Step 1 - Ask for secret code
+  let code = prompt("Enter secret code to delete:");
+
+  if (!code) {
+    alert("❌ Cancelled");
+    return;
+  }
+
+  // Step 2 - Check correct code
+  if (code.trim().toLowerCase() !== "bijush") {
+    alert("❌ Wrong code! Delete blocked.");
+    return;
+  }
+
+  // Step 3 - Final confirmation
+  if (!confirm("Are you SURE you want to delete this voter permanently?")) {
+    alert("❌ Cancelled");
+    return;
+  }
+
+  // Step 4 - Delete from Firebase
+  remove(ref(db, `voters/${house}/${key}`))
+    .then(() => {
+      alert("🗑️ Voter deleted successfully.");
+    })
+    .catch(err => {
+      alert("Error: " + err.message);
+    });
+};
 
 });
