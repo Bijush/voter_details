@@ -99,9 +99,21 @@ rptBtn.addEventListener("click", () => {
 // ✅ LOAD DATA FROM FIREBASE (LIVE)
 // ----------------------------
 onValue(ref(db, "voters"), snapshot => {
+
   voterData = snapshot.val() || {};
   processData();
+
+  // ⭐ SHOW LAST UPDATED TIME INDIAN TIME
+  const now = new Date().toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+    hour12: true
+  });
+
+  document.getElementById("lastUpdated").textContent =
+    "Last Updated: " + now;
 });
+
+
 
   // ----------------------------
   // PROCESS DATA
@@ -246,7 +258,10 @@ onValue(ref(db, "voters"), snapshot => {
       ${p.mobile ? `<p><strong>Mobile:</strong>
         <a href="tel:${p.mobile}" style="color:#2563eb;font-weight:600">
           ${p.mobile} 📞
-        </a></p>` : ""}
+        </a></p>`: ""}
+         <p style="font-size:12px;color:#2563eb;margin-top:4px;">
+  <strong>Updated:</strong> ${p.updatedAt || "—"}
+  </p>
 
       <div class="card-actions" style="display:flex;gap:10px;margin-top:10px;"></div>
     </div>
@@ -443,6 +458,29 @@ if (filterHouse.value.trim() !== "") {
   filterHouse.addEventListener("input", applyFilters);
   filterHouse.addEventListener("change", applyFilters);
 
+
+
+
+// 🔄 RESET FILTERS + SEARCH + SORT
+document.getElementById("resetFiltersBtn").onclick = () => {
+  
+  // reset values
+  searchInput.value = "";
+  filterAge.value = "";
+  filterHouse.value = "";
+  filterMobile.value = "";
+  sortBy.value = "default";
+  sortMode = "default";
+
+  // show full list again
+  renderResults(allPeople);
+  buildDuplicateCycle();
+
+  alert("✔️ Filters reset!");
+};
+
+
+
   // ----------------------------
   // SEARCH
   // ----------------------------
@@ -464,6 +502,10 @@ if (filterHouse.value.trim() !== "") {
     renderResults(matched);
     buildDuplicateCycle();
   });
+  
+  
+  
+  
 
   // ----------------------------
   // BACK TO TOP
@@ -1195,7 +1237,8 @@ window.saveEditVoter = async function () {
 
     // 2️⃣ Add to NEW house
     await update(ref(db, newPath), {
-      serial, name, father, husband, age, gender, byp, mobile
+      serial, name, father, husband, age, gender, byp, mobile,
+      updatedAt: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", hour12: true })
     });
 
     alert("🏠 House updated & voter moved successfully!");
@@ -1207,7 +1250,8 @@ window.saveEditVoter = async function () {
   // ⭐ IF HOUSE SAME → NORMAL UPDATE
   // -----------------------------
   update(ref(db, oldPath), {
-    serial, name, father, husband, age, gender, byp, mobile
+    serial, name, father, husband, age, gender, byp, mobile,
+    updatedAt: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", hour12: true })
   });
 
   alert("✅ Voter updated successfully");
@@ -1251,15 +1295,16 @@ window.saveAddVoter = function () {
 
   // ✅ PUSH TO FIREBASE
   push(ref(db, "voters/house_" + house), {
-    serial,
-    name,
-    father: father || "",
-    husband: husband || "",
-    age,
-    gender,
-    byp,
-    mobile
-  });
+  serial,
+  name,
+  father: father || "",
+  husband: husband || "",
+  age,
+  gender,
+  byp,
+  mobile,
+  updatedAt: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", hour12: true })
+});
 
   // ✅ CLEAR FORM
   avSerial.value = "";
