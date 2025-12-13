@@ -155,6 +155,10 @@ onValue(ref(db, "voters"), snapshot => {
     muslimBtn.style.display = hasMuslim ? "block" : "none";
   }
     
+    // 🔄 reset Muslim jump floating counter
+  muslimIndex = 0;
+  const muslimFloat = document.getElementById("muslimFloatCounter");
+  if (muslimFloat) muslimFloat.style.display = "none";
     
     
   }
@@ -193,11 +197,9 @@ onValue(ref(db, "voters"), snapshot => {
 // ===============================
 
 // ===============================
-// ☪️ MUSLIM ONLY JUMP (FINAL FIX)
-// ===============================
-
 let muslimIndex = 0;
 const muslimBtn = document.getElementById("muslimJumpBtn");
+const muslimFloat = document.getElementById("muslimFloatCounter");
 
 function getMuslimCards() {
   return [...document.querySelectorAll(".card")].filter(card => {
@@ -211,7 +213,7 @@ function expandHouseIfCollapsed(card) {
   if (!section) return;
 
   const content = section.querySelector(".house-content");
-  const arrow   = section.querySelector(".collapse-icon");
+  const arrow = section.querySelector(".collapse-icon");
 
   if (content && content.style.maxHeight === "0px") {
     content.style.maxHeight = content.scrollHeight + "px";
@@ -229,18 +231,26 @@ if (muslimBtn) {
 
     const card = muslimCards[muslimIndex];
 
-    // ✅ AUTO EXPAND HOUSE FIRST
     expandHouseIfCollapsed(card);
 
     // highlight
     card.style.boxShadow = "0 0 0 4px #16a34a";
     setTimeout(() => card.style.boxShadow = "", 1200);
 
-    // scroll
-    card.scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
+    card.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    // ⭐ FLOATING COUNTER
+    if (muslimFloat) {
+      muslimFloat.style.display = "block";
+      muslimFloat.textContent =
+        `☪️ ${muslimIndex + 1} out of ${muslimCards.length}`;
+
+      // little animation
+      muslimFloat.style.transform = "scale(1.1)";
+      setTimeout(() => {
+        muslimFloat.style.transform = "scale(1)";
+      }, 150);
+    }
 
     muslimIndex++;
   };
