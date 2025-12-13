@@ -14,6 +14,21 @@ document.addEventListener("DOMContentLoaded", () => {
       popups[i].remove();
     }
   }
+  
+   // 🔁 FILTER + STATS TOGGLE
+const toggleFilterAreaBtn = document.getElementById("toggleFilterAreaBtn");
+const filterToggleArea    = document.getElementById("filterToggleArea");
+
+if (toggleFilterAreaBtn && filterToggleArea) {
+  toggleFilterAreaBtn.addEventListener("click", () => {
+    const hidden = filterToggleArea.style.display === "none";
+
+    filterToggleArea.style.display = hidden ? "block" : "none";
+    toggleFilterAreaBtn.textContent = hidden
+      ? "⚙️ Hide Filters & Stats"
+      : "⚙️ Show Filters & Stats";
+  });
+}
 
 });
 
@@ -339,14 +354,25 @@ if (muslimFloat) {
     statOBC.textContent = list.filter(p => p.caste === "OBC").length;
     statST.textContent  = list.filter(p => p.caste === "ST").length;
     statMus.textContent = list.filter(p => p.caste === "Muslim").length;
+    
+    document.getElementById("statVerified").textContent =
+  list.filter(p => p.verified === true).length;
+
+document.getElementById("statUnverified").textContent =
+  list.filter(p => !p.verified).length;
   }
 
   // ----------------------------
   // CARD BUILDER
   // ----------------------------
   function createVoterCard(p) {
-  const card = document.createElement("div");
-  card.className = "card";
+const card = document.createElement("div");
+card.className = "card";
+
+// ✅ GREEN GLOW IF VERIFIED
+if (p.verified === true) {
+  card.classList.add("verified-glow");
+}
 
   // STORE CORRECT HOUSE + KEY INSIDE CARD
   card.dataset.house = p.house;   // like "house_87"
@@ -377,9 +403,8 @@ if (muslimFloat) {
     ${photoBadge}
   </span>
         
-        <span class="gender-pill ${(p.gender || "").toLowerCase()}">
-          ${p.gender || "—"}
-        </span>
+        
+        
       </h3>
 
       ${p.father ? `<p><strong>Father:</strong> ${p.father}</p>` : ""}
@@ -388,6 +413,12 @@ if (muslimFloat) {
       <p class="byp-field"><strong>BYP:</strong> ${p.byp}</p>
       <p><strong>Age:</strong> ${p.age}</p>
       <p><strong>Caste:</strong> <span class="pill">${p.caste}</span></p>
+      <p>
+  <strong>Gender:</strong>
+  <span class="gender-pill ${(p.gender || "").toLowerCase()}">
+    ${p.gender || "—"}
+  </span>
+</p>
 
       ${p.mobile ? `<p><strong>Mobile:</strong>
         <a href="tel:${p.mobile}" style="color:#2563eb;font-weight:600">
@@ -565,6 +596,20 @@ card.addEventListener("dblclick", async () => {
     if (filterMobile.value === "none") {
       filtered = filtered.filter(p => !p.mobile || p.mobile.trim() === "");
     }
+    
+    // ✅ VERIFIED FILTER
+const filterVerified = document.getElementById("filterVerified");
+
+if (filterVerified.value === "yes") {
+  filtered = filtered.filter(p => p.verified === true);
+}
+
+if (filterVerified.value === "no") {
+  filtered = filtered.filter(p => !p.verified);
+}
+    
+    
+    
 
     // ----------------------------------------
     // ⭐ HOUSE RANGE FILTER — supports:
@@ -616,6 +661,8 @@ if (filterHouse.value.trim() !== "") {
   // Text input → live filter
   filterHouse.addEventListener("input", applyFilters);
   filterHouse.addEventListener("change", applyFilters);
+  
+  filterVerified.onchange = applyFilters;
 
 
 

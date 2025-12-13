@@ -512,6 +512,13 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
   margin-left:6px;
 }
 
+/* ✅ VERIFIED CARD GLOW */
+.card.verified-glow{
+  border:2px solid #16a34a;
+  box-shadow: 0 0 0 3px rgba(22,163,74,0.25),
+              0 8px 18px rgba(0,0,0,0.12);
+}
+
 </style>
 </head>
 
@@ -551,7 +558,27 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
           <i class="bi bi-houses-fill"></i>
           <strong id="breadcrumbHouse">All Houses</strong>
         </div>
+        
+        
+        <button id="toggleFilterAreaBtn"
+  style="
+    margin:8px 0;
+    padding:8px 14px;
+    border-radius:10px;
+    border:1px solid #94a3b8;
+    background:#f1f5f9;
+    font-size:14px;
+    cursor:pointer;
+    width:100%;">
+  ⚙️ Show Filters & Stats
+</button>
 
+<!-- 🔽 TOGGLE AREA START -->
+
+<div id="filterToggleArea" style="display:none;">
+    
+    
+    
         <!-- SEARCH -->
         <input id="search" type="text" placeholder="Search by name / house / serial / BYP…">
         
@@ -592,6 +619,13 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
       <option value="has">Has Mobile</option>
       <option value="none">No Mobile</option>
     </select>
+    
+    
+    <select id="filterVerified">
+  <option value="">Verified</option>
+  <option value="yes">Verified Only</option>
+  <option value="no">Unverified Only</option>
+</select>
 
     <!-- ⭐ NEW: SORT DROPDOWN -->
     <select id="sortBy">
@@ -603,15 +637,24 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
         <div class="stats-bar">
           <div class="stat-chip">Total: <span id="statTotal" class="value">0</span></div>
           <div class="stat-chip">Male: <span id="statMale" class="value">0</span></div>
-<div class="stat-chip">Houses: <span id="statHouses" class="value">0</span></div>
           <div class="stat-chip">Female: <span id="statFemale" class="value">0</span></div>
-
-          <div class="stat-chip">SC: <span id="statSC">0</span></div>
-          <div class="stat-chip">OBC: <span id="statOBC">0</span></div>
-          <div class="stat-chip">ST: <span id="statST">0</span></div>
+          
+<div class="stat-chip">Houses: <span id="statHouses" class="value">0</span></div>
+          <div class="stat-chip">SC: <span id="statSC" class="value">0</span></div>
+          <div class="stat-chip">OBC: <span id="statOBC" class="value">0</span></div>
+          <div class="stat-chip">ST: <span id="statST" class="value">0</span></div>
           <div class="stat-chip">Muslim: <span id="statMuslim" class="value">0</span></div>
 
           <div class="stat-chip">Duplicate: <span id="statDup" class="value">0</span></div>
+          
+          <div class="stat-chip">
+  Verified: <span id="statVerified" class="value">0</span>
+</div>
+
+<div class="stat-chip">
+  Unverified: <span id="statUnverified" class="value">0</span>
+</div>
+          
         </div>
 
 
@@ -620,6 +663,9 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
         background:#f87171;color:#fff;border:none;cursor:pointer;">
   🔄 Reset Filters
 </button>
+
+</div>
+<!-- 🔼 TOGGLE AREA END -->
 
 </div>
 
