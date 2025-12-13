@@ -199,7 +199,7 @@ onValue(ref(db, "voters"), snapshot => {
 // ===============================
 let muslimIndex = 0;
 const muslimBtn = document.getElementById("muslimJumpBtn");
-const muslimFloat = document.getElementById("muslimFloatCounter");
+
 
 function getMuslimCards() {
   return [...document.querySelectorAll(".card")].filter(card => {
@@ -255,6 +255,52 @@ if (muslimBtn) {
     muslimIndex++;
   };
 }
+const muslimFloat = document.getElementById("muslimFloatCounter");
+
+// 🖱️ CLICK FLOAT → JUMP TO NUMBER
+if (muslimFloat) {
+  muslimFloat.addEventListener("click", () => {
+    const muslimCards = getMuslimCards();
+    if (!muslimCards.length) return;
+
+    const input = prompt(
+      `Enter Muslim number (1 – ${muslimCards.length})`
+    );
+
+    if (!input) return;
+
+    let n = Number(input);
+
+    if (isNaN(n) || n < 1 || n > muslimCards.length) {
+      alert("❌ Invalid number");
+      return;
+    }
+
+    // 🔥 set index (n-1)
+    muslimIndex = n - 1;
+
+    const card = muslimCards[muslimIndex];
+
+    // auto expand house
+    expandHouseIfCollapsed(card);
+
+    // highlight
+    card.style.boxShadow = "0 0 0 4px #16a34a";
+    setTimeout(() => card.style.boxShadow = "", 1200);
+
+    card.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
+    // update floating counter
+    muslimFloat.textContent = `${n} / ${muslimCards.length}`;
+
+    // next ☪️ click goes to next
+    muslimIndex++;
+  });
+}
+
   // ----------------------------
   // BUILD LEFT HOUSE NAV
   // ----------------------------
