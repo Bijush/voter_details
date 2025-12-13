@@ -367,18 +367,23 @@ if (muslimFloat) {
   card.innerHTML = `
     <img src="${photoPath}" class="voter-photo" style="cursor:pointer;">
     <div class="card-content">
+        
       <h3 class="card-header-line">
-        <span>
-          ${p.name} <span class="pill">#${p.serial}</span>
-          ${duplicateBadge}
-          ${photoBadge}
-        </span>
+  <span>
+    ${p.name} <span class="pill">#${p.serial}</span>
+
+    ${p.verified ? `<span class="verified-badge">✔ Verified</span>` : ""}
+    ${duplicateBadge}
+    ${photoBadge}
+  </span>
+        
         <span class="gender-pill ${(p.gender || "").toLowerCase()}">
           ${p.gender || "—"}
         </span>
       </h3>
 
       ${p.father ? `<p><strong>Father:</strong> ${p.father}</p>` : ""}
+      ${p.mother ? `<p><strong>Mother:</strong> ${p.mother}</p>` : ""}
       ${p.husband ? `<p><strong>Husband:</strong> ${p.husband}</p>` : ""}
       <p class="byp-field"><strong>BYP:</strong> ${p.byp}</p>
       <p><strong>Age:</strong> ${p.age}</p>
@@ -423,6 +428,30 @@ if (muslimFloat) {
 
   actions.appendChild(editBtn);
   actions.appendChild(delBtn);
+  
+  
+  
+  // ✅ DOUBLE CLICK → TOGGLE VERIFIED (FIREBASE)
+card.addEventListener("dblclick", async () => {
+
+  const house = card.dataset.house;
+  const key   = card.dataset.key;
+
+  const newStatus = !p.verified;
+
+  await update(ref(db, `voters/${house}/${key}`), {
+    verified: newStatus,
+    updatedAt: new Date().toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour12: true
+    })
+  });
+
+  // small feedback
+  card.style.outline = "3px solid #16a34a";
+  setTimeout(() => card.style.outline = "", 600);
+});
+  
 
   return card;
 }
@@ -1287,6 +1316,7 @@ function loadEditForm(voter) {
   evHouse.value  = voter.house.replace("house_", "");
   evName.value   = voter.name;
   evFather.value = voter.father || "";
+  evMother.value = voter.mother || ""; 
   evHusband.value = voter.husband || "";
   evAge.value    = voter.age;
   evGender.value = voter.gender;
@@ -1335,6 +1365,7 @@ window.saveEditVoter = async function () {
   const serial  = Number(evSerial.value);
   const name    = evName.value.trim();
   const father  = evFather.value.trim();
+  const mother = evMother.value.trim();
   const husband = evHusband.value.trim();
   const age     = Number(evAge.value);
   const gender  = evGender.value.trim();
@@ -1370,7 +1401,7 @@ window.saveEditVoter = async function () {
 
     // 2️⃣ Add to NEW house
     await update(ref(db, newPath), {
-      serial, name, father, husband, age, gender, byp, mobile,
+      serial, name, father,mother, husband, age, gender, byp, mobile,
       updatedAt: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", hour12: true })
     });
 
@@ -1383,7 +1414,7 @@ window.saveEditVoter = async function () {
   // ⭐ IF HOUSE SAME → NORMAL UPDATE
   // -----------------------------
   update(ref(db, oldPath), {
-    serial, name, father, husband, age, gender, byp, mobile,
+    serial, name, father,mother, husband, age, gender, byp, mobile,
     updatedAt: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", hour12: true })
   });
 
