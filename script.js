@@ -577,6 +577,37 @@ card.addEventListener("dblclick", async () => {
   resultsDiv.appendChild(frag);
 }
 
+
+
+
+// 🔽 COLLAPSE ALL HOUSES
+function collapseAllHouses() {
+  document.querySelectorAll(".house-section").forEach(section => {
+    const content = section.querySelector(".house-content");
+    const arrow   = section.querySelector(".collapse-icon");
+
+    if (content) {
+      content.style.maxHeight = "0px";
+      content.style.opacity = "0";
+    }
+    if (arrow) arrow.classList.add("rotate");
+  });
+}
+
+// 🔼 EXPAND ALL HOUSES
+function expandAllHouses() {
+  document.querySelectorAll(".house-section").forEach(section => {
+    const content = section.querySelector(".house-content");
+    const arrow   = section.querySelector(".collapse-icon");
+
+    if (content) {
+      content.style.maxHeight = content.scrollHeight + "px";
+      content.style.opacity = "1";
+    }
+    if (arrow) arrow.classList.remove("rotate");
+  });
+}
+
   // ----------------------------
   // FILTERS
   // ----------------------------
@@ -607,7 +638,17 @@ if (filterVerified.value === "yes") {
 if (filterVerified.value === "no") {
   filtered = filtered.filter(p => !p.verified);
 }
-    
+    // 🏠 HOUSE TOGGLE FILTER
+const filterHouseToggle = document.getElementById("filterHouseToggle");
+
+if (filterHouseToggle.value === "off") {
+  // little delay so DOM render completes
+  setTimeout(collapseAllHouses, 50);
+}
+
+if (filterHouseToggle.value === "on") {
+  setTimeout(expandAllHouses, 50);
+}
     
     
 
@@ -663,6 +704,7 @@ if (filterHouse.value.trim() !== "") {
   filterHouse.addEventListener("change", applyFilters);
   
   filterVerified.onchange = applyFilters;
+  filterHouseToggle.onchange = applyFilters;
 
 
 
