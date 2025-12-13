@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-
+});
 
 // ⭐ REPORT SECTION TOGGLE
 const rptBtn = document.getElementById("toggleReportBtn");
@@ -35,25 +35,26 @@ rptBtn.addEventListener("click", () => {
   // CASTE AUTO-DETECT RULES
   // ----------------------------
   function detectCaste(nameRaw) {
-    if (!nameRaw) return "General";
+  if (!nameRaw) return "General";
 
-    const name = nameRaw.trim().toLowerCase();
-    const parts = name.split(/\s+/);
-    const last = " " + parts[parts.length - 1] + " "; // last name only
+  const parts = nameRaw.trim().toLowerCase().split(/\s+/);
+  const lastWord = parts[parts.length - 1]; // ✅ exact last word only
 
-    const MUSLIM = [" laskar "," uddin "," hussain "," hossain "," ali "," ahmed "," ahmad "," begum "," khatun "," barbhuiya "," mia "];
-    const SC     = [" roy "," das "," namashudra "," namasudra "," namsudra "," sarkar "," debnath "];
-    const ST     = [" majhi "," tudu "," hansda "," murmu "," basumatary "];
-    const OBC    = [" mallick "," mallik "," dey "," sukla "," suklabaidya "," bhadra "," deb "];
+  // Hindu / SC / ST / OBC FIRST (priority)
+  const SC  = ["roy", "das", "namashudra", "namasudra", "namsudra", "sarkar", "debnath"];
+  const ST  = ["majhi", "tudu", "hansda", "murmu", "basumatary"];
+  const OBC = ["mallick", "mallik", "dey", "sukla", "suklabaidya", "bhadra", "deb"];
 
-    if (MUSLIM.some(k => last.includes(k))) return "Muslim";
-    if (SC.some(k => last.includes(k)))     return "SC";
-    if (ST.some(k => last.includes(k)))     return "ST";
-    if (OBC.some(k => last.includes(k)))    return "OBC";
+  // Muslim — ONLY true last names (no first names)
+  const MUSLIM = ["laskar", "uddin", "hussain", "hossain", "begum", "khatun", "barbhuiya", "mia"];
 
-    return "General";
-  }
+  if (SC.includes(lastWord))  return "SC";
+  if (ST.includes(lastWord))  return "ST";
+  if (OBC.includes(lastWord)) return "OBC";
+  if (MUSLIM.includes(lastWord)) return "Muslim";
 
+  return "General";
+}
   // ----------------------------
   // DOM ELEMENTS
   // ----------------------------
@@ -94,6 +95,10 @@ rptBtn.addEventListener("click", () => {
 
   let dupCycle = [];     // one-by-one cycle list
   let dupIndex = 0;      // pointer
+  
+  
+  
+
 
   // ----------------------------
 // ✅ LOAD DATA FROM FIREBASE (LIVE)
@@ -142,6 +147,16 @@ onValue(ref(db, "voters"), snapshot => {
     renderDailyNewVoterNames();
     renderDailyShiftVoterList();
     renderCharts();
+    
+    // ⭐ SHOW / HIDE MUSLIM JUMP ICON
+  const muslimBtn = document.getElementById("muslimJumpBtn");
+  if (muslimBtn) {
+    const hasMuslim = allPeople.some(p => p.caste === "Muslim");
+    muslimBtn.style.display = hasMuslim ? "block" : "none";
+  }
+    
+    
+    
   }
 
   function normalizeGender(g) {
@@ -171,7 +186,65 @@ onValue(ref(db, "voters"), snapshot => {
       colors[h] = `hsla(${(i * 40) % 360}, 70%, 92%, 1)`;
     });
   }
+  
+  
+  // ===============================
+// ☪️ MUSLIM ONLY JUMP (FINAL)
+// ===============================
 
+// ===============================
+// ☪️ MUSLIM ONLY JUMP (FINAL FIX)
+// ===============================
+
+let muslimIndex = 0;
+const muslimBtn = document.getElementById("muslimJumpBtn");
+
+function getMuslimCards() {
+  return [...document.querySelectorAll(".card")].filter(card => {
+    const text = card.innerText.toLowerCase();
+    return text.includes("caste:") && text.includes("muslim");
+  });
+}
+
+function expandHouseIfCollapsed(card) {
+  const section = card.closest(".house-section");
+  if (!section) return;
+
+  const content = section.querySelector(".house-content");
+  const arrow   = section.querySelector(".collapse-icon");
+
+  if (content && content.style.maxHeight === "0px") {
+    content.style.maxHeight = content.scrollHeight + "px";
+    content.style.opacity = "1";
+    arrow && arrow.classList.remove("rotate");
+  }
+}
+
+if (muslimBtn) {
+  muslimBtn.onclick = () => {
+    const muslimCards = getMuslimCards();
+    if (!muslimCards.length) return;
+
+    if (muslimIndex >= muslimCards.length) muslimIndex = 0;
+
+    const card = muslimCards[muslimIndex];
+
+    // ✅ AUTO EXPAND HOUSE FIRST
+    expandHouseIfCollapsed(card);
+
+    // highlight
+    card.style.boxShadow = "0 0 0 4px #16a34a";
+    setTimeout(() => card.style.boxShadow = "", 1200);
+
+    // scroll
+    card.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    });
+
+    muslimIndex++;
+  };
+}
   // ----------------------------
   // BUILD LEFT HOUSE NAV
   // ----------------------------
@@ -450,6 +523,7 @@ if (filterHouse.value.trim() !== "") {
 }
     renderResults(filtered);
     buildDuplicateCycle();
+    
   }
 
   filterAge.onchange    = applyFilters;
@@ -475,6 +549,8 @@ document.getElementById("resetFiltersBtn").onclick = () => {
   // show full list again
   renderResults(allPeople);
   buildDuplicateCycle();
+  
+  
 
   alert("✔️ Filters reset!");
 };
@@ -489,6 +565,7 @@ document.getElementById("resetFiltersBtn").onclick = () => {
     if (!q) {
       renderResults(allPeople);
       buildDuplicateCycle();
+      
       return;
     }
 
@@ -1354,5 +1431,3 @@ window.deleteVoter = function (house, key) {
       alert("Error: " + err.message);
     });
 };
-
-});
