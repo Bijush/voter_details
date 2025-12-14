@@ -6,6 +6,9 @@ from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
 const db = window.db;
 
+let lastActionVoterKey = null;
+let lastScrollY = 0;
+
 // AUTO-FIX: remove duplicate shift popup if exists
 document.addEventListener("DOMContentLoaded", () => {
   const popups = document.querySelectorAll("#shiftVoterPopup");
@@ -458,17 +461,19 @@ if (p.verified === true) {
     <div class="card-content">
         
       <h3 class="card-header-line">
-  <span>
-    ${p.name} <span class="pill">#${p.serial}</span>
+  <div class="name-line">
+    <span class="name-text">
+      ${p.name}
+      <span class="pill">#${p.serial}</span>
+      ${p.verified ? `<span class="verified-badge">✔ Verified</span>` : ""}
+    </span>
+  </div>
 
-    ${p.verified ? `<span class="verified-badge">✔ Verified</span>` : ""}
+  <div class="badge-line">
     ${duplicateBadge}
     ${photoBadge}
-  </span>
-        
-        
-        
-      </h3>
+  </div>
+</h3>
 
       ${p.father ? `<p><strong>Father:</strong> ${p.father}</p>` : ""}
       ${p.mother ? `<p><strong>Mother:</strong> ${p.mother}</p>` : ""}
@@ -530,7 +535,9 @@ card.addEventListener("dblclick", async () => {
 
   const house = card.dataset.house;
   const key   = card.dataset.key;
-
+  
+lastActionVoterKey = key;   // ✅ remember this voter
+let lastScrollY = 0;
   const newStatus = !p.verified;
 
   await update(ref(db, `voters/${house}/${key}`), {
@@ -549,6 +556,23 @@ card.addEventListener("dblclick", async () => {
 
   return card;
 }
+
+
+
+function expandHouseForCard(card) {
+  const section = card.closest(".house-section");
+  if (!section) return;
+
+  const content = section.querySelector(".house-content");
+  const arrow   = section.querySelector(".collapse-icon");
+
+  if (content && content.style.maxHeight === "0px") {
+    content.style.maxHeight = content.scrollHeight + "px";
+    content.style.opacity = "1";
+    arrow && arrow.classList.remove("rotate");
+  }
+}
+
   // ----------------------------
   // RENDER RESULTS
   // ----------------------------
@@ -645,6 +669,35 @@ setTimeout(toggleUnverifiedMuslimBtn, 200);
 
 
   resultsDiv.appendChild(frag);
+  
+  // 🔒 RESTORE SCROLL POSITION (CRITICAL FIX)
+if (lastScrollY > 0) {
+  requestAnimationFrame(() => {
+    window.scrollTo({
+      top: lastScrollY,
+      behavior: "auto"
+    });
+  });
+}
+
+// 🔁 OPTIONAL: focus verified voter (visual only)
+if (lastActionVoterKey) {
+  setTimeout(() => {
+    const target = document.querySelector(
+      `.card[data-key="${lastActionVoterKey}"]`
+    );
+
+    if (target) {
+      expandHouseForCard(target);
+
+      target.style.boxShadow = "0 0 0 4px #22c55e";
+      setTimeout(() => target.style.boxShadow = "", 1200);
+    }
+
+    lastActionVoterKey = null;
+    lastScrollY = 0;
+  }, 120);
+}
 }
 
 
@@ -1725,3 +1778,13 @@ window.deleteVoter = async function (house, key) {
 window.openDeletedPage = function () {
   window.location.href = "deleted.html";
 };
+
+// 🔗 Deleted Voters button click
+document.addEventListener("DOMContentLoaded", () => {
+  const delBtn = document.getElementById("deletedBtn");
+  if (delBtn) {
+    delBtn.addEventListener("click", () => {
+      window.location.href = "deleted.html";
+    });
+  }
+});

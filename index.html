@@ -172,17 +172,7 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
 /* ============================================
    STICKY SEARCH / HEADER
 ============================================ */
-.sticky-header{
-  position:sticky;
-  top:0;
-  z-index:50;
-  padding:8px;
-  margin:-8px -8px 10px;
-  border-radius:14px;
-  background:rgba(255,255,255,.88);
-  backdrop-filter:blur(14px);
-  border:1px solid rgba(148,163,184,.45);
-}
+
 
 #search{
   width:100%;
@@ -296,10 +286,31 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
   border:3px solid #fff;
 }
 
+/* ✅ FIX VERIFIED BADGE POSITION */
 .card-header-line{
   display:flex;
   justify-content:space-between;
+  align-items:flex-start;
+  gap:8px;
+}
+
+.name-line{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.name-text{
+  display:flex;
   align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.badge-line{
+  display:flex;
+  gap:6px;
+  flex-shrink:0;
 }
 .card-header-line span{font-size:20px;font-weight:700;}
 
@@ -544,7 +555,139 @@ margin:8px 0;
   box-shadow:0 2px 8px rgba(0,0,0,.25);
   display:none;
 }
+/* 🔥 HIDE FULL BREADCRUMB */
+#breadcrumb {
+  display: none !important;
+}
+/* 🔥 FORCE LEFT + RIGHT END */
+.top-action-bar{
+  display:flex;
+  align-items:center;
+  width:100%;
+  margin-bottom:10px;
+  position: relative;
+  z-index: 10001; 
+}
 
+/* 🔥 POLLING STATION HEADER */
+.ps-header{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 14px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#2563eb,#1e40af);
+  color:#fff;
+  font-size:15px;
+  font-weight:600;
+  box-shadow:0 6px 18px rgba(37,99,235,.35);
+}
+
+.ps-header strong{
+  background:#fff;
+  color:#1e3a8a;
+  padding:2px 8px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:700;
+}
+
+.ps-header i{
+  font-size:16px;
+}
+
+/* 🔥 COMPACT TOP TOOLBAR */
+.compact-toolbar{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-top:8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+  
+
+
+.toolbar-row{
+  display:flex;
+  gap:8px;
+}
+
+.tool-btn{
+  flex:1;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #cbd5f5;
+  background:#f8fafc;
+  font-weight:600;
+  font-size:14px;
+  cursor:pointer;
+}
+
+.tool-btn:active{
+  transform:scale(.97);
+}
+
+.tool-btn.danger{
+  background:#fee2e2;
+  border-color:#fecaca;
+  color:#b91c1c;
+}
+
+.tool-select{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid #cbd5f5;
+  background:#f9fafb;
+  font-size:14px;
+}
+.container,
+.wrapper,
+.section {
+  max-width: none;
+}
+/* 🔥 FULL-WIDTH STICKY HEADER (FIXED) */
+.sticky-header{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+
+  background: rgba(255,255,255,.88);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(148,163,184,.45);
+  border-radius: 0;
+}
+/* 🔥 CENTER CONTENT INSIDE FULL-WIDTH HEADER */
+.sticky-inner{
+  max-width: 1200px;
+  margin: auto;
+  padding: 8px;
+}
+
+.houses-btn{
+  padding:10px 14px;
+  border-radius:10px;
+  border:1px solid #cbd5f5;
+  background:#f8fafc;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+}
+.houses-btn:active{
+  transform:scale(.97);
+}
+
+.sidebar-overlay.show{
+  display:block;
+}
 </style>
 </head>
 
@@ -563,17 +706,28 @@ margin:8px 0;
   </aside>
 
   <!-- Toggle -->
-  <button id="toggleSidebarBtn" class="sidebar-toggle-btn">☰ Houses</button>
+  <div class="top-action-bar">
+  <button id="toggleSidebarBtn" class="houses-btn">
+    ☰ Houses
+  </button>
+
+   <div class="ps-header">
+  <i class="bi bi-geo-alt-fill"></i>
+  <span>Polling Station</span>
+  <strong>87</strong>
+</div>
+      
+</div>
 
   <!-- MAIN -->
   <main class="main">
     <div class="card-main">
 
-      <h1>Polling Station 87</h1>
-      <div class="subtitle">Smart voter list with search, filters, stats & family view</div>
+     
 
       <!-- ⭐ STICKY GLASS HEADER (ALL INSIDE HERE) -->
       <div class="sticky-header">
+           <div class="sticky-inner">
 
         <!-- BREADCRUMB -->
         <div id="breadcrumb" class="breadcrumb">
@@ -586,6 +740,28 @@ margin:8px 0;
         </div>
         
         
+        
+        <div class="compact-toolbar">
+
+  <div class="toolbar-row">
+    <button id="toggleFilterAreaBtn" class="tool-btn">
+      ⚙️ Filters
+    </button>
+
+    <button id="deletedBtn" class="tool-btn danger">
+      🗑️ Deleted List
+    </button>
+  </div>
+
+  <select id="filterHouseToggle" class="tool-select">
+    <option value="">House View</option>
+    <option value="off">Off All Houses</option>
+    <option value="on">On All Houses</option>
+  </select>
+
+</div>
+        
+        <!--
         <button id="toggleFilterAreaBtn"
   style="
     margin:8px 0;
@@ -598,6 +774,7 @@ margin:8px 0;
     width:100%;">
   ⚙️ Show Filters & Stats
 </button>
+
 <button onclick="openDeletedPage()"
   style="
     margin-top:10px;
@@ -617,6 +794,7 @@ margin:8px 0;
   <option value="off">Off All Houses</option>
   <option value="on">On All Houses</option>
 </select>
+   -->
 <!-- 🔽 TOGGLE AREA START -->
 
 <div id="filterToggleArea" style="display:none;">
@@ -717,6 +895,7 @@ margin:8px 0;
   🔄 Reset Filters
 </button>
 
+</div>
 </div>
 <!-- 🔼 TOGGLE AREA END -->
 
