@@ -241,7 +241,7 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
    HOUSE SECTION
 ============================================ */
 .house-section{
-  padding:16px;
+  padding:10px;
   border-radius:18px;
   margin-bottom:16px;
 }
@@ -281,14 +281,15 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
   border:1px solid #e0e0e0;
   box-shadow:0 4px 14px rgba(0,0,0,.08);
   margin-bottom:16px;
+  width:100%;
 }
 .card:hover{transform:translateY(-1px);}
 .card-content{flex:1;display:flex;flex-direction:column;gap:4px;}
 .card p{margin:2px 0;font-size:15px;color:#333;}
 
 .voter-photo{
-  width:90px;
-  height:90px;
+  width:70px;
+  height:70px;
   border-radius:10px;
   object-fit:cover;
   box-shadow:0 2px 8px rgba(0,0,0,.15);
@@ -530,6 +531,19 @@ margin:8px 0;
     width:100%;
     
 }
+#unverifiedMuslimJumpBtn{
+  position:fixed;
+  right:14px;
+  bottom:174px; /* Muslim jump er upor */
+  padding:10px 14px;
+  border-radius:50%;
+  border:1px solid #f59e0b;
+  background:#fff7ed;
+  font-size:16px;
+  cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
+  display:none;
+}
 
 </style>
 </head>
@@ -671,6 +685,15 @@ margin:8px 0;
 <div class="stat-chip">
   Unverified: <span id="statUnverified" class="value">0</span>
 </div>
+<div class="stat-chip">
+  ☪️ Verified-Muslim:
+  <span id="statVerifiedMuslim" class="value">0</span>
+</div>
+
+<div class="stat-chip">
+  ☪️ Unverified:
+  <span id="statUnverifiedMuslim" class="value">0</span>
+</div>
           
         </div>
 
@@ -753,6 +776,7 @@ margin:8px 0;
 <button id="backToTop">↑ Top</button>
 <button id="dupJumpBtn">🔁</button>
 <button id="muslimJumpBtn">☪️</button>
+<button id="unverifiedMuslimJumpBtn">☪️❌</button>
 
 <!-- Photo viewer -->
 <div id="photoViewer" onclick="closePhoto()">

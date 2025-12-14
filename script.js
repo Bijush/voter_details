@@ -316,6 +316,56 @@ if (muslimFloat) {
   });
 }
 
+// ===============================
+// ☪️❌ UNVERIFIED MUSLIM JUMP
+// ===============================
+let unverifiedMuslimIndex = 0;
+const unverifiedMuslimBtn = document.getElementById("unverifiedMuslimJumpBtn");
+
+// get ONLY unverified muslim cards
+function getUnverifiedMuslimCards(){
+  return [...document.querySelectorAll(".card")].filter(card =>
+    card.dataset.caste === "Muslim" &&
+    card.dataset.verified === "no"
+  );
+}
+
+// show / hide button automatically
+function toggleUnverifiedMuslimBtn(){
+  const list = getUnverifiedMuslimCards();
+  unverifiedMuslimBtn.style.display = list.length ? "block" : "none";
+}
+
+// call after render
+setTimeout(toggleUnverifiedMuslimBtn, 800);
+
+if (unverifiedMuslimBtn) {
+  unverifiedMuslimBtn.onclick = () => {
+    const cards = getUnverifiedMuslimCards();
+    if (!cards.length) return;
+
+    if (unverifiedMuslimIndex >= cards.length)
+      unverifiedMuslimIndex = 0;
+
+    const card = cards[unverifiedMuslimIndex];
+
+    // auto expand house
+    expandHouseIfCollapsed(card);
+
+    // highlight
+    card.style.boxShadow = "0 0 0 4px #f59e0b";
+    setTimeout(() => card.style.boxShadow = "", 1300);
+
+    card.scrollIntoView({
+      behavior:"smooth",
+      block:"center"
+    });
+
+    unverifiedMuslimIndex++;
+  };
+}
+
+
   // ----------------------------
   // BUILD LEFT HOUSE NAV
   // ----------------------------
@@ -360,6 +410,14 @@ if (muslimFloat) {
 
 document.getElementById("statUnverified").textContent =
   list.filter(p => !p.verified).length;
+  
+  // ☪️ VERIFIED / UNVERIFIED MUSLIM STATS
+document.getElementById("statVerifiedMuslim").textContent =
+  list.filter(p => p.caste === "Muslim" && p.verified === true).length;
+
+document.getElementById("statUnverifiedMuslim").textContent =
+  list.filter(p => p.caste === "Muslim" && !p.verified).length;
+  
   }
 
   // ----------------------------
@@ -368,6 +426,8 @@ document.getElementById("statUnverified").textContent =
   function createVoterCard(p) {
 const card = document.createElement("div");
 card.className = "card";
+card.dataset.caste = p.caste;
+card.dataset.verified = p.verified ? "yes" : "no";
 
 // ✅ GREEN GLOW IF VERIFIED
 if (p.verified === true) {
@@ -573,6 +633,13 @@ card.addEventListener("dblclick", async () => {
 
     frag.appendChild(section);
   });
+  
+  
+
+// ✅ update unverified muslim jump button
+setTimeout(toggleUnverifiedMuslimBtn, 200);
+
+
 
   resultsDiv.appendChild(frag);
 }
