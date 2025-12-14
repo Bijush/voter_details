@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Deleted Voters</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import { getDatabase, ref, onValue, remove, set } 
+from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  const app = initializeApp({
+    apiKey: "AIzaSyCybmzCk3M8jV_255SbRGkGPWLAz2lgayE",
+    authDomain: "bijus-app-52978.firebaseapp.com",
+    databaseURL: "https://bijus-app-52978.firebaseio.com",
+    projectId: "bijus-app-52978"
+  });
+
+  const db = getDatabase(app);
+  const list = document.getElementById("deletedList");
+
+  onValue(ref(db, "deleted_voters"), snap => {
+    list.innerHTML = "";
+    const data = snap.val() || {};
+
+    Object.entries(data).reverse().forEach(([key, v]) => {
+
+      const div = document.createElement("div");
+      div.style.cssText = `
+        background:#fee2e2;
+        border:1px solid #fecaca;
+        padding:12px;
+        border-radius:12px;
+        margin-bottom:10px;
+      `;
+
+      div.innerHTML = `
+        <div style="font-size:16px;font-weight:700;">
+          ${v.name || "-"} <span>(#${v.serial || "-"})</span>
+        </div>
+
+        <div style="font-size:14px;margin-top:6px;">
+          🏠 <b>House:</b> ${v.house?.replace("house_","")}<br>
+          🆔 <b>BYP:</b> ${v.byp || "-"}<br>
+          🎂 <b>Age:</b> ${v.age || "-"}<br>
+          🚻 <b>Gender:</b> ${v.gender || "-"}<br>
+          ✔️ <b>Verified:</b> ${v.verified ? "Yes" : "No"}<br>
+          
+          📝 <b>Reason:</b>
+<span style="
+  padding:2px 8px;
+  border-radius:999px;
+  font-weight:600;
+  background:
+    ${v.deleteReason === "Dead" ? "#fecaca" :
+      v.deleteReason === "Shifted" ? "#dbeafe" :
+      "#fde68a"};
+">
+  ${v.deleteReason || "—"}
+</span>
+<br>
+          ⏰ <b>Deleted:</b> ${v.deletedAt}
+        </div>
+
+        <div style="margin-top:10px;display:flex;gap:10px;">
+  <button class="restoreBtn"
+    style="
+      flex:1;
+      padding:8px;
+      border-radius:8px;
+      border:1px solid #86efac;
+      background:#dcfce7;
+      cursor:pointer;
+      font-weight:600;">
+    ♻️ Restore
+  </button>
+
+  <button class="permDeleteBtn"
+    style="
+      flex:1;
+      padding:8px;
+      border-radius:8px;
+      border:1px solid #fecaca;
+      background:#fee2e2;
+      cursor:pointer;
+      font-weight:600;">
+    ❌ Permanent
+  </button>
+</div>
+      `;
+
+      const restoreBtn = div.querySelector(".restoreBtn");
+      
+      const permDeleteBtn = div.querySelector(".permDeleteBtn");
+
+permDeleteBtn.onclick = async () => {
+
+  // 🔐 Secret code
+  let code = prompt("Enter secret code for PERMANENT delete:");
+
+  if (!code) return;
+
+  if (code.trim().toLowerCase() !== "bijush") {
+    alert("❌ Wrong code!");
+    return;
+  }
+
+  // ⚠️ Final warning
+  if (!confirm("⚠️ PERMANENT DELETE!\nThis cannot be undone.\nAre you 100% sure?")) {
+    return;
+  }
+
+  try {
+    await remove(ref(db, `deleted_voters/${key}`));
+    alert("❌ Voter permanently deleted");
+  } catch (err) {
+    alert("Error: " + err.message);
+  }
+};
+      
+
+      restoreBtn.onclick = async () => {
+        if (!confirm("Restore this voter?")) return;
+
+        const house = v.house;
+        const originalKey = v.originalKey || key;
+
+        await set(ref(db, `voters/${house}/${originalKey}`), {
+          ...v,
+          updatedAt: new Date().toLocaleString("en-IN", {
+            timeZone: "Asia/Kolkata",
+            hour12: true
+          })
+        });
+
+        await remove(ref(db, `deleted_voters/${key}`));
+
+        alert("♻️ Restored successfully");
+      };
+
+      list.appendChild(div);
+    });
+  });
+
+});
+</script>
+</head>
+
+<body style="font-family:system-ui;background:#fef2f2;padding:15px;">
+
+<h2 style="text-align:center;">🗑️ Deleted Voters</h2>
+
+<button onclick="history.back()"
+ style="
+  margin-bottom:15px;
+  padding:8px 14px;
+  border-radius:8px;
+  border:1px solid #aaa;
+  cursor:pointer;">
+⬅ Back
+</button>
+
+<div id="deletedList"></div>
+
+</body>
+</html>

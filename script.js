@@ -1,7 +1,7 @@
 
 
 // ✅ FIREBASE IMPORT (TOP OF FILE)
-import { ref, onValue, push, update, remove }
+import { ref, onValue, push, update, remove,get}
 from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
 const db = window.db;
@@ -77,6 +77,9 @@ rptBtn.addEventListener("click", () => {
   let sortMode = "default";
 
   const searchInput    = document.getElementById("search");
+  
+  let searchTimer = null; // ✅ debounce timer
+  
   const resultsDiv     = document.getElementById("results");
   const filterAge      = document.getElementById("filterAge");
   const filterHouse    = document.getElementById("filterHouse");
@@ -802,11 +805,17 @@ document.getElementById("resetFiltersBtn").onclick = () => {
   // SEARCH
   // ----------------------------
   searchInput.addEventListener("input", () => {
+
+  // ⏳ debounce
+  clearTimeout(searchTimer);
+
+  searchTimer = setTimeout(() => {
+
     const q = searchInput.value.toLowerCase().trim();
+
     if (!q) {
       renderResults(allPeople);
       buildDuplicateCycle();
-      
       return;
     }
 
@@ -819,8 +828,9 @@ document.getElementById("resetFiltersBtn").onclick = () => {
 
     renderResults(matched);
     buildDuplicateCycle();
-  });
-  
+
+  }, 250); // 👈 magic number (200–300 best)
+});
   
   
   
@@ -1642,35 +1652,76 @@ window.saveAddVoter = function () {
   alert("✅ Voter added with Serial #" + serial);
 };
 
-// 🔥 SECURE DELETE — secret code required
-window.deleteVoter = function (house, key) {
+// 🔥 SECURE DELETE + MOVE TO DELETED LIST
+window.deleteVoter = async function (house, key) {
 
-  // Step 1 - Ask for secret code
+  // Step 1 - Secret code
   let code = prompt("Enter secret code to delete:");
-
   if (!code) {
     alert("❌ Cancelled");
     return;
   }
-
-  // Step 2 - Check correct code
   if (code.trim().toLowerCase() !== "bijush") {
-    alert("❌ Wrong code! Delete blocked.");
+    alert("❌ Wrong code");
     return;
   }
 
-  // Step 3 - Final confirmation
-  if (!confirm("Are you SURE you want to delete this voter permanently?")) {
-    alert("❌ Cancelled");
+  // Step 2 - Final confirmation  ✅ (এইটাই তুমি জিজ্ঞেস করছিলে)
+  if (!confirm("Are you SURE you want to delete this voter?")) {
     return;
   }
 
-  // Step 4 - Delete from Firebase
-  remove(ref(db, `voters/${house}/${key}`))
-    .then(() => {
-      alert("🗑️ Voter deleted successfully.");
-    })
-    .catch(err => {
-      alert("Error: " + err.message);
+  // Step 3 - Ask delete reason  ✅ (এখানে বসবে)
+  let reason = prompt(
+    "Enter delete reason:\n" +
+    "1 = Shifted\n" +
+    "2 = Dead\n" +
+    "3 = Duplicate Entry"
+  );
+
+  if (!reason) {
+    alert("❌ Delete cancelled (no reason)");
+    return;
+  }
+
+  let deleteReason = "";
+  if (reason === "1") deleteReason = "Shifted";
+  else if (reason === "2") deleteReason = "Dead";
+  else if (reason === "3") deleteReason = "Duplicate Entry";
+  else {
+    alert("❌ Invalid reason");
+    return;
+  }
+
+  // Step 4 - Firebase work
+  try {
+    const voterRef = ref(db, `voters/${house}/${key}`);
+    const snap = await get(voterRef);
+    if (!snap.exists()) return;
+
+    const voterData = snap.val();
+
+    await push(ref(db, "deleted_voters"), {
+      ...voterData,
+      house: house,
+      originalKey: key,
+      deleteReason: deleteReason,   // ✅ reason saved
+      deletedAt: new Date().toLocaleString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        hour12: true
+      })
     });
+
+    await remove(voterRef);
+
+    alert("🗑️ Voter deleted (" + deleteReason + ")");
+
+  } catch (err) {
+    alert("❌ Error: " + err.message);
+  }
+};
+
+
+window.openDeletedPage = function () {
+  window.location.href = "deleted.html";
 };
