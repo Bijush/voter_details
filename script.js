@@ -19,21 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
    // 🔁 FILTER + STATS TOGGLE
-const toggleFilterAreaBtn = document.getElementById("toggleFilterAreaBtn");
-const filterToggleArea    = document.getElementById("filterToggleArea");
 
-if (toggleFilterAreaBtn && filterToggleArea) {
-  toggleFilterAreaBtn.addEventListener("click", () => {
-    const hidden = filterToggleArea.style.display === "none";
 
-    filterToggleArea.style.display = hidden ? "block" : "none";
-    toggleFilterAreaBtn.textContent = hidden
-      ? "⚙️ Hide Filters & Stats"
-      : "⚙️ Show Filters & Stats";
-  });
-}
-
-});
 
 // ⭐ REPORT SECTION TOGGLE
 const rptBtn = document.getElementById("toggleReportBtn");
@@ -48,6 +35,10 @@ rptBtn.addEventListener("click", () => {
         rptBtn.textContent = "📊 Show Report";
     }
 });
+
+});
+
+
 
   // ----------------------------
   // CASTE AUTO-DETECT RULES
@@ -99,7 +90,7 @@ rptBtn.addEventListener("click", () => {
   const statMus = document.getElementById("statMuslim");
   const statHouses = document.getElementById("statHouses");
 
-  const houseNav        = document.getElementById("houseNav");
+  //const houseNav        = document.getElementById("houseNav");
   const breadcrumbHouse = document.getElementById("breadcrumbHouse");
   const dupBtn          = document.getElementById("dupJumpBtn");
   const backToTop       = document.getElementById("backToTop");
@@ -108,6 +99,16 @@ rptBtn.addEventListener("click", () => {
   const sidebarOverlay   = document.getElementById("sidebarOverlay");
   const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
   const sidebarCloseBtn  = document.querySelector(".sidebar-close-btn");
+  const houseViewSelect = document.getElementById("filterHouseToggle");
+  
+const filterBar        = document.querySelector(".filter-bar");
+const statsBar         = document.querySelector(".stats-bar");
+const resetBtn         = document.getElementById("resetFiltersBtn");
+const reportBtn        = document.getElementById("toggleReportBtn");
+const addVoterBtn = document.getElementById("openAddVoter");
+const deletedListBtn = document.getElementById("deletedBtn");
+
+
 
   let voterData = {};
   let allPeople = [];
@@ -161,7 +162,7 @@ onValue(ref(db, "voters"), snapshot => {
 
     generateColors();
     findDuplicateBYP();
-    buildHouseNav();
+   // buildHouseNav();
     renderResults(allPeople);
     buildDuplicateCycle();
     calculateSurveyReport();
@@ -1040,16 +1041,218 @@ document.getElementById("resetFiltersBtn").onclick = () => {
     });
   });
 
-  // Side bar Code
+  // 😘😘😘 SIDE BAR CODE START FROM HERE
+  //-----------++++------------+++++
+  
   toggleSidebarBtn.addEventListener("click", () => {
     sidebar.classList.add("open");
     sidebarOverlay.style.display = "block";
   });
+  
+  // ================================
+// 🔘 SIDEBAR SWITCH CONTROLS
+// ================================
 
-  sidebarCloseBtn.addEventListener("click", () => {
+
+const swStats     = document.getElementById("swStats");
+
+const swFilters      = document.getElementById("swFilters");
+const swHouseToggle  = document.getElementById("swHouseToggle");
+const swShowMissing  = document.getElementById("swShowMissing");
+
+
+const filterArea     = document.getElementById("filterToggleArea");
+const showMissingBtn = document.getElementById("showMissing");
+
+const swHouseViewBtn  = document.getElementById("swHouseViewBtn");
+
+function ensureFiltersOn() {
+  if (!swFilters.checked) {
+    swFilters.checked = true;
+    filterArea.style.display = "block";
+  }
+}
+
+
+
+// default OFF
+if (statsBar) statsBar.style.display = "none";
+if (filterArea) filterArea.style.display = "none";
+if (showMissingBtn) showMissingBtn.style.display = "none";
+
+// ⚙️ Filters
+swFilters?.addEventListener("change", () => {
+  if (!filterArea) return;
+  filterArea.style.display = swFilters.checked ? "block" : "none";
+});
+
+// 🔍 Missing serials button
+swShowMissing?.addEventListener("change", () => {
+  if (!showMissingBtn) return;
+  showMissingBtn.style.display = swShowMissing.checked ? "block" : "none";
+});
+
+// ================================
+// 🏠 HOUSE VIEW BUTTON SHOW / HIDE
+// ================================
+
+
+
+// ✅ DEFAULT OFF (page load)
+if (houseViewSelect) houseViewSelect.style.display = "none";
+if (swHouseViewBtn) swHouseViewBtn.checked = false;
+
+// 🔁 TOGGLE FROM SIDEBAR
+swHouseViewBtn?.addEventListener("change", () => {
+  if (!houseViewSelect) return;
+
+  if (swHouseViewBtn.checked) {
+    houseViewSelect.style.display = "block";
+  } else {
+    houseViewSelect.style.display = "none";
+  }
+  
+});
+
+// ===== SIDEBAR ONE BY ONE CONTROL =====
+
+const swSearch  = document.getElementById("swSearch");
+const swReset   = document.getElementById("swReset");
+const swReport  = document.getElementById("swReport");
+const swAddVoter     = document.getElementById("swAddVoter");
+const swDeletedList  = document.getElementById("swDeletedList");
+
+
+// 🔒 AUTO ENABLE FILTER AREA
+
+
+
+
+// DEFAULT OFF
+// ================================
+// 🔘 SIDEBAR ONE-BY-ONE CONTROL (FIXED)
+// ================================
+
+// DEFAULT OFF
+
+if (searchInput) searchInput.style.display = "none";
+
+if (statsBar)   statsBar.style.display   = "none";
+if (resetBtn)   resetBtn.style.display   = "none";
+if (reportBtn)  reportBtn.style.display  = "none";
+if (houseViewSelect) houseViewSelect.style.display = "none";
+
+// SEARCH
+swSearch?.addEventListener("change", () => {
+  if (swSearch.checked) ensureFiltersOn();
+  searchInput.style.display = swSearch.checked ? "block" : "none";
+});
+
+if (addVoterBtn) addVoterBtn.style.display = "none";
+if (deletedListBtn) deletedListBtn.style.display = "none";
+
+
+
+
+// FILTERS
+swFilters?.addEventListener("change", () => {
+  filterArea.style.display = swFilters.checked ? "block" : "none";
+});
+
+
+
+
+// 📊 STATS (SINGLE & CLEAN)
+if (statsBar) statsBar.style.display = "none"; // default OFF
+
+swStats?.addEventListener("change", () => {
+  if (swStats.checked) {
+    ensureFiltersOn();              // filter area auto ON
+    statsBar.style.display = "flex";
+  } else {
+    statsBar.style.display = "none";
+  }
+});
+
+
+// RESET
+swReset?.addEventListener("change", () => {
+  if (swReset.checked) ensureFiltersOn();
+  resetBtn.style.display = swReset.checked ? "block" : "none";
+});
+
+// REPORT
+swReport?.addEventListener("change", () => {
+  if (swReport.checked) ensureFiltersOn();
+  reportBtn.style.display = swReport.checked ? "block" : "none";
+});
+
+// HOUSE VIEW BUTTON
+swHouseViewBtn?.addEventListener("change", () => {
+  houseViewSelect.style.display = swHouseViewBtn.checked ? "block" : "none";
+});
+
+// ➕ ADD VOTER
+swAddVoter?.addEventListener("change", () => {
+  if (!addVoterBtn) return;
+  addVoterBtn.style.display = swAddVoter.checked ? "block" : "none";
+});
+
+// 🗑️ DELETED LIST
+swDeletedList?.addEventListener("change", () => {
+  if (!deletedListBtn) return;
+  deletedListBtn.style.display = swDeletedList.checked ? "block" : "none";
+});
+ sidebarCloseBtn.addEventListener("click", () => {
     sidebar.classList.remove("open");
     sidebarOverlay.style.display = "none";
   });
+
+
+
+
+// ===== FILTER BAR ONE BY ONE CONTROL =====
+
+// elements
+const elAge      = document.getElementById("filterAge");
+const elHouse    = document.getElementById("filterHouse");
+const elMobile   = document.getElementById("filterMobile");
+const elVerified = document.getElementById("filterVerified");
+const elSort     = document.getElementById("sortBy");
+
+// switches
+const swAge      = document.getElementById("swAge");
+const swHouse    = document.getElementById("swHouse");
+const swMobile   = document.getElementById("swMobile");
+const swVerified = document.getElementById("swVerified");
+const swSort     = document.getElementById("swSort");
+
+// ✅ DEFAULT OFF
+[elAge, elHouse, elMobile, elVerified, elSort].forEach(el => {
+  if (el) el.style.display = "none";
+});
+
+// helper
+function toggle(sw, el) {
+  if (!sw || !el) return;
+  sw.addEventListener("change", () => {
+    el.style.display = sw.checked ? "block" : "none";
+  });
+}
+
+// 🔁 connect one by one
+toggle(swAge, elAge);
+toggle(swHouse, elHouse);
+toggle(swMobile, elMobile);
+toggle(swVerified, elVerified);
+toggle(swSort, elSort);
+
+
+
+
+
+//  END OF SIDE BAR CODE HERE 
+
 
   sidebarOverlay.addEventListener("click", () => {
     sidebar.classList.remove("open");
@@ -1788,3 +1991,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+function updateStickyHeaderVisibility() {
+  const header = document.querySelector(".sticky-header");
+  if (!header) return;
+
+  // check if ANY visible child exists
+  const hasVisibleContent = [...header.querySelectorAll("*")]
+    .some(el => {
+      const style = window.getComputedStyle(el);
+      return style.display !== "none" && el.offsetHeight > 0;
+    });
+
+  if (!hasVisibleContent) {
+    header.style.display = "none";
+  } else {
+    header.style.display = "block";
+  }
+}
+
+// 🔁 run after every toggle / render
+setTimeout(updateStickyHeaderVisibility, 50);
+document.addEventListener("click", () =>
+  setTimeout(updateStickyHeaderVisibility, 50)
+);

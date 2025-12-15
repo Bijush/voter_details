@@ -689,29 +689,69 @@ margin:8px 0;
   display:block;
 }
 
-/* -- Only For Hide */
-
-#showMissing,#filterAge,#filterMobile,#filterVerified,#resetFiltersBtn{
-display:none !important;
-    
+.hidden{
+  display:none;
 }
 
-/* 🔥 SHOW ONLY TOTAL STAT (FIXED) */
 
-/* stats bar visible */
-.stats-bar{
-  display:flex !important;
+.sidebar-controls{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-top:10px;
 }
 
-/* সব stat hide */
-.stats-bar .stat-chip{
-  display:none !important;
+.toggle-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:13px;
+  cursor:pointer;
 }
 
-/* শুধু Total show */
-.stats-bar .stat-chip:has(#statTotal){
-  display:inline-flex !important;
+.toggle-item input{
+  width:18px;
+  height:18px;
 }
+/* 🔥 HIDE TOP BAR WHEN SIDEBAR OPEN */
+.sidebar.open ~ .page .top-action-bar,
+.sidebar.open ~ .top-action-bar{
+  display:none;
+}
+
+
+/* 🔥 REMOVE BLANK GAP ABOVE LAST UPDATED */
+#lastUpdated{
+  margin-top: 0;
+  padding: 6px 12px;
+  display: inline-block;
+  background: #eef2ff;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e40af;
+}
+
+/* 🔥 TIGHTEN STICKY HEADER BOTTOM */
+.sticky-header{
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+}
+/* 🔥 KILL EMPTY SPACE INSIDE STICKY HEADER */
+.compact-toolbar,
+.filter-bar,
+#filterToggleArea {
+  margin: 0 !important;
+}
+
+/* extra safety */
+.sticky-inner {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
 </style>
 </head>
 
@@ -724,10 +764,82 @@ display:none !important;
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <button class="sidebar-close-btn">✖</button>
-    <h2 class="sidebar-title">Houses</h2>
-    <div id="houseNav" class="house-nav"></div>
-  </aside>
+  <button class="sidebar-close-btn">✖</button>
+
+  <h2 class="sidebar-title">Controls</h2>
+
+  <div class="sidebar-controls">
+
+    <label class="toggle-item">
+      <input type="checkbox" id="swFilters">
+      <span>Filters</span>
+    </label>
+
+    <label class="toggle-item">
+      <input type="checkbox" id="swShowMissing">
+      <span>Missing Serials</span>
+    </label>
+    
+<label class="toggle-item">
+  <input type="checkbox" id="swHouseViewBtn">
+  <span>House View Button</span>
+</label>
+  </div>
+  <label class="toggle-item">
+  <input type="checkbox" id="swSearch">
+  <span>Search</span>
+</label>
+
+<label class="toggle-item">
+  <input type="checkbox" id="swAge">
+  <span>Age Filter</span>
+</label>
+
+<label class="toggle-item">
+  <input type="checkbox" id="swHouse">
+  <span>House Filter</span>
+</label>
+
+<label class="toggle-item">
+  <input type="checkbox" id="swMobile">
+  <span>Mobile Filter</span>
+</label>
+
+<label class="toggle-item">
+  <input type="checkbox" id="swVerified">
+  <span>Verified Filter</span>
+</label>
+
+<label class="toggle-item">
+  <input type="checkbox" id="swSort">
+  <span>Sort</span>
+</label>
+
+<label class="toggle-item">
+  <input type="checkbox" id="swAddVoter">
+  <span>Add Voter</span>
+</label>
+
+<label class="toggle-item">
+  <input type="checkbox" id="swDeletedList">
+  <span>Deleted List</span>
+</label>
+
+<label class="toggle-item">
+  <input type="checkbox" id="swStats">
+  <span>Stats</span>
+</label>
+
+<label class="toggle-item">
+  <input type="checkbox" id="swReset">
+  <span>Reset Button</span>
+</label>
+
+<label class="toggle-item">
+  <input type="checkbox" id="swReport">
+  <span>Report Button</span>
+</label>
+</aside>
 
   <!-- Toggle -->
   <div class="top-action-bar">
@@ -768,14 +880,18 @@ display:none !important;
         <div class="compact-toolbar">
 
   <div class="toolbar-row">
-    <button id="toggleFilterAreaBtn" class="tool-btn">
-      ⚙️ Filters
-    </button>
 
-    <button id="deletedBtn" class="tool-btn danger">
-      🗑️ Deleted List
-    </button>
-  </div>
+  <button id="openAddVoter"
+    class="tool-btn"
+    style="background:#22c55e;color:#fff;">
+    ➕ Add Voter
+  </button>
+
+  <button id="deletedBtn" class="tool-btn danger">
+    🗑️ Deleted List
+  </button>
+
+</div>
 
   <select id="filterHouseToggle" class="tool-select">
     <option value="">House View</option>
@@ -785,73 +901,8 @@ display:none !important;
 
 </div>
         
-        <!--
-        <button id="toggleFilterAreaBtn"
-  style="
-    margin:8px 0;
-    padding:8px 14px;
-    border-radius:10px;
-    border:1px solid #94a3b8;
-    background:#f1f5f9;
-    font-size:14px;
-    cursor:pointer;
-    width:100%;">
-  ⚙️ Show Filters & Stats
-</button>
-
-<button onclick="openDeletedPage()"
-  style="
-    margin-top:10px;
-    padding:10px;
-    border-radius:10px;
-    background:#dc2626;
-    color:white;
-    border:none;
-    font-weight:600;
-    cursor:pointer;
-    width:100%;">
-  🗑️ Deleted Voters
-</button>
-
-<select id="filterHouseToggle">
-  <option value="">House View</option>
-  <option value="off">Off All Houses</option>
-  <option value="on">On All Houses</option>
-</select>
-   -->
-<!-- 🔽 TOGGLE AREA START -->
-
-<div id="filterToggleArea" style="display:none;">
-    
-    
-    
-        <!-- SEARCH -->
-        <input id="search" type="text" placeholder="Search by name / house / serial / BYP…">
-        
-        <button id="openAddVoter"
-  style="margin-top:8px;padding:8px 14px;border-radius:10px;
-  background:#22c55e;color:#fff;border:none;cursor:pointer;">
-  ➕ Add Voter
-</button>
-        
-        
-        <!-- Report Showing buttong -->
-        <button id="toggleReportBtn" 
-        style="margin-top:10px;padding:8px 12px;
-        border-radius:8px;border:1px solid #444;">
-📊 Show Report
-</button>
-
-
-<!-- For hide some time  -->
-
-
-<button onclick="showMissingSerials()" 
-        style="padding:8px 12px;border-radius:8px;border:1px solid #888;margin:6px 0;" id="showMissing">
-  🔍 Show Missing Serials
-</button>
-        <!-- FILTERS -->
-        <div class="filter-bar">
+       <!-- FILTERS -->
+        <div class="filter-bar" id="filterBar">
     <select id="filterAge">
       <option value="">Age</option>
       <option value="18-25">18–25</option>
@@ -884,6 +935,39 @@ display:none !important;
       <option value="serial">Serial (Low → High)</option>
     </select>
 </div>
+
+       
+<!-- 🔽 TOGGLE AREA START -->
+
+<div id="filterToggleArea" style="display:none;">
+    
+    
+    
+        <!-- SEARCH -->
+        <input id="search" type="text" placeholder="Search by name / house / serial / BYP…">
+        
+        
+        
+        
+        <!-- Report Showing buttong -->
+        <button id="toggleReportBtn" 
+        style="margin-top:10px;padding:8px 12px;
+        border-radius:8px;border:1px solid #444;">
+📊 Show Report
+</button>
+
+
+<!-- For hide some time  -->
+
+
+<button onclick="showMissingSerials()" 
+        style="padding:8px 12px;border-radius:8px;border:1px solid #888;margin:6px 0;" id="showMissing">
+  🔍 Show Missing Serials
+</button>
+
+
+       
+
         <!-- STATS -->
         <div class="stats-bar">
           <div class="stat-chip">Total: <span id="statTotal" class="value">0</span></div>
