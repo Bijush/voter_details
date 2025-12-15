@@ -688,6 +688,30 @@ margin:8px 0;
 .sidebar-overlay.show{
   display:block;
 }
+
+/* -- Only For Hide */
+
+#showMissing,#filterAge,#filterMobile,#filterVerified,#resetFiltersBtn{
+display:none !important;
+    
+}
+
+/* 🔥 SHOW ONLY TOTAL STAT (FIXED) */
+
+/* stats bar visible */
+.stats-bar{
+  display:flex !important;
+}
+
+/* সব stat hide */
+.stats-bar .stat-chip{
+  display:none !important;
+}
+
+/* শুধু Total show */
+.stats-bar .stat-chip:has(#statTotal){
+  display:inline-flex !important;
+}
 </style>
 </head>
 
@@ -810,6 +834,7 @@ margin:8px 0;
   ➕ Add Voter
 </button>
         
+        
         <!-- Report Showing buttong -->
         <button id="toggleReportBtn" 
         style="margin-top:10px;padding:8px 12px;
@@ -817,8 +842,12 @@ margin:8px 0;
 📊 Show Report
 </button>
 
+
+<!-- For hide some time  -->
+
+
 <button onclick="showMissingSerials()" 
-        style="padding:8px 12px;border-radius:8px;border:1px solid #888;margin:6px 0;">
+        style="padding:8px 12px;border-radius:8px;border:1px solid #888;margin:6px 0;" id="showMissing">
   🔍 Show Missing Serials
 </button>
         <!-- FILTERS -->
