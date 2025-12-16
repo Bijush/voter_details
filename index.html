@@ -88,9 +88,12 @@ body{
 
 .sidebar-title{
   text-align:center;
-  font-size:12px;
-  font-weight:600;
-  margin-bottom:6px;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.5px;
+  padding-bottom:6px;
+  border-bottom:1px dashed #c7d2fe;
+  margin-bottom:12px;
 }
 
 .sidebar-close-btn{
@@ -256,6 +259,7 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
 .house-content {
   overflow: hidden;
   transition: max-height .3s ease, opacity .25s ease;
+  max-height:99999px;
 }
 
 
@@ -751,7 +755,128 @@ margin:8px 0;
   padding-top: 6px;
   padding-bottom: 6px;
 }
+.sidebar{
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  padding: 14px;
+}
 
+.toggle-item{
+  background:#f8fafc;
+  padding:8px 10px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+  transition:.2s;
+}
+.toggle-item:hover{
+  background:#eef2ff;
+  border-color:#c7d2fe;
+}
+.toggle-item span{
+  font-weight:600;
+  font-size:13px;
+}
+.toggle-item input{
+  accent-color:#2563eb;
+  transform: scale(1.1);
+}
+.sidebar-close-btn{
+  background:#fee2e2;
+  color:#b91c1c;
+  border:none;
+}
+.sidebar-close-btn:hover{
+  background:#fecaca;
+}
+.sidebar-controls{
+  gap:12px;
+}
+.sb-divider{
+  border:none;
+  border-top:1px dashed #c7d2fe;
+  margin:10px 0;
+}
+.loading-skeleton{
+  padding:20px;
+  text-align:center;
+  font-size:14px;
+  color:#64748b;
+  background:#f1f5f9;
+  border-radius:16px;
+  margin-top:10px;
+  animation:pulse 1.2s infinite;
+}
+
+@keyframes pulse{
+  0%{opacity:.4}
+  50%{opacity:1}
+  100%{opacity:.4}
+}
+.top-action-bar{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:6px 8px;
+}
+
+/* LEFT BUTTON */
+.houses-btn{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+  background:#ffffff;
+  font-size:14px;
+  font-weight:600;
+  box-shadow:0 3px 10px rgba(0,0,0,.12);
+}
+
+/* RIGHT PILL */
+.ps-header{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 16px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#2563eb,#1e40af);
+  color:#fff;
+  font-size:14px;
+  font-weight:600;
+  box-shadow:0 6px 18px rgba(37,99,235,.35);
+}
+
+/* 87 NUMBER BADGE */
+.ps-header strong{
+  background:#ffffff;
+  color:#1e3a8a;
+  padding:2px 10px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:700;
+}
+.name-marquee{
+  width:100%;
+  display:flex;
+  justify-content:center;   /* ✅ CENTER FIX */
+  margin:6px 0 6px;
+}
+
+.name-marquee marquee{
+  display:inline-block;
+  padding:6px 18px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#e0e7ff,#f0f9ff);
+  border:1px solid #c7d2fe;
+  font-weight:700;
+  font-size:13px;
+  color:#1e3a8a;
+  box-shadow:0 2px 6px rgba(0,0,0,.12);
+  white-space:nowrap;
+}
 </style>
 </head>
 
@@ -847,14 +972,19 @@ margin:8px 0;
     ☰ Houses
   </button>
 
-   <div class="ps-header">
-  <i class="bi bi-geo-alt-fill"></i>
-  <span>Polling Station</span>
-  <strong>87</strong>
-</div>
-      
+  <div class="ps-header">
+    <i class="bi bi-geo-alt-fill"></i>
+    <span>Polling Station</span>
+    <strong>87</strong>
+  </div>
 </div>
 
+<!-- ✅ NEW MARQUEE LINE -->
+<div class="name-marquee">
+  <marquee behavior="scroll" direction="left" scrollamount="4">
+    ✨ BIJUSH KUMAR ROY ✨
+  </marquee>
+</div>
   <!-- MAIN -->
   <main class="main">
     <div class="card-main">
@@ -1071,7 +1201,12 @@ margin:8px 0;
 <canvas id="casteChart" style="margin-top:20px;"></canvas>
 </div>
       <!-- RESULTS -->
-      <div id="results"></div>
+      <div id="loadingSkeleton" class="loading-skeleton">
+  Loading voters...
+</div>
+
+<div id="results"></div>
+      
 
     </div>
   </main>

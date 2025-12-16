@@ -22,19 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-// ⭐ REPORT SECTION TOGGLE
-const rptBtn = document.getElementById("toggleReportBtn");
-const rptBox = document.getElementById("reportSection");
 
-rptBtn.addEventListener("click", () => {
-    if (rptBox.style.display === "none") {
-        rptBox.style.display = "block";
-        rptBtn.textContent = "📊 Hide Report";
-    } else {
-        rptBox.style.display = "none";
-        rptBtn.textContent = "📊 Show Report";
-    }
-});
 
 });
 
@@ -107,6 +95,25 @@ const resetBtn         = document.getElementById("resetFiltersBtn");
 const reportBtn        = document.getElementById("toggleReportBtn");
 const addVoterBtn = document.getElementById("openAddVoter");
 const deletedListBtn = document.getElementById("deletedBtn");
+
+const rptBtn = document.getElementById("toggleReportBtn");
+const rptBox = document.getElementById("reportSection");
+
+// ⭐ REPORT SECTION TOGGLE
+
+
+
+
+rptBtn.addEventListener("click", () => {
+    if (rptBox.style.display === "none") {
+        rptBox.style.display = "block";
+        rptBtn.textContent = "📊 Hide Report";
+    } else {
+        rptBox.style.display = "none";
+        rptBtn.textContent = "📊 Show Report";
+    }
+});
+
 
 
 
@@ -578,6 +585,9 @@ function expandHouseForCard(card) {
   // RENDER RESULTS
   // ----------------------------
   function renderResults(list) {
+  
+  document.getElementById("loadingSkeleton")?.remove();
+  
   resultsDiv.innerHTML = "";
 
   if (!list.length) {
@@ -1139,7 +1149,7 @@ if (searchInput) searchInput.style.display = "none";
 
 if (statsBar)   statsBar.style.display   = "none";
 if (resetBtn)   resetBtn.style.display   = "none";
-if (reportBtn)  reportBtn.style.display  = "none";
+
 if (houseViewSelect) houseViewSelect.style.display = "none";
 
 // SEARCH
@@ -1183,8 +1193,28 @@ swReset?.addEventListener("change", () => {
 
 // REPORT
 swReport?.addEventListener("change", () => {
-  if (swReport.checked) ensureFiltersOn();
-  reportBtn.style.display = swReport.checked ? "block" : "none";
+  if (!reportBtn || !rptBox || !filterArea) return;
+
+  if (swReport.checked) {
+
+    // 🔥 FILTER AREA MUST BE ON
+    swFilters.checked = true;
+    filterArea.style.display = "block";
+
+    // 🔥 SHOW REPORT BUTTON
+    reportBtn.style.display = "block";
+
+    // (optional) auto open report
+    rptBox.style.display = "block";
+    reportBtn.textContent = "📊 Hide Report";
+
+  } else {
+
+    // 🔒 HIDE ALL
+    reportBtn.style.display = "none";
+    rptBox.style.display = "none";
+    reportBtn.textContent = "📊 Show Report";
+  }
 });
 
 // HOUSE VIEW BUTTON
