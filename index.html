@@ -877,6 +877,40 @@ margin:8px 0;
   box-shadow:0 2px 6px rgba(0,0,0,.12);
   white-space:nowrap;
 }
+.app-footer{
+  margin-top:30px;
+  padding:12px;
+  text-align:center;
+  font-size:13px;
+  color:#475569;
+  background:#f1f5f9;
+  border-top:1px solid #cbd5e1;
+}
+#pagination{
+  display:flex !important;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  margin:20px 0 10px;
+  position:relative;
+  z-index:20;
+}
+
+#pagination button{
+  padding:8px 14px;
+  border-radius:8px;
+  border:1px solid #cbd5e1;
+  background:#ffffff;
+  font-size:14px;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+}
+
+#pagination span{
+  font-weight:700;
+  color:#1e3a8a;
+}
 </style>
 </head>
 
@@ -891,7 +925,7 @@ margin:8px 0;
   <aside class="sidebar">
   <button class="sidebar-close-btn">✖</button>
 
-  <h2 class="sidebar-title">Controls</h2>
+  <h2 class="sidebar-title">Controls Panel</h2>
 
   <div class="sidebar-controls">
 
@@ -954,6 +988,17 @@ margin:8px 0;
   <input type="checkbox" id="swStats">
   <span>Stats</span>
 </label>
+
+<label class="toggle-item">
+  <input type="checkbox" id="swMuslimJump">
+  <span>Muslim Jump</span>
+</label>
+
+<label class="toggle-item">
+  <input type="checkbox" id="swUnverifiedMuslimJump">
+  <span>Unverified Muslim</span>
+</label>
+
 
 <label class="toggle-item">
   <input type="checkbox" id="swReset">
@@ -1080,6 +1125,7 @@ margin:8px 0;
         
         
         <!-- Report Showing buttong -->
+        
         <button id="toggleReportBtn" 
         style="margin-top:10px;padding:8px 12px;
         border-radius:8px;border:1px solid #444;">
@@ -1206,6 +1252,11 @@ margin:8px 0;
 </div>
 
 <div id="results"></div>
+<div id="pagination" style="text-align:center;margin:20px 0;">
+  <button id="prevPage" type="button">⬅ Prev</button>
+  <span id="pageInfo"></span>
+  <button id="nextPage" type="button">Next ➡</button>
+</div>
       
 
     </div>
@@ -1379,6 +1430,10 @@ function closePhoto(){
 
 
 <script type="module" src="script.js"></script>
+
+<footer class="app-footer">
+  © 2025 • Polling Station 87 • Developed by Bijush Kumar Roy
+</footer>
 
 </body>
 </html>

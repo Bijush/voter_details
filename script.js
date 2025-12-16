@@ -8,6 +8,10 @@ const db = window.db;
 
 let lastActionVoterKey = null;
 let lastScrollY = 0;
+let currentPage = 1;
+const PAGE_SIZE = 50;   // 🔥 pagination page size
+let lastRenderedList = [];
+let isLiveUpdate = false;   // 🔥 ADD THIS
 
 // AUTO-FIX: remove duplicate shift popup if exists
 document.addEventListener("DOMContentLoaded", () => {
@@ -18,13 +22,52 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   
-   // 🔁 FILTER + STATS TOGGLE
+   
 
+  const prevBtn  = document.getElementById("prevPage");
+  const nextBtn  = document.getElementById("nextPage");
+  const pageInfo = document.getElementById("pageInfo");
 
+  function updatePageInfo(totalItems) {
+    const totalPages = Math.ceil(totalItems / PAGE_SIZE) || 1;
 
+    if (pageInfo) {
+      pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+    }
 
+    if (prevBtn) prevBtn.disabled = currentPage <= 1;
+    if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
+  }
 
+  // ⬅️ PREV
+  prevBtn.addEventListener("click", () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderResults(lastRenderedList);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  });
+
+  // ➡️ NEXT
+  nextBtn.addEventListener("click", () => {
+    const totalPages =
+      Math.ceil(lastRenderedList.length / PAGE_SIZE) || 1;
+
+    if (currentPage < totalPages) {
+      currentPage++;
+      renderResults(lastRenderedList);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  });
+
+  // 🔓 allow renderResults() to call it
+  window.updatePageInfo = updatePageInfo;
 });
+
+
+
+
+
 
 
 
@@ -170,7 +213,12 @@ onValue(ref(db, "voters"), snapshot => {
     generateColors();
     findDuplicateBYP();
    // buildHouseNav();
-    renderResults(allPeople);
+   if (!isLiveUpdate) {
+  currentPage = 1;   // 🔥 only for normal reload
+}
+
+renderResults(allPeople);
+isLiveUpdate = false;   // 🔁 reset flag
     buildDuplicateCycle();
     calculateSurveyReport();
     renderDailyNewVoterNames();
@@ -178,11 +226,11 @@ onValue(ref(db, "voters"), snapshot => {
     renderCharts();
     
     // ⭐ SHOW / HIDE MUSLIM JUMP ICON
-  const muslimBtn = document.getElementById("muslimJumpBtn");
-  if (muslimBtn) {
-    const hasMuslim = allPeople.some(p => p.caste === "Muslim");
-    muslimBtn.style.display = hasMuslim ? "block" : "none";
-  }
+ // const muslimBtn = document.getElementById("muslimJumpBtn");
+ // if (muslimBtn) {
+    //const hasMuslim = allPeople.some(p => p.caste === "Muslim");
+   // muslimBtn.style.display = hasMuslim ? "block" : "none";
+  //}
     
     // 🔄 reset Muslim jump floating counter
   muslimIndex = 0;
@@ -351,7 +399,7 @@ function toggleUnverifiedMuslimBtn(){
 }
 
 // call after render
-setTimeout(toggleUnverifiedMuslimBtn, 800);
+//setTimeout(toggleUnverifiedMuslimBtn, 800);
 
 if (unverifiedMuslimBtn) {
   unverifiedMuslimBtn.onclick = () => {
@@ -546,6 +594,7 @@ card.addEventListener("dblclick", async () => {
   
 lastActionVoterKey = key;   // ✅ remember this voter
 let lastScrollY = 0;
+isLiveUpdate = true;   // 🔥 ADD THIS
   const newStatus = !p.verified;
 
   await update(ref(db, `voters/${house}/${key}`), {
@@ -586,13 +635,23 @@ function expandHouseForCard(card) {
   // ----------------------------
   function renderResults(list) {
   
-  document.getElementById("loadingSkeleton")?.remove();
+  // 👉 PAGINATION SLICE
+  lastRenderedList = list; 
+  
+  const totalPages = Math.ceil(list.length / PAGE_SIZE);
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const end   = start + PAGE_SIZE;
+  const pageList = list.slice(start, end);
+  
+ // Pagination End
+ document.getElementById("loadingSkeleton")?.remove();
   
   resultsDiv.innerHTML = "";
 
   if (!list.length) {
     resultsDiv.innerHTML = "<p>No results found.</p>";
     updateStats(list);
+    window.updatePageInfo(0);
     return;
   }
 
@@ -603,7 +662,7 @@ function expandHouseForCard(card) {
     list.sort((a, b) => a.serial - b.serial);
 
     const frag = document.createDocumentFragment();
-    list.forEach(p => frag.appendChild(createVoterCard(p)));
+    pageList.forEach(p => frag.appendChild(createVoterCard(p)));
     resultsDiv.appendChild(frag);
 
     return;
@@ -611,7 +670,7 @@ function expandHouseForCard(card) {
 
   // ⭐ DEFAULT MODE — GROUP BY HOUSE
   const grouped = {};
-  list.forEach(p => {
+  pageList.forEach(p => {
     if (!grouped[p.house]) grouped[p.house] = [];
     grouped[p.house].push(p);
   });
@@ -675,11 +734,16 @@ function expandHouseForCard(card) {
   
 
 // ✅ update unverified muslim jump button
-setTimeout(toggleUnverifiedMuslimBtn, 200);
+//setTimeout(toggleUnverifiedMuslimBtn, 200);
 
 
 
   resultsDiv.appendChild(frag);
+  
+  // pagination info update
+  
+  window.updatePageInfo(list.length);
+  
   
   // 🔒 RESTORE SCROLL POSITION (CRITICAL FIX)
 if (lastScrollY > 0) {
@@ -826,6 +890,7 @@ if (filterHouse.value.trim() !== "") {
     return true;
   });
 }
+    currentPage = 1;
     renderResults(filtered);
     buildDuplicateCycle();
     
@@ -853,7 +918,8 @@ document.getElementById("resetFiltersBtn").onclick = () => {
   filterMobile.value = "";
   sortBy.value = "default";
   sortMode = "default";
-
+  
+ currentPage = 1;
   // show full list again
   renderResults(allPeople);
   buildDuplicateCycle();
@@ -878,6 +944,8 @@ document.getElementById("resetFiltersBtn").onclick = () => {
     const q = searchInput.value.toLowerCase().trim();
 
     if (!q) {
+    currentPage = 1;
+
       renderResults(allPeople);
       buildDuplicateCycle();
       return;
@@ -889,7 +957,7 @@ document.getElementById("resetFiltersBtn").onclick = () => {
       (p.byp || "").toLowerCase().includes(q) ||
       p.caste.toLowerCase().includes(q)
     );
-
+currentPage = 1;
     renderResults(matched);
     buildDuplicateCycle();
 
@@ -1102,6 +1170,10 @@ swShowMissing?.addEventListener("change", () => {
   showMissingBtn.style.display = swShowMissing.checked ? "block" : "none";
 });
 
+
+
+
+
 // ================================
 // 🏠 HOUSE VIEW BUTTON SHOW / HIDE
 // ================================
@@ -1131,6 +1203,12 @@ const swReset   = document.getElementById("swReset");
 const swReport  = document.getElementById("swReport");
 const swAddVoter     = document.getElementById("swAddVoter");
 const swDeletedList  = document.getElementById("swDeletedList");
+const swMuslimJump = document.getElementById("swMuslimJump");
+const swUnverifiedMuslimJump = document.getElementById("swUnverifiedMuslimJump");
+
+const muslimJumpBtn = document.getElementById("muslimJumpBtn");
+const unverifiedMuslimJumpBtn = document.getElementById("unverifiedMuslimJumpBtn");
+
 
 
 // 🔒 AUTO ENABLE FILTER AREA
@@ -1160,6 +1238,10 @@ swSearch?.addEventListener("change", () => {
 
 if (addVoterBtn) addVoterBtn.style.display = "none";
 if (deletedListBtn) deletedListBtn.style.display = "none";
+
+// ☪️ DEFAULT HIDE ON PAGE LOAD
+if (muslimJumpBtn) muslimJumpBtn.style.display = "none";
+if (unverifiedMuslimJumpBtn) unverifiedMuslimJumpBtn.style.display = "none";
 
 
 
@@ -1233,6 +1315,27 @@ swDeletedList?.addEventListener("change", () => {
   if (!deletedListBtn) return;
   deletedListBtn.style.display = swDeletedList.checked ? "block" : "none";
 });
+
+
+// ☪️ MUSLIM JUMP BUTTONS (SIDEBAR CONTROL)
+
+
+// ✅ DEFAULT OFF
+if (muslimJumpBtn) muslimJumpBtn.style.display = "none";
+if (unverifiedMuslimJumpBtn) unverifiedMuslimJumpBtn.style.display = "none";
+
+// ☪️ All Muslim Jump
+swMuslimJump?.addEventListener("change", () => {
+  if (!muslimJumpBtn) return;
+  muslimJumpBtn.style.display = swMuslimJump.checked ? "block" : "none";
+});
+
+// ☪️❌ Unverified Muslim Jump
+swUnverifiedMuslimJump?.addEventListener("change", () => {
+  if (!unverifiedMuslimJumpBtn) return;
+  unverifiedMuslimJumpBtn.style.display =
+    swUnverifiedMuslimJump.checked ? "block" : "none";
+});
  sidebarCloseBtn.addEventListener("click", () => {
     sidebar.classList.remove("open");
     sidebarOverlay.style.display = "none";
@@ -1282,6 +1385,15 @@ toggle(swSort, elSort);
 
 
 //  END OF SIDE BAR CODE HERE 
+
+
+
+// ================================
+// 📄 PAGINATION CONTROLS (FINAL FIX)
+// ================================
+
+
+
 
 
   sidebarOverlay.addEventListener("click", () => {
@@ -2021,6 +2133,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
 function updateStickyHeaderVisibility() {
   const header = document.querySelector(".sticky-header");
   if (!header) return;
@@ -2044,3 +2157,7 @@ setTimeout(updateStickyHeaderVisibility, 50);
 document.addEventListener("click", () =>
   setTimeout(updateStickyHeaderVisibility, 50)
 );
+
+
+// Pagination Function 
+
