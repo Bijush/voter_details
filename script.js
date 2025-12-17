@@ -145,7 +145,9 @@ const rptBox = document.getElementById("reportSection");
 
 // ⭐ REPORT SECTION TOGGLE
 
-
+// 🔒 DEFAULT HIDE REPORT (PAGE LOAD)
+if (reportBtn) reportBtn.style.display = "none";
+if (rptBox) rptBox.style.display = "none";
 
 
 rptBtn.addEventListener("click", () => {
@@ -2166,4 +2168,3 @@ setTimeout(updateStickyHeaderVisibility, 50);
 document.addEventListener("click", () =>
   setTimeout(updateStickyHeaderVisibility, 50)
 );
-
