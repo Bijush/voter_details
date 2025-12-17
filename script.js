@@ -12,6 +12,7 @@ let currentPage = 1;
 const PAGE_SIZE = 50;   // 🔥 pagination page size
 let lastRenderedList = [];
 let isLiveUpdate = false;   // 🔥 ADD THIS
+let lastSearchQuery = "";
 
 // AUTO-FIX: remove duplicate shift popup if exists
 document.addEventListener("DOMContentLoaded", () => {
@@ -217,7 +218,18 @@ onValue(ref(db, "voters"), snapshot => {
   currentPage = 1;   // 🔥 only for normal reload
 }
 
-renderResults(allPeople);
+if (lastSearchQuery) {
+  const matched = allPeople.filter(p =>
+    p.name.toLowerCase().includes(lastSearchQuery) ||
+    String(p.serial).includes(lastSearchQuery) ||
+    (p.byp || "").toLowerCase().includes(lastSearchQuery) ||
+    p.caste.toLowerCase().includes(lastSearchQuery)
+  );
+  renderResults(matched);
+} else {
+  renderResults(allPeople);
+}
+
 isLiveUpdate = false;   // 🔁 reset flag
     buildDuplicateCycle();
     calculateSurveyReport();
@@ -935,33 +947,30 @@ document.getElementById("resetFiltersBtn").onclick = () => {
   // SEARCH
   // ----------------------------
   searchInput.addEventListener("input", () => {
-
-  // ⏳ debounce
   clearTimeout(searchTimer);
 
   searchTimer = setTimeout(() => {
+    lastSearchQuery = searchInput.value.toLowerCase().trim(); // 🔥 SAVE
 
-    const q = searchInput.value.toLowerCase().trim();
-
-    if (!q) {
-    currentPage = 1;
-
+    if (!lastSearchQuery) {
+      currentPage = 1;
       renderResults(allPeople);
       buildDuplicateCycle();
       return;
     }
 
     const matched = allPeople.filter(p =>
-      p.name.toLowerCase().includes(q) ||
-      String(p.serial).includes(q) ||
-      (p.byp || "").toLowerCase().includes(q) ||
-      p.caste.toLowerCase().includes(q)
+      p.name.toLowerCase().includes(lastSearchQuery) ||
+      String(p.serial).includes(lastSearchQuery) ||
+      (p.byp || "").toLowerCase().includes(lastSearchQuery) ||
+      p.caste.toLowerCase().includes(lastSearchQuery)
     );
-currentPage = 1;
+
+    currentPage = 1;
     renderResults(matched);
     buildDuplicateCycle();
 
-  }, 250); // 👈 magic number (200–300 best)
+  }, 250);
 });
   
   
@@ -2157,7 +2166,4 @@ setTimeout(updateStickyHeaderVisibility, 50);
 document.addEventListener("click", () =>
   setTimeout(updateStickyHeaderVisibility, 50)
 );
-
-
-// Pagination Function 
 
