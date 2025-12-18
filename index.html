@@ -1252,10 +1252,26 @@ margin:8px 0;
 </div>
 
 <div id="results"></div>
+
 <div id="pagination" style="text-align:center;margin:20px 0;">
   <button id="prevPage" type="button">⬅ Prev</button>
   <span id="pageInfo"></span>
   <button id="nextPage" type="button">Next ➡</button>
+  <input
+  type="number"
+  id="pageInput"
+  min="1"
+  placeholder="Page"
+  style="
+    width:70px;
+    padding:6px;
+    border-radius:6px;
+    border:1px solid #cbd5e1;
+    text-align:center;
+  "
+/>
+
+<button id="goPageBtn">Go</button>
 </div>
       
 

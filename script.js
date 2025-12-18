@@ -35,6 +35,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const prevBtn  = document.getElementById("prevPage");
   const nextBtn  = document.getElementById("nextPage");
   const pageInfo = document.getElementById("pageInfo");
+  
+  const pageInput = document.getElementById("pageInput");
+const goPageBtn = document.getElementById("goPageBtn");
 
   function updatePageInfo(totalItems) {
     const totalPages = Math.ceil(totalItems / PAGE_SIZE) || 1;
@@ -45,6 +48,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (prevBtn) prevBtn.disabled = currentPage <= 1;
     if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
+    if (pageInput) {
+  pageInput.value = currentPage;
+}
   }
 
   // ⬅️ PREV
@@ -1464,8 +1470,38 @@ toggle(swSort, elSort);
 // ================================
 
 
+// 🔢 GO TO PAGE (INPUT)
 
+if (goPageBtn && pageInput) {
+  goPageBtn.addEventListener("click", () => {
 
+    if (!pageInput.value) return;
+
+    const totalPages =
+      Math.ceil(lastRenderedList.length / PAGE_SIZE) || 1;
+
+    let page = Number(pageInput.value);
+
+    // ❌ invalid fix
+    if (isNaN(page) || page < 1) page = 1;
+    if (page > totalPages) page = totalPages;
+
+    currentPage = page;
+
+    renderResults(lastRenderedList);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
+// ⏎ ENTER KEY SUPPORT FOR PAGE INPUT
+if (pageInput) {
+  pageInput.addEventListener("keydown", (e) => {
+
+    if (e.key === "Enter") {
+      goPageBtn.click();   // 👉 Go button auto click
+    }
+
+  });
+}
 
   sidebarOverlay.addEventListener("click", () => {
     sidebar.classList.remove("open");
