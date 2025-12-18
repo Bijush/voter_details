@@ -4,6 +4,8 @@
 import { ref, onValue, push, update, remove,get}
 from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
 
+// Global Variable 
+
 const db = window.db;
 
 let lastActionVoterKey = null;
@@ -13,6 +15,11 @@ const PAGE_SIZE = 50;   // 🔥 pagination page size
 let lastRenderedList = [];
 let isLiveUpdate = false;   // 🔥 ADD THIS
 let lastSearchQuery = "";
+
+//let lastFilteredList = null;   // ✅ FILTER STATE SAVE
+
+let lastFilterState = null;
+let isFilterMode = false;
 
 // AUTO-FIX: remove duplicate shift popup if exists
 document.addEventListener("DOMContentLoaded", () => {
@@ -216,20 +223,54 @@ onValue(ref(db, "voters"), snapshot => {
     generateColors();
     findDuplicateBYP();
    // buildHouseNav();
-   if (!isLiveUpdate) {
-  currentPage = 1;   // 🔥 only for normal reload
+  // 🔥 ONLY reset page when NOT filtering
+if (!isFilterMode && !isLiveUpdate) {
+  currentPage = 1;
 }
 
+// 🔁 RESTORE SEARCH / FILTER STATE
 if (lastSearchQuery) {
+
   const matched = allPeople.filter(p =>
     p.name.toLowerCase().includes(lastSearchQuery) ||
     String(p.serial).includes(lastSearchQuery) ||
     (p.byp || "").toLowerCase().includes(lastSearchQuery) ||
     p.caste.toLowerCase().includes(lastSearchQuery)
   );
+
   renderResults(matched);
+
+} else if (lastFilterState) {
+
+  let filtered = [...allPeople];
+
+  if (lastFilterState.age) {
+    const [min, max] = lastFilterState.age.split("-").map(Number);
+    filtered = filtered.filter(p => p.age >= min && p.age <= max);
+  }
+
+  if (lastFilterState.mobile === "has") {
+    filtered = filtered.filter(p => p.mobile && p.mobile.trim() !== "");
+  }
+
+  if (lastFilterState.mobile === "none") {
+    filtered = filtered.filter(p => !p.mobile || p.mobile.trim() === "");
+  }
+
+  if (lastFilterState.verified === "yes") {
+    filtered = filtered.filter(p => p.verified === true);
+  }
+
+  if (lastFilterState.verified === "no") {
+    filtered = filtered.filter(p => !p.verified);
+  }
+
+  applyFilters(false);   // ✅ page reset হবে না
+
 } else {
+
   renderResults(allPeople);
+
 }
 
 isLiveUpdate = false;   // 🔁 reset flag
@@ -607,7 +648,7 @@ card.addEventListener("dblclick", async () => {
   const key   = card.dataset.key;
   
 lastActionVoterKey = key;   // ✅ remember this voter
-let lastScrollY = 0;
+lastScrollY = window.scrollY;
 isLiveUpdate = true;   // 🔥 ADD THIS
   const newStatus = !p.verified;
 
@@ -618,6 +659,9 @@ isLiveUpdate = true;   // 🔥 ADD THIS
       hour12: true
     })
   });
+  setTimeout(() => {
+  isLiveUpdate = false;
+}, 200);
 
   // small feedback
   card.style.outline = "3px solid #16a34a";
@@ -823,7 +867,15 @@ function expandAllHouses() {
   // ----------------------------
   // FILTERS
   // ----------------------------
-  function applyFilters() {
+  function applyFilters(resetPage = true) {
+  
+  if(resetPage){
+      currentPage = 1;
+  }
+  // 🔐 SAVE CURRENT PAGE BEFORE FILTER
+    const prevPage = currentPage;
+    isFilterMode = true;
+   // currentPage = 1;
     let filtered = [...allPeople];
 
     // AGE FILTER
@@ -862,13 +914,7 @@ if (filterHouseToggle.value === "on") {
   setTimeout(expandAllHouses, 50);
 }
     
-    
 
-    // ----------------------------------------
-    // ⭐ HOUSE RANGE FILTER — supports:
-    // "1-30", "1to30", "1 to 30", "7"
-    // ----------------------------------------
-    // ----------------------------------------
 // ⭐ FINAL HOUSE RANGE FILTER (22, 22K, 25CH works)
 // ----------------------------------------
 if (filterHouse.value.trim() !== "") {
@@ -904,20 +950,29 @@ if (filterHouse.value.trim() !== "") {
     return true;
   });
 }
-    currentPage = 1;
+    
+    lastFilterState = {
+  age: filterAge.value,
+  house: filterHouse.value,
+  mobile: filterMobile.value,
+  verified: filterVerified.value
+};
+// 🔁 RESTORE PAGE IF LIVE UPDATE
+if (isLiveUpdate) {
+  currentPage = prevPage;
+}
     renderResults(filtered);
     buildDuplicateCycle();
     
   }
 
-  filterAge.onchange    = applyFilters;
-  filterMobile.onchange = applyFilters;
-  // Text input → live filter
-  filterHouse.addEventListener("input", applyFilters);
-  filterHouse.addEventListener("change", applyFilters);
-  
-  filterVerified.onchange = applyFilters;
-  filterHouseToggle.onchange = applyFilters;
+  filterAge.onchange          = () => applyFilters(true);
+filterMobile.onchange       = () => applyFilters(true);
+filterVerified.onchange     = () => applyFilters(true);
+filterHouseToggle.onchange  = () => applyFilters(true);
+
+filterHouse.addEventListener("input", () => applyFilters(true));
+filterHouse.addEventListener("change", () => applyFilters(true));
 
 
 
@@ -925,6 +980,7 @@ if (filterHouse.value.trim() !== "") {
 // 🔄 RESET FILTERS + SEARCH + SORT
 document.getElementById("resetFiltersBtn").onclick = () => {
   
+   isFilterMode = false;
   // reset values
   searchInput.value = "";
   filterAge.value = "";
@@ -933,8 +989,12 @@ document.getElementById("resetFiltersBtn").onclick = () => {
   sortBy.value = "default";
   sortMode = "default";
   
- currentPage = 1;
+ 
   // show full list again
+  lastFilterState = null;
+lastSearchQuery = "";
+currentPage = 1;
+renderResults(allPeople);
   renderResults(allPeople);
   buildDuplicateCycle();
   
