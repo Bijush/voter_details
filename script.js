@@ -13,6 +13,8 @@ let lastScrollY = 0;
 
 let currentPage = Number(localStorage.getItem("lastPage")) || 1;
 
+let lastVisibleSerial = Number(localStorage.getItem("lastVisibleSerial")) || null;
+
 const PAGE_SIZE = 50;   // 🔥 pagination page size
 let lastRenderedList = [];
 let isLiveUpdate = false;   // 🔥 ADD THIS
@@ -847,6 +849,27 @@ if (lastActionVoterKey) {
 // 💾 SAVE CURRENT PAGE
 localStorage.setItem("lastPage", currentPage);
 
+// 🔁 RESTORE LAST VISIBLE VOTER POSITION
+if (lastVisibleSerial) {
+  setTimeout(() => {
+    const target = [...document.querySelectorAll(".card")].find(card => {
+      const pill = card.querySelector(".pill");
+      return pill && pill.innerText.includes(`#${lastVisibleSerial}`);
+    });
+
+    if (target) {
+      expandHouseForCard(target);
+      target.scrollIntoView({
+        behavior: "auto",
+        block: "start"
+      });
+
+      target.style.boxShadow = "0 0 0 4px #3b82f6";
+      setTimeout(() => target.style.boxShadow = "", 1200);
+    }
+  }, 150);
+}
+
 }
 
 
@@ -1061,6 +1084,15 @@ renderResults(allPeople);
     if (!backToTop) return;
     backToTop.style.display = window.scrollY > 200 ? "block" : "none";
   });
+  
+  // 🔁 SAVE CURRENT VISIBLE VOTER (SCROLL MEMORY)
+let scrollTimer = null;
+
+window.addEventListener("scroll", () => {
+  clearTimeout(scrollTimer);
+  scrollTimer = setTimeout(saveCurrentVisibleVoter, 200);
+});
+
 
   if (backToTop) {
     backToTop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
@@ -2274,3 +2306,31 @@ setTimeout(updateStickyHeaderVisibility, 50);
 document.addEventListener("click", () =>
   setTimeout(updateStickyHeaderVisibility, 50)
 );
+
+// current position Voter
+
+function saveCurrentVisibleVoter() {
+  const cards = document.querySelectorAll(".card");
+  let closest = null;
+  let minDiff = Infinity;
+
+  cards.forEach(card => {
+    const rect = card.getBoundingClientRect();
+    const diff = Math.abs(rect.top);
+
+    if (rect.top >= 0 && diff < minDiff) {
+      minDiff = diff;
+      closest = card;
+    }
+  });
+
+  if (closest) {
+    const serialText = closest.querySelector(".pill")?.innerText || "";
+    const serial = Number(serialText.replace("#", ""));
+
+    if (serial) {
+      localStorage.setItem("lastVisibleSerial", serial);
+      lastVisibleSerial = serial;
+    }
+  }
+}
