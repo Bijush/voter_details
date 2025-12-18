@@ -34,7 +34,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   
-   
+  document.querySelectorAll(".sidebar input[type='checkbox']").forEach(sw => {
+    const saved = localStorage.getItem("sidebar_" + sw.id);
+    if (saved !== null) {
+      sw.checked = saved === "1";
+      sw.dispatchEvent(new Event("change"));
+    }
+  });
 
   const prevBtn  = document.getElementById("prevPage");
   const nextBtn  = document.getElementById("nextPage");
@@ -1246,6 +1252,12 @@ window.addEventListener("scroll", () => {
     sidebarOverlay.style.display = "block";
   });
   
+  document.querySelectorAll(".sidebar input[type='checkbox']").forEach(sw => {
+  sw.addEventListener("change", () => {
+    saveSidebarState(sw.id, sw.checked);
+  });
+});
+  
   // ================================
 // 🔘 SIDEBAR SWITCH CONTROLS
 // ================================
@@ -2333,4 +2345,8 @@ function saveCurrentVisibleVoter() {
       lastVisibleSerial = serial;
     }
   }
+}
+ // side bar save code.
+function saveSidebarState(id, checked) {
+  localStorage.setItem("sidebar_" + id, checked ? "1" : "0");
 }
