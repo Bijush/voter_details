@@ -1564,7 +1564,7 @@ if (pageInput) {
 
   sortBy.addEventListener("change", () => {
     sortMode = sortBy.value;
-    renderResults(allPeople);
+    renderResults(getActiveList());
   });
 
   // 🔍 SHOW MISSING SERIALS IN ALERT — MOBILE FRIENDLY
@@ -2349,4 +2349,11 @@ function saveCurrentVisibleVoter() {
  // side bar save code.
 function saveSidebarState(id, checked) {
   localStorage.setItem("sidebar_" + id, checked ? "1" : "0");
+}
+
+// sort Serial Function 
+function getActiveList() {
+  return lastRenderedList && lastRenderedList.length
+    ? lastRenderedList
+    : allPeople;
 }
