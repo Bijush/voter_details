@@ -10,7 +10,9 @@ const db = window.db;
 
 let lastActionVoterKey = null;
 let lastScrollY = 0;
-let currentPage = 1;
+
+let currentPage = Number(localStorage.getItem("lastPage")) || 1;
+
 const PAGE_SIZE = 50;   // 🔥 pagination page size
 let lastRenderedList = [];
 let isLiveUpdate = false;   // 🔥 ADD THIS
@@ -41,6 +43,9 @@ const goPageBtn = document.getElementById("goPageBtn");
 
   function updatePageInfo(totalItems) {
     const totalPages = Math.ceil(totalItems / PAGE_SIZE) || 1;
+    
+if (currentPage < 1) currentPage = 1;
+if (currentPage > totalPages) currentPage = totalPages;
 
     if (pageInfo) {
       pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
@@ -228,9 +233,11 @@ onValue(ref(db, "voters"), snapshot => {
 
     generateColors();
     findDuplicateBYP();
-   // buildHouseNav();
-  // 🔥 ONLY reset page when NOT filtering
-if (!isFilterMode && !isLiveUpdate) {
+   
+  
+// 🔥 RESET PAGE ONLY IF NO SAVED PAGE
+
+if (!isFilterMode && !isLiveUpdate && !localStorage.getItem("lastPage")) {
   currentPage = 1;
 }
 
@@ -837,6 +844,9 @@ if (lastActionVoterKey) {
     lastScrollY = 0;
   }, 120);
 }
+// 💾 SAVE CURRENT PAGE
+localStorage.setItem("lastPage", currentPage);
+
 }
 
 
