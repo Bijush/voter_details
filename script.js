@@ -734,11 +734,18 @@ function expandHouseForCard(card) {
   function renderResults(list) {
 
   // ⭐ SORT FIRST (BEFORE PAGINATION)
-  let workingList = [...list];
+  
+let workingList = [...list];
 
-  if (sortMode === "serial") {
-    workingList.sort((a, b) => a.serial - b.serial);
-  }
+if (sortMode === "serial-asc") {
+  // Low → High
+  workingList.sort((a, b) => a.serial - b.serial);
+}
+
+if (sortMode === "serial-desc") {
+  // High → Low
+  workingList.sort((a, b) => b.serial - a.serial);
+}
 
   lastRenderedList = workingList;
 
@@ -761,7 +768,7 @@ function expandHouseForCard(card) {
   // =================================================
   // ⭐ SERIAL SORT MODE — FLAT LIST (NO HOUSE GROUP)
   // =================================================
-  if (sortMode === "serial") {
+  if (sortMode === "serial-asc" || sortMode === "serial-desc") {
     const frag = document.createDocumentFragment();
     pageList.forEach(p => frag.appendChild(createVoterCard(p)));
     resultsDiv.appendChild(frag);
@@ -1583,6 +1590,7 @@ if (pageInput) {
 
   sortBy.addEventListener("change", () => {
     sortMode = sortBy.value;
+    currentPage = 1;
     renderResults(getActiveList());
   });
 
