@@ -25,8 +25,19 @@ let lastSearchQuery = "";
 let lastFilterState = null;
 let isFilterMode = false;
 
+
+// 🔁 PAGINATION FEATURE TOGGLE
+let PAGINATION_ENABLED = false;   // 🔴 now OFF
+// const PAGINATION_ENABLED = true; // 🟢 future ON
+
+
 // AUTO-FIX: remove duplicate shift popup if exists
 document.addEventListener("DOMContentLoaded", () => {
+
+const swPagination = document.getElementById("swPagination");
+const paginationBox = document.getElementById("pagination");
+
+
   const popups = document.querySelectorAll("#shiftVoterPopup");
   if (popups.length > 1) {
     for (let i = 1; i < popups.length; i++) {
@@ -42,6 +53,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+// 🔁 RESTORE PAGINATION STATE
+const savedPagination = localStorage.getItem("pagination_enabled");
+if (savedPagination === "1") {
+  PAGINATION_ENABLED = true;
+  if (swPagination) swPagination.checked = true;
+  if (paginationBox) paginationBox.style.display = "flex";
+} else {
+  PAGINATION_ENABLED = false;
+  if (paginationBox) paginationBox.style.display = "none";
+}
+
+
+
   const prevBtn  = document.getElementById("prevPage");
   const nextBtn  = document.getElementById("nextPage");
   const pageInfo = document.getElementById("pageInfo");
@@ -50,6 +74,9 @@ document.addEventListener("DOMContentLoaded", () => {
 const goPageBtn = document.getElementById("goPageBtn");
 
   function updatePageInfo(totalItems) {
+  
+  if (!PAGINATION_ENABLED) return;
+  
     const totalPages = Math.ceil(totalItems / PAGE_SIZE) || 1;
     
 if (currentPage < 1) currentPage = 1;
@@ -65,27 +92,20 @@ if (currentPage > totalPages) currentPage = totalPages;
   pageInput.value = currentPage;
 }
   }
-
-  // ⬅️ PREV
+  
+if (PAGINATION_ENABLED && prevBtn) {
   prevBtn.addEventListener("click", () => {
-    if (currentPage > 1) {
-      currentPage--;
-      renderResults(lastRenderedList);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    currentPage--;
+    renderResults(getActiveList());
   });
+}
 
-  // ➡️ NEXT
+if (PAGINATION_ENABLED && nextBtn) {
   nextBtn.addEventListener("click", () => {
-    const totalPages =
-      Math.ceil(lastRenderedList.length / PAGE_SIZE) || 1;
-
-    if (currentPage < totalPages) {
-      currentPage++;
-      renderResults(lastRenderedList);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+    currentPage++;
+    renderResults(getActiveList());
   });
+}
 
   // 🔓 allow renderResults() to call it
   window.updatePageInfo = updatePageInfo;
@@ -168,6 +188,8 @@ const deletedListBtn = document.getElementById("deletedBtn");
 
 const rptBtn = document.getElementById("toggleReportBtn");
 const rptBox = document.getElementById("reportSection");
+
+
 
 // ⭐ REPORT SECTION TOGGLE
 
@@ -254,12 +276,16 @@ if (
   currentPage = 1;
 }
 
+// 🔁 RESTORE PAGE AFTER VERIFY / RELOAD
+if (PAGINATION_ENABLED) {
+  const savedLastPage = localStorage.getItem("lastPage");
+  if (savedLastPage) currentPage = Number(savedLastPage);
 
-// 🔁 RESTORE PAGE AFTER VERIFY (SORT SAFE)
-const savedPage = localStorage.getItem("verifyPage");
-if (savedPage) {
-  currentPage = Number(savedPage);
-  localStorage.removeItem("verifyPage");
+  const savedPage = localStorage.getItem("verifyPage");
+  if (savedPage) {
+    currentPage = Number(savedPage);
+    localStorage.removeItem("verifyPage");
+  }
 }
 
 // 🔁 RESTORE SEARCH / FILTER STATE
@@ -314,12 +340,7 @@ isLiveUpdate = false;   // 🔁 reset flag
     renderDailyShiftVoterList();
     renderCharts();
     
-    // ⭐ SHOW / HIDE MUSLIM JUMP ICON
- // const muslimBtn = document.getElementById("muslimJumpBtn");
- // if (muslimBtn) {
-    //const hasMuslim = allPeople.some(p => p.caste === "Muslim");
-   // muslimBtn.style.display = hasMuslim ? "block" : "none";
-  //}
+    
     
     // 🔄 reset Muslim jump floating counter
   muslimIndex = 0;
@@ -686,7 +707,9 @@ card.addEventListener("dblclick", async () => {
   lastActionVoterKey = key;
   
   // ⭐ SAVE CURRENT PAGE BEFORE VERIFY
-localStorage.setItem("verifyPage", currentPage);
+if (PAGINATION_ENABLED) {
+  localStorage.setItem("verifyPage", currentPage);
+}
 
   // ⭐ EXACT PIXEL POSITION SAVE
   const rect = card.getBoundingClientRect();
@@ -733,25 +756,29 @@ function expandHouseForCard(card) {
   // ----------------------------
   function renderResults(list) {
 
-  // ⭐ SORT FIRST (BEFORE PAGINATION)
-  
-let workingList = [...list];
+  // ⭐ SORT FIRST
+  let workingList = [...list];
 
-if (sortMode === "serial-asc") {
-  // Low → High
-  workingList.sort((a, b) => a.serial - b.serial);
-}
+  if (sortMode === "serial-asc") {
+    workingList.sort((a, b) => a.serial - b.serial);
+  }
 
-if (sortMode === "serial-desc") {
-  // High → Low
-  workingList.sort((a, b) => b.serial - a.serial);
-}
+  if (sortMode === "serial-desc") {
+    workingList.sort((a, b) => b.serial - a.serial);
+  }
 
   lastRenderedList = workingList;
 
-  const start = (currentPage - 1) * PAGE_SIZE;
-  const end   = start + PAGE_SIZE;
-  const pageList = workingList.slice(start, end);
+  // ===============================
+  // 🔁 PAGINATION TOGGLE
+  // ===============================
+  let displayList = workingList;
+
+  if (PAGINATION_ENABLED) {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const end   = start + PAGE_SIZE;
+    displayList = workingList.slice(start, end);
+  }
 
   document.getElementById("loadingSkeleton")?.remove();
   resultsDiv.innerHTML = "";
@@ -759,30 +786,34 @@ if (sortMode === "serial-desc") {
   if (!workingList.length) {
     resultsDiv.innerHTML = "<p>No results found.</p>";
     updateStats([]);
-    window.updatePageInfo(0);
+    if (PAGINATION_ENABLED) {
+      window.updatePageInfo?.(0);
+    }
     return;
   }
 
   updateStats(workingList);
 
   // =================================================
-  // ⭐ SERIAL SORT MODE — FLAT LIST (NO HOUSE GROUP)
+  // ⭐ SERIAL SORT MODE — FLAT LIST
   // =================================================
   if (sortMode === "serial-asc" || sortMode === "serial-desc") {
     const frag = document.createDocumentFragment();
-    pageList.forEach(p => frag.appendChild(createVoterCard(p)));
+    displayList.forEach(p => frag.appendChild(createVoterCard(p)));
     resultsDiv.appendChild(frag);
 
-    window.updatePageInfo(workingList.length);
-    localStorage.setItem("lastPage", currentPage);
-    return; // ✅ ONLY valid return
+    if (PAGINATION_ENABLED) {
+      window.updatePageInfo?.(workingList.length);
+      localStorage.setItem("lastPage", currentPage);
+    }
+    return;
   }
 
   // =================================================
   // ⭐ DEFAULT MODE — GROUP BY HOUSE
   // =================================================
   const grouped = {};
-  pageList.forEach(p => {
+  displayList.forEach(p => {
     if (!grouped[p.house]) grouped[p.house] = [];
     grouped[p.house].push(p);
   });
@@ -791,18 +822,16 @@ if (sortMode === "serial-desc") {
 
   Object.keys(grouped).sort(sortHouseASC).forEach(h => {
     const housePeople = grouped[h].sort((a, b) => a.serial - b.serial);
-    const houseNumber = h.replace("house_", "");
 
     const section = document.createElement("div");
     section.className = "house-section";
-    section.id = "house-section-" + h;
     section.style.background = colors[h];
 
     const header = document.createElement("div");
     header.className = "house-title";
     header.innerHTML = `
       <span>
-        House: ${houseNumber}
+        House: ${h.replace("house_", "")}
         <i class="bi bi-chevron-up collapse-icon"></i>
       </span>
       <small>${housePeople.length} voters</small>
@@ -810,27 +839,6 @@ if (sortMode === "serial-desc") {
 
     const content = document.createElement("div");
     content.className = "house-content";
-    content.style.maxHeight = "unset";
-    content.style.opacity = "1";
-
-    let collapsed = false;
-    const arrow = header.querySelector(".collapse-icon");
-    arrow.classList.remove("rotate");
-
-    header.style.cursor = "pointer";
-    header.onclick = () => {
-      collapsed = !collapsed;
-      if (collapsed) {
-        content.style.maxHeight = "0px";
-        content.style.opacity = "0";
-        arrow.classList.add("rotate");
-      } else {
-        content.style.maxHeight = content.scrollHeight + "px";
-        content.style.opacity = "1";
-        arrow.classList.remove("rotate");
-      }
-      startConfetti();
-    };
 
     const cardFrag = document.createDocumentFragment();
     housePeople.forEach(p => cardFrag.appendChild(createVoterCard(p)));
@@ -844,10 +852,12 @@ if (sortMode === "serial-desc") {
   resultsDiv.appendChild(frag);
 
   // =================================================
-  // 📄 PAGINATION INFO
+  // 📄 PAGINATION INFO (SAFE)
   // =================================================
-  window.updatePageInfo(workingList.length);
-  localStorage.setItem("lastPage", currentPage);
+  if (PAGINATION_ENABLED) {
+    window.updatePageInfo?.(workingList.length);
+    localStorage.setItem("lastPage", currentPage);
+  }
 
   // =================================================
   // 🔒 RESTORE SCROLL / VERIFY FOCUS
@@ -900,8 +910,8 @@ if (sortMode === "serial-desc") {
       localStorage.removeItem("verifyScrollTop");
     });
   }
-  // End of RenderResulta Function
 }
+// End Of RenderResult Function 
 
 
 
@@ -1296,6 +1306,7 @@ const swHouseToggle  = document.getElementById("swHouseToggle");
 const swShowMissing  = document.getElementById("swShowMissing");
 
 
+
 const filterArea     = document.getElementById("filterToggleArea");
 const showMissingBtn = document.getElementById("showMissing");
 
@@ -1327,7 +1338,25 @@ swShowMissing?.addEventListener("change", () => {
   showMissingBtn.style.display = swShowMissing.checked ? "block" : "none";
 });
 
+swPagination?.addEventListener("change", () => {
+  PAGINATION_ENABLED = swPagination.checked;
 
+  // save state
+  localStorage.setItem(
+    "pagination_enabled",
+    PAGINATION_ENABLED ? "1" : "0"
+  );
+
+  // show / hide HTML
+  if (paginationBox) {
+    paginationBox.style.display =
+      PAGINATION_ENABLED ? "flex" : "none";
+  }
+
+  // reset page safely
+  currentPage = 1;
+  renderResults(getActiveList());
+});
 
 
 
@@ -1552,7 +1581,7 @@ toggle(swSort, elSort);
 
 // 🔢 GO TO PAGE (INPUT)
 
-if (goPageBtn && pageInput) {
+if (PAGINATION_ENABLED && goPageBtn && pageInput) {
   goPageBtn.addEventListener("click", () => {
 
     if (!pageInput.value) return;
@@ -1589,10 +1618,14 @@ if (pageInput) {
   });
 
   sortBy.addEventListener("change", () => {
-    sortMode = sortBy.value;
-    currentPage = 1;
-    renderResults(getActiveList());
-  });
+  sortMode = sortBy.value;
+
+  // 🔥 SAVE SORT MODE
+  localStorage.setItem("sortMode", sortMode);
+
+  currentPage = 1;
+  renderResults(getActiveList());
+});
 
   // 🔍 SHOW MISSING SERIALS IN ALERT — MOBILE FRIENDLY
   window.showMissingSerials = function () {
