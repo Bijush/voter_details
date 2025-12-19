@@ -245,8 +245,21 @@ onValue(ref(db, "voters"), snapshot => {
   
 // 🔥 RESET PAGE ONLY IF NO SAVED PAGE
 
-if (!isFilterMode && !isLiveUpdate && !localStorage.getItem("lastPage")) {
+if (
+  !isFilterMode &&
+  !isLiveUpdate &&
+  sortMode === "default" &&
+  !lastSearchQuery
+) {
   currentPage = 1;
+}
+
+
+// 🔁 RESTORE PAGE AFTER VERIFY (SORT SAFE)
+const savedPage = localStorage.getItem("verifyPage");
+if (savedPage) {
+  currentPage = Number(savedPage);
+  localStorage.removeItem("verifyPage");
 }
 
 // 🔁 RESTORE SEARCH / FILTER STATE
@@ -667,10 +680,19 @@ card.addEventListener("dblclick", async () => {
 
   const house = card.dataset.house;
   const key   = card.dataset.key;
+
+  // 🔒 LOCK STATE
+  isLiveUpdate = true;
+  lastActionVoterKey = key;
   
-lastActionVoterKey = key;   // ✅ remember this voter
-lastScrollY = window.scrollY;
-isLiveUpdate = true;   // 🔥 ADD THIS
+  // ⭐ SAVE CURRENT PAGE BEFORE VERIFY
+localStorage.setItem("verifyPage", currentPage);
+
+  // ⭐ EXACT PIXEL POSITION SAVE
+  const rect = card.getBoundingClientRect();
+  const absoluteTop = rect.top + window.scrollY;
+  localStorage.setItem("verifyScrollTop", absoluteTop);
+
   const newStatus = !p.verified;
 
   await update(ref(db, `voters/${house}/${key}`), {
@@ -680,13 +702,10 @@ isLiveUpdate = true;   // 🔥 ADD THIS
       hour12: true
     })
   });
-  setTimeout(() => {
-  isLiveUpdate = false;
-}, 200);
 
-  // small feedback
-  card.style.outline = "3px solid #16a34a";
-  setTimeout(() => card.style.outline = "", 600);
+  setTimeout(() => {
+    isLiveUpdate = false;
+  }, 600);
 });
   
 
@@ -713,41 +732,48 @@ function expandHouseForCard(card) {
   // RENDER RESULTS
   // ----------------------------
   function renderResults(list) {
-  
-  // 👉 PAGINATION SLICE
-  lastRenderedList = list; 
-  
-  const totalPages = Math.ceil(list.length / PAGE_SIZE);
+
+  // ⭐ SORT FIRST (BEFORE PAGINATION)
+  let workingList = [...list];
+
+  if (sortMode === "serial") {
+    workingList.sort((a, b) => a.serial - b.serial);
+  }
+
+  lastRenderedList = workingList;
+
   const start = (currentPage - 1) * PAGE_SIZE;
   const end   = start + PAGE_SIZE;
-  const pageList = list.slice(start, end);
-  
- // Pagination End
- document.getElementById("loadingSkeleton")?.remove();
-  
+  const pageList = workingList.slice(start, end);
+
+  document.getElementById("loadingSkeleton")?.remove();
   resultsDiv.innerHTML = "";
 
-  if (!list.length) {
+  if (!workingList.length) {
     resultsDiv.innerHTML = "<p>No results found.</p>";
-    updateStats(list);
+    updateStats([]);
     window.updatePageInfo(0);
     return;
   }
 
-  updateStats(list);
+  updateStats(workingList);
 
-  // ⭐ SERIAL SORT MODE — FLAT LIST
+  // =================================================
+  // ⭐ SERIAL SORT MODE — FLAT LIST (NO HOUSE GROUP)
+  // =================================================
   if (sortMode === "serial") {
-    list.sort((a, b) => a.serial - b.serial);
-
     const frag = document.createDocumentFragment();
     pageList.forEach(p => frag.appendChild(createVoterCard(p)));
     resultsDiv.appendChild(frag);
 
-    return;
+    window.updatePageInfo(workingList.length);
+    localStorage.setItem("lastPage", currentPage);
+    return; // ✅ ONLY valid return
   }
 
+  // =================================================
   // ⭐ DEFAULT MODE — GROUP BY HOUSE
+  // =================================================
   const grouped = {};
   pageList.forEach(p => {
     if (!grouped[p.house]) grouped[p.house] = [];
@@ -785,7 +811,7 @@ function expandHouseForCard(card) {
     arrow.classList.remove("rotate");
 
     header.style.cursor = "pointer";
-    header.addEventListener("click", () => {
+    header.onclick = () => {
       collapsed = !collapsed;
       if (collapsed) {
         content.style.maxHeight = "0px";
@@ -797,86 +823,79 @@ function expandHouseForCard(card) {
         arrow.classList.remove("rotate");
       }
       startConfetti();
-    });
+    };
 
-    // Add voter cards fast
     const cardFrag = document.createDocumentFragment();
     housePeople.forEach(p => cardFrag.appendChild(createVoterCard(p)));
     content.appendChild(cardFrag);
 
     section.appendChild(header);
     section.appendChild(content);
-
     frag.appendChild(section);
   });
-  
-  
-
-// ✅ update unverified muslim jump button
-//setTimeout(toggleUnverifiedMuslimBtn, 200);
-
-
 
   resultsDiv.appendChild(frag);
-  
-  // pagination info update
-  
-  window.updatePageInfo(list.length);
-  
-  
-  // 🔒 RESTORE SCROLL POSITION (CRITICAL FIX)
-if (lastScrollY > 0) {
-  requestAnimationFrame(() => {
-    window.scrollTo({
-      top: lastScrollY,
-      behavior: "auto"
+
+  // =================================================
+  // 📄 PAGINATION INFO
+  // =================================================
+  window.updatePageInfo(workingList.length);
+  localStorage.setItem("lastPage", currentPage);
+
+  // =================================================
+  // 🔒 RESTORE SCROLL / VERIFY FOCUS
+  // =================================================
+  if (lastScrollY > 0) {
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: lastScrollY, behavior: "auto" });
     });
-  });
-}
+  }
 
-// 🔁 OPTIONAL: focus verified voter (visual only)
-if (lastActionVoterKey) {
-  setTimeout(() => {
-    const target = document.querySelector(
-      `.card[data-key="${lastActionVoterKey}"]`
-    );
+  if (lastActionVoterKey) {
+    setTimeout(() => {
+      const target = document.querySelector(
+        `.card[data-key="${lastActionVoterKey}"]`
+      );
+      if (target) {
+        expandHouseForCard(target);
+        target.style.boxShadow = "0 0 0 4px #22c55e";
+        setTimeout(() => target.style.boxShadow = "", 1200);
+      }
+      lastActionVoterKey = null;
+      lastScrollY = 0;
+    }, 120);
+  }
 
-    if (target) {
-      expandHouseForCard(target);
-
-      target.style.boxShadow = "0 0 0 4px #22c55e";
-      setTimeout(() => target.style.boxShadow = "", 1200);
-    }
-
-    lastActionVoterKey = null;
-    lastScrollY = 0;
-  }, 120);
-}
-// 💾 SAVE CURRENT PAGE
-localStorage.setItem("lastPage", currentPage);
-
-// 🔁 RESTORE LAST VISIBLE VOTER POSITION
-if (lastVisibleSerial) {
-  setTimeout(() => {
-    const target = [...document.querySelectorAll(".card")].find(card => {
-      const pill = card.querySelector(".pill");
-      return pill && pill.innerText.includes(`#${lastVisibleSerial}`);
-    });
-
-    if (target) {
-      expandHouseForCard(target);
-      target.scrollIntoView({
-        behavior: "auto",
-        block: "start"
+  // 🔁 RESTORE LAST VISIBLE SERIAL
+  if (lastVisibleSerial) {
+    setTimeout(() => {
+      const target = [...document.querySelectorAll(".card")].find(card => {
+        const pill = card.querySelector(".pill");
+        return pill && pill.innerText.includes(`#${lastVisibleSerial}`);
       });
+      if (target) {
+        expandHouseForCard(target);
+        target.scrollIntoView({ behavior: "auto", block: "start" });
+        target.style.boxShadow = "0 0 0 4px #3b82f6";
+        setTimeout(() => target.style.boxShadow = "", 1200);
+      }
+    }, 150);
+  }
 
-      target.style.boxShadow = "0 0 0 4px #3b82f6";
-      setTimeout(() => target.style.boxShadow = "", 1200);
-    }
-  }, 150);
+  // 🔁 RESTORE VERIFY SCROLL
+  const savedTop = localStorage.getItem("verifyScrollTop");
+  if (savedTop && lastActionVoterKey) {
+    requestAnimationFrame(() => {
+      window.scrollTo({
+        top: Number(savedTop) - 120,
+        behavior: "auto"
+      });
+      localStorage.removeItem("verifyScrollTop");
+    });
+  }
+  // End of RenderResulta Function
 }
 
-}
 
 
 
