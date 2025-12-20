@@ -1,0 +1,35 @@
+
+body{
+  font-family:system-ui;
+  background:#fef2f2;
+  padding:15px;
+}
+.counter{
+  padding:10px;
+  border-radius:12px;
+  text-align:center;
+  cursor:pointer;
+  font-weight:600;
+}
+.card{
+  background:#fee2e2;
+  border:1px solid #fecaca;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:12px;
+}
+.btn{
+  padding:6px 10px;
+  border-radius:6px;
+  border:1px solid #aaa;
+  cursor:pointer;
+  font-weight:600;
+}
+.line{
+  padding:4px 0;
+  border-bottom:1px dashed #fca5a5;
+}
+
+.line:last-child{
+  border-bottom:none;
+}
