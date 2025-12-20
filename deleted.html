@@ -5,7 +5,6 @@
 <title>Deleted Voters</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Firebase -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import { getDatabase, ref, onValue, remove, set } 
@@ -21,13 +20,30 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const db = getDatabase(app);
+
   const list = document.getElementById("deletedList");
 
+  // 🔢 Counter elements
+  const totalEl = document.getElementById("cTotal");
+  const deadEl = document.getElementById("cDead");
+  const shiftedEl = document.getElementById("cShifted");
+  const dupEl = document.getElementById("cDuplicate");
+
   onValue(ref(db, "deleted_voters"), snap => {
+
     list.innerHTML = "";
+
+    let total = 0, dead = 0, shifted = 0, duplicate = 0;
+
     const data = snap.val() || {};
 
     Object.entries(data).reverse().forEach(([key, v]) => {
+
+      total++;
+
+      if (v.deleteReason === "Dead") dead++;
+      else if (v.deleteReason === "Shifted") shifted++;
+      else if (v.deleteReason === "Duplicate") duplicate++;
 
       const div = document.createElement("div");
       div.style.cssText = `
@@ -49,101 +65,55 @@ document.addEventListener("DOMContentLoaded", () => {
           🎂 <b>Age:</b> ${v.age || "-"}<br>
           🚻 <b>Gender:</b> ${v.gender || "-"}<br>
           ✔️ <b>Verified:</b> ${v.verified ? "Yes" : "No"}<br>
-          
           📝 <b>Reason:</b>
-<span style="
-  padding:2px 8px;
-  border-radius:999px;
-  font-weight:600;
-  background:
-    ${v.deleteReason === "Dead" ? "#fecaca" :
-      v.deleteReason === "Shifted" ? "#dbeafe" :
-      "#fde68a"};
-">
-  ${v.deleteReason || "—"}
-</span>
-<br>
+          <span style="
+            padding:2px 8px;
+            border-radius:999px;
+            font-weight:600;
+            background:
+              ${v.deleteReason === "Dead" ? "#fecaca" :
+                v.deleteReason === "Shifted" ? "#dbeafe" :
+                "#fde68a"};
+          ">
+            ${v.deleteReason || "—"}
+          </span><br>
           ⏰ <b>Deleted:</b> ${v.deletedAt}
         </div>
 
         <div style="margin-top:10px;display:flex;gap:10px;">
-  <button class="restoreBtn"
-    style="
-      flex:1;
-      padding:8px;
-      border-radius:8px;
-      border:1px solid #86efac;
-      background:#dcfce7;
-      cursor:pointer;
-      font-weight:600;">
-    ♻️ Restore
-  </button>
+          <button class="restoreBtn"
+            style="flex:1;padding:8px;border-radius:8px;border:1px solid #86efac;background:#dcfce7;font-weight:600;">
+            ♻️ Restore
+          </button>
 
-  <button class="permDeleteBtn"
-    style="
-      flex:1;
-      padding:8px;
-      border-radius:8px;
-      border:1px solid #fecaca;
-      background:#fee2e2;
-      cursor:pointer;
-      font-weight:600;">
-    ❌ Permanent
-  </button>
-</div>
+          <button class="permDeleteBtn"
+            style="flex:1;padding:8px;border-radius:8px;border:1px solid #fecaca;background:#fee2e2;font-weight:600;">
+            ❌ Permanent
+          </button>
+        </div>
       `;
 
-      const restoreBtn = div.querySelector(".restoreBtn");
-      
-      const permDeleteBtn = div.querySelector(".permDeleteBtn");
-
-permDeleteBtn.onclick = async () => {
-
-  // 🔐 Secret code
-  let code = prompt("Enter secret code for PERMANENT delete:");
-
-  if (!code) return;
-
-  if (code.trim().toLowerCase() !== "bijush") {
-    alert("❌ Wrong code!");
-    return;
-  }
-
-  // ⚠️ Final warning
-  if (!confirm("⚠️ PERMANENT DELETE!\nThis cannot be undone.\nAre you 100% sure?")) {
-    return;
-  }
-
-  try {
-    await remove(ref(db, `deleted_voters/${key}`));
-    alert("❌ Voter permanently deleted");
-  } catch (err) {
-    alert("Error: " + err.message);
-  }
-};
-      
-
-      restoreBtn.onclick = async () => {
-        if (!confirm("Restore this voter?")) return;
-
-        const house = v.house;
-        const originalKey = v.originalKey || key;
-
-        await set(ref(db, `voters/${house}/${originalKey}`), {
-          ...v,
-          updatedAt: new Date().toLocaleString("en-IN", {
-            timeZone: "Asia/Kolkata",
-            hour12: true
-          })
-        });
-
+      div.querySelector(".permDeleteBtn").onclick = async () => {
+        const code = prompt("Enter secret code for PERMANENT delete:");
+        if (!code || code.toLowerCase() !== "bijush") return alert("❌ Wrong code");
+        if (!confirm("⚠️ PERMANENT DELETE!\nThis cannot be undone.")) return;
         await remove(ref(db, `deleted_voters/${key}`));
+      };
 
-        alert("♻️ Restored successfully");
+      div.querySelector(".restoreBtn").onclick = async () => {
+        if (!confirm("Restore this voter?")) return;
+        await set(ref(db, `voters/${v.house}/${v.originalKey || key}`), v);
+        await remove(ref(db, `deleted_voters/${key}`));
       };
 
       list.appendChild(div);
     });
+
+    // ✅ Update counters
+    totalEl.textContent = total;
+    deadEl.textContent = dead;
+    shiftedEl.textContent = shifted;
+    dupEl.textContent = duplicate;
   });
 
 });
@@ -154,13 +124,29 @@ permDeleteBtn.onclick = async () => {
 
 <h2 style="text-align:center;">🗑️ Deleted Voters</h2>
 
-<button onclick="history.back()"
- style="
+<!-- 🔢 SUMMARY BAR -->
+<div style="
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
   margin-bottom:15px;
-  padding:8px 14px;
-  border-radius:8px;
-  border:1px solid #aaa;
-  cursor:pointer;">
+">
+  <div style="background:#fee2e2;padding:10px;border-radius:10px;text-align:center;">
+    🗑️ Total<br><b id="cTotal">0</b>
+  </div>
+  <div style="background:#fecaca;padding:10px;border-radius:10px;text-align:center;">
+    ⚰️ Dead<br><b id="cDead">0</b>
+  </div>
+  <div style="background:#dbeafe;padding:10px;border-radius:10px;text-align:center;">
+    🚚 Shifted<br><b id="cShifted">0</b>
+  </div>
+  <div style="background:#fde68a;padding:10px;border-radius:10px;text-align:center;">
+    📄 Duplicate<br><b id="cDuplicate">0</b>
+  </div>
+</div>
+
+<button onclick="history.back()"
+ style="margin-bottom:15px;padding:8px 14px;border-radius:8px;">
 ⬅ Back
 </button>
 
