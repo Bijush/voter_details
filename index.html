@@ -915,6 +915,12 @@ margin:8px 0;
 </head>
 
 <body>
+<script>
+  if(localStorage.getItem("isAdmin") !== "1"){
+    location.href = "login.html";
+  }
+</script>
+
 
 <div class="page">
 
@@ -1014,7 +1020,24 @@ margin:8px 0;
   <input type="checkbox" id="swReport">
   <span>Report Button</span>
 </label>
+<hr class="sb-divider">
+
+<button id="logoutBtn"
+  style="
+    width:100%;
+    padding:12px;
+    border-radius:12px;
+    border:none;
+    background:#dc2626;
+    color:#fff;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+  ">
+  🚪 Logout
+</button>
 </aside>
+
 
   <!-- Toggle -->
   <div class="top-action-bar">

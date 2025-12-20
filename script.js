@@ -109,10 +109,19 @@ if (PAGINATION_ENABLED && nextBtn) {
 
   // 🔓 allow renderResults() to call it
   window.updatePageInfo = updatePageInfo;
+  
+  // 🔐 LOGOUT BUTTON — FINAL FIX
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("isAdmin");
+    window.location.replace("login.html");
+  });
+}
+
 });
 
-
-
+// End of DOMCONTENT LOAD
 
 
 
