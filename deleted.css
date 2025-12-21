@@ -33,3 +33,15 @@ body{
 .line:last-child{
   border-bottom:none;
 }
+/* ⭐ ACTIVE COUNTER */
+.counter.active{
+  outline:3px solid #2563eb;
+  background:#eff6ff !important;
+}
+
+/* 🔥 FORCE CURRENT CARD (OVERRIDE ALL) */
+.card.current-card{
+  border:3px solid #2563eb !important;
+  background:#ffffff !important;
+  box-shadow:0 0 0 4px rgba(37,99,235,.35) !important;
+}

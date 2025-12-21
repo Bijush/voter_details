@@ -46,6 +46,23 @@ function parseDeletedDate(str) {
 /* 🔘 COUNTER CLICK */
 window.setReasonFilter = (reason) => {
   activeReasonFilter = reason;
+
+  // 🔥 ACTIVE COUNTER UI
+  document.querySelectorAll(".counter").forEach(c =>
+    c.classList.remove("active")
+  );
+
+  const map = {
+    "": 0,
+    "Dead": 1,
+    "Shifted": 2,
+    "Duplicate": 3
+  };
+
+  const index = map[reason];
+  document.querySelectorAll(".counter")[index]
+    ?.classList.add("active");
+
   renderList();
 };
 
@@ -103,6 +120,28 @@ function updateCounters() {
   cShifted.textContent = shifted;
   cDuplicate.textContent = dup;
 }
+
+
+
+// ===============================
+// ⭐ SCROLL CURRENT DELETED CARD
+// ===============================
+let activeDeletedCard = null;
+
+const delObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+
+    // 🔥 remove from all cards first
+    document.querySelectorAll(".card.current-card")
+      .forEach(c => c.classList.remove("current-card"));
+
+    e.target.classList.add("current-card");
+  });
+}, {
+  rootMargin: "-40% 0px -40% 0px",
+  threshold: 0
+});
 
 /* 🧠 MAIN RENDER */
 function renderList() {
@@ -180,4 +219,21 @@ function renderList() {
 
     list.appendChild(div);
   });
+  
+  // ⭐ AUTO HIGHLIGHT FIRST CARD
+// ⭐ AUTO HIGHLIGHT FIRST CARD (FORCE TEST)
+// ⭐ AUTO HIGHLIGHT FIRST CARD (FINAL)
+setTimeout(() => {
+  const first = document.querySelector(".card");
+  if (first) {
+    first.classList.add("current-card");
+    first.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}, 50);
+  document.querySelectorAll(".card").forEach(c=>{
+  delObserver.observe(c);
+});
+
 }
+
+

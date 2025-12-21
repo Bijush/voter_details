@@ -31,6 +31,8 @@ let PAGINATION_ENABLED = false;   // 🔴 now OFF
 // const PAGINATION_ENABLED = true; // 🟢 future ON
 
 
+let currentVisibleCard = null;
+
 // AUTO-FIX: remove duplicate shift popup if exists
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -919,10 +921,41 @@ function expandHouseForCard(card) {
       localStorage.removeItem("verifyScrollTop");
     });
   }
+  // 🔍 OBSERVE ALL VOTER CARDS
+setTimeout(() => {
+  document.querySelectorAll(".card").forEach(card => {
+    observer.observe(card);
+  });
+}, 100);
+ 
 }
 // End Of RenderResult Function 
 
 
+
+// ===============================
+// ⭐ CURRENT SCROLL VISIBLE VOTER
+// ===============================
+
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+
+      // remove old highlight
+      if (currentVisibleCard && currentVisibleCard !== entry.target) {
+        currentVisibleCard.classList.remove("current-voter");
+      }
+
+      // add new highlight
+      currentVisibleCard = entry.target;
+      currentVisibleCard.classList.add("current-voter");
+    }
+  });
+}, {
+  root: null,
+  threshold: 0.6   // 🔥 60% visible হলে active
+});
 
 
 
@@ -932,10 +965,12 @@ function collapseAllHouses() {
     const content = section.querySelector(".house-content");
     const arrow   = section.querySelector(".collapse-icon");
 
-    if (content) {
-      content.style.maxHeight = "0px";
-      content.style.opacity = "0";
-    }
+    if (!content) return;
+
+    // 🔥 FORCE COLLAPSE (NO CONDITION)
+    content.style.maxHeight = "0px";
+    content.style.opacity = "0";
+
     if (arrow) arrow.classList.add("rotate");
   });
 }

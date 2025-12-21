@@ -882,3 +882,15 @@ margin:8px 0;
   font-weight:700;
   color:#1e3a8a;
 }
+/* ⭐ CURRENT VISIBLE VOTER */
+.card.current-voter {
+  border: 2px solid red;
+  background: #eff6ff;
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.35),
+              0 10px 20px rgba(0,0,0,0.12);
+  transition: all .25s ease;
+}
+.card.current-voter.verified-glow{
+  background:#ecfdf5;
+  border-color:#16a34a;
+}
