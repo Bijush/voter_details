@@ -32,6 +32,7 @@ let PAGINATION_ENABLED = false;   // 🔴 now OFF
 
 
 let currentVisibleCard = null;
+let allowAutoHighlight = false;
 
 // AUTO-FIX: remove duplicate shift popup if exists
 document.addEventListener("DOMContentLoaded", () => {
@@ -939,24 +940,26 @@ setTimeout(() => {
 
 
 const observer = new IntersectionObserver((entries) => {
+
+  if (!allowAutoHighlight) return; // 🔒 prevent random highlight
+
   entries.forEach(entry => {
     if (entry.isIntersecting) {
 
-      // remove old highlight
+      // remove old
       if (currentVisibleCard && currentVisibleCard !== entry.target) {
         currentVisibleCard.classList.remove("current-voter");
       }
 
-      // add new highlight
+      // add new
       currentVisibleCard = entry.target;
       currentVisibleCard.classList.add("current-voter");
     }
   });
-}, {
-  root: null,
-  threshold: 0.6   // 🔥 60% visible হলে active
-});
 
+}, {
+  threshold: 0.6   // 60% visible হলে
+});
 
 
 // 🔽 COLLAPSE ALL HOUSES
@@ -1184,6 +1187,10 @@ window.addEventListener("scroll", () => {
     backToTop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
+
+window.addEventListener("scroll", () => {
+  allowAutoHighlight = true;
+});
   // ----------------------------
   // BREADCRUMB UPDATE
   // ----------------------------

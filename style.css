@@ -894,3 +894,9 @@ margin:8px 0;
   background:#ecfdf5;
   border-color:#16a34a;
 }
+.current-voter{
+  outline: 3px solid #2563eb;
+  outline-offset: 4px;
+  border-radius: 16px;
+  transition: outline 0.25s ease;
+}
