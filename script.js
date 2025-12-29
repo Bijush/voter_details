@@ -656,7 +656,14 @@ if (p.verified === true) {
       ${p.father ? `<p><strong>Father:</strong> ${p.father}</p>` : ""}
       ${p.mother ? `<p><strong>Mother:</strong> ${p.mother}</p>` : ""}
       ${p.husband ? `<p><strong>Husband:</strong> ${p.husband}</p>` : ""}
-      <p class="byp-field"><strong>BYP:</strong> ${p.byp}</p>
+     <p class="byp-field"><strong>BYP:</strong> ${p.byp || "—"}</p>
+
+<p>
+  <strong>House:</strong>
+  <span class="pill house-pill">
+    ${p.house.replace("house_", "")}
+  </span>
+</p>
       <p><strong>Age:</strong> ${p.age}</p>
       <p><strong>Caste:</strong> <span class="pill">${p.caste}</span></p>
       <p>

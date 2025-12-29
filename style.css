@@ -1057,3 +1057,8 @@ margin:8px 0;
   padding:2px 6px;
   transition:background .3s;
 }
+.house-pill{
+  background:#e0f2fe;      /* same tone as other pills */
+  color:#0369a1;
+  font-weight:600;
+}
