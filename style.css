@@ -1062,3 +1062,7 @@ margin:8px 0;
   color:#0369a1;
   font-weight:600;
 }
+/* hidden section*/
+.stat-st,.stat-unverified,.stat-verified,.stat-umuslim,.stat-vmuslim,.stat-dup{
+  display:none;
+}

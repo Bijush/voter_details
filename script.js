@@ -140,9 +140,9 @@ if (logoutBtn) {
   const lastWord = parts[parts.length - 1]; // ✅ exact last word only
 
   // Hindu / SC / ST / OBC FIRST (priority)
-  const SC  = ["roy","mallick", "mallik", "das", "namashudra", "namasudra", "namsudra", "sarkar", "debnath"];
-  const ST  = [ "tudu", "hansda", "murmu", "basumatary"];
-  const OBC = ["dey","majhi", "sukla", "suklabaidya", "bhadra"];
+  const SC  = ["roy","mallick", "mallik","das", "namashudra", "namasudra", "namsudra", "sarkar", "debnath","majhi"];
+  const ST  = ["tudu", "hansda", "murmu", "basumatary"];
+  const OBC = [ "dey", "sukla", "suklabaidya", "bhadra"];
 
   // Muslim — ONLY true last names (no first names)
   const MUSLIM = ["laskar", "uddin", "hussain", "hossain", "begum", "khatun", "barbhuiya", "mia"];
@@ -588,6 +588,8 @@ if (unverifiedMuslimBtn) {
     statOBC.textContent = list.filter(p => p.caste === "OBC").length;
     statST.textContent  = list.filter(p => p.caste === "ST").length;
     statMus.textContent = list.filter(p => p.caste === "Muslim").length;
+    document.getElementById("statGeneral").textContent =
+  list.filter(p => (p.caste || "General") === "General").length;
     
     document.getElementById("statVerified").textContent =
   list.filter(p => p.verified === true).length;
@@ -665,7 +667,12 @@ if (p.verified === true) {
   </span>
 </p>
       <p><strong>Age:</strong> ${p.age}</p>
-      <p><strong>Caste:</strong> <span class="pill">${p.caste}</span></p>
+      <p>
+  <strong>Caste:</strong>
+  <span class="pill">
+    ${p.caste && p.caste.trim() ? p.caste : "General"}
+  </span>
+</p>
       <p>
   <strong>Gender:</strong>
   <span class="gender-pill ${(p.gender || "").toLowerCase()}">

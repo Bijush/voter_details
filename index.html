@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Polling Station 90</title>
+<title>Polling Station 87</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -171,7 +171,7 @@
 <!-- 🔢 ONLY TOTAL -->
 <div class="total-bar">
   <div class="stat-chip total-chip">
-    Total Voters:
+    Total:
     <span id="statTotal" class="value" data-last="0">0</span>
     <span id="totalArrow" class="total-arrow"></span>
   </div>
@@ -306,24 +306,29 @@
 <div class="stat-chip">Houses: <span id="statHouses" class="value">0</span></div>
           <div class="stat-chip">SC: <span id="statSC" class="value">0</span></div>
           <div class="stat-chip">OBC: <span id="statOBC" class="value">0</span></div>
-          <div class="stat-chip">ST: <span id="statST" class="value">0</span></div>
-          <div class="stat-chip">Muslim: <span id="statMuslim" class="value">0</span></div>
-
-          <div class="stat-chip">Duplicate: <span id="statDup" class="value">0</span></div>
+          
+          <div class="stat-chip stat-st" >ST: <span id="statST" class="value">0</span></div>
           
           <div class="stat-chip">
+  General: <span id="statGeneral" class="value">0</span>
+</div>
+          <div class="stat-chip">Muslim: <span id="statMuslim" class="value">0</span></div>
+
+          <div class="stat-chip stat-dup">Duplicate: <span id="statDup" class="value">0</span></div>
+          
+          <div class="stat-chip stat-verified">
   Verified: <span id="statVerified" class="value">0</span>
 </div>
 
-<div class="stat-chip">
+<div class="stat-chip stat-unverified">
   Unverified: <span id="statUnverified" class="value">0</span>
 </div>
-<div class="stat-chip">
+<div class="stat-chip stat-vmuslim">
   ☪️ Verified-Muslim:
   <span id="statVerifiedMuslim" class="value">0</span>
 </div>
 
-<div class="stat-chip">
+<div class="stat-chip stat-umuslim">
   ☪️ Unverified:
   <span id="statUnverifiedMuslim" class="value">0</span>
 </div>
