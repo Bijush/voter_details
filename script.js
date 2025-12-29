@@ -140,9 +140,9 @@ if (logoutBtn) {
   const lastWord = parts[parts.length - 1]; // ✅ exact last word only
 
   // Hindu / SC / ST / OBC FIRST (priority)
-  const SC  = ["roy", "das", "namashudra", "namasudra", "namsudra", "sarkar", "debnath"];
-  const ST  = ["majhi", "tudu", "hansda", "murmu", "basumatary"];
-  const OBC = ["mallick", "mallik", "dey", "sukla", "suklabaidya", "bhadra", "deb"];
+  const SC  = ["roy","mallick", "mallik", "das", "namashudra", "namasudra", "namsudra", "sarkar", "debnath"];
+  const ST  = [ "tudu", "hansda", "murmu", "basumatary"];
+  const OBC = ["dey","majhi", "sukla", "suklabaidya", "bhadra"];
 
   // Muslim — ONLY true last names (no first names)
   const MUSLIM = ["laskar", "uddin", "hussain", "hossain", "begum", "khatun", "barbhuiya", "mia"];
