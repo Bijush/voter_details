@@ -174,6 +174,10 @@
     <span>Polling Station</span>
     <strong>90</strong>
   </div>
+  <a href="pending.html" class="pending-btn" id="pendingBtn">
+  ⏳ Pending Voters
+  <span id="pendingCount" class="pending-count">0</span>
+</a>
  
 </div>
 <!-- 🔢 ONLY TOTAL -->
@@ -611,7 +615,11 @@ function closePhoto(){
 </script>
 
 
+<!-- Main logic -->
 <script type="module" src="script.js"></script>
+
+<!-- Pending badge logic -->
+<script type="module" src="pending-indicator.js"></script>
 
 <footer class="app-footer">
   © 2025 • Polling Station 90 • Developed by Bijush Kumar Roy

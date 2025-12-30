@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pending Voters</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+
+<style>
+.pending-page{max-width:980px;margin:auto;padding:16px}
+.pending-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.pending-header h2{margin:0}
+
+.btn{padding:8px 12px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
+.btn-back{background:#e5e7eb}
+.btn-add{background:#f59e0b;color:#fff}
+
+.pending-card{
+  background:#fff;border-radius:14px;padding:14px;margin-bottom:12px;
+  box-shadow:0 6px 18px rgba(0,0,0,.08)
+}
+.pending-card h3{margin:0 0 6px;font-size:18px}
+.pending-meta{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:6px;font-size:14px;color:#334155
+}
+.pending-actions{margin-top:10px;display:flex;gap:10px}
+.btn-del{background:#fee2e2;color:#b91c1c}
+.btn-move{background:#dbeafe;color:#1d4ed8}
+
+.popup{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);
+  align-items:center;justify-content:center;z-index:99999
+}
+.popup-box{
+  background:#fff;padding:18px;border-radius:16px;width:340px
+}
+.popup-box input{
+  width:100%;margin-bottom:6px;padding:8px;border-radius:8px;border:1px solid #d1d5db
+}
+.popup-actions{display:flex;gap:10px;margin-top:8px}
+</style>
+
+
+<!-- 🔥 Firebase INIT (same as index.html) -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+  import { getDatabase } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+
+  window.firebaseApp = initializeApp({
+    apiKey: "AIzaSyCybmzCk3M8jV_255SbRGkGPWLAz2lgayE",
+    authDomain: "bijus-app-52978.firebaseapp.com",
+    databaseURL: "https://bijus-app-52978.firebaseio.com",
+    projectId: "bijus-app-52978",
+    storageBucket: "bijus-app-52978.firebasestorage.app",
+    messagingSenderId: "796288544713",
+    appId: "1:796288544713:web:643d5dee81c51e5aaec218"
+  });
+
+  window.db = getDatabase(window.firebaseApp);
+</script>
+</head>
+
+<body>
+
+<script>
+/* 🔐 Admin check */
+if (localStorage.getItem("isAdmin") !== "1") {
+  location.href = "login.html";
+}
+</script>
+
+<div class="pending-page">
+
+  <div class="pending-header">
+    <h2>⏳ Pending Voters</h2>
+    <div>
+      <button id="openAddPending" class="btn btn-add">➕ Add Pending</button>
+      <a href="index.html"><button class="btn btn-back">⬅ Back</button></a>
+    </div>
+  </div>
+
+  <div id="pendingList">Loading…</div>
+</div>
+
+<!-- ADD POPUP -->
+<div id="addPendingPopup" class="popup">
+  <div class="popup-box">
+    <h3>➕ Add Pending Voter</h3>
+
+    <input id="pvName" placeholder="Name">
+    <input id="pvHouse" placeholder="House Number">
+    <input id="pvFather" placeholder="Father Name">
+    <input id="pvMother" placeholder="Mother Name">
+    <input id="pvHusband" placeholder="Husband Name">
+    <input id="pvAge" type="number" placeholder="Age">
+    <input id="pvCaste" placeholder="Caste (General/SC/OBC/ST)">
+    <input id="pvMobile" placeholder="Mobile Number">
+
+    <div class="popup-actions">
+      <button class="btn btn-add" onclick="savePendingVoter()">Save</button>
+      <button class="btn btn-back" onclick="closeAdd()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- MOVE POPUP -->
+<div id="movePopup" class="popup">
+  <div class="popup-box">
+    <h3>Move to Main List</h3>
+
+    <input id="mvSerial" placeholder="Serial Number">
+    <input id="mvBYP" placeholder="BYP Number">
+
+    <div class="popup-actions">
+      <button class="btn btn-add" onclick="confirmMove()">Save</button>
+      <button class="btn btn-back" onclick="closeMove()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- JS -->
+<script type="module" src="pending.js"></script>
+
+</body>
+</html>

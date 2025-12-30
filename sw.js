@@ -5,6 +5,11 @@ const FILES_TO_CACHE = [
   "./index.html",
   "./style.css",
   "./script.js",
+
+  "./pending.html",
+  "./pending.js",
+  "./pending-indicator.js",
+
   "./login.html",
   "./deleted.html",
   "./deleted.css",
