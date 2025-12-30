@@ -28,6 +28,9 @@
 
 <link rel="stylesheet" href="style.css">
 
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2563eb">
+
 </head>
 
 <body>
@@ -611,8 +614,12 @@ function closePhoto(){
 <script type="module" src="script.js"></script>
 
 <footer class="app-footer">
-  © 2025 • Polling Station 87 • Developed by Bijush Kumar Roy
+  © 2025 • Polling Station 90 • Developed by Bijush Kumar Roy
 </footer>
-
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("sw.js");
+}
+</script>
 </body>
 </html>
