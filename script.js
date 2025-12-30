@@ -834,11 +834,11 @@ const saveBtn = noteBox.querySelector(".save-note-btn");
 function repairNoteTemplate(text) {
 
   const sections = [
-    "Online :",
-    "Form Type :",
-    "New house :",
-    "Old house :"
-  ];
+  "Online :",
+  "Form Type:",
+  "New house :",
+  "Old house :"
+];
 
   const lines = [];
   const divider = NOTE_DIVIDER;
