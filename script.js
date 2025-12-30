@@ -39,6 +39,13 @@ let SHOW_ONLY_NOTED = false;
 
 // AUTO-FIX: remove duplicate shift popup if exists
 document.addEventListener("DOMContentLoaded", () => {
+// ⚡ INSTANT LOAD FROM CACHE (2.2)
+const cached = localStorage.getItem("voters_cache");
+if (cached) {
+  voterData = JSON.parse(cached);
+  IS_DATA_LOADING = false;
+  processData();
+}
 
 const swPagination = document.getElementById("swPagination");
 const paginationBox = document.getElementById("pagination");
@@ -247,6 +254,10 @@ rptBtn.addEventListener("click", () => {
 onValue(ref(db, "voters"), snapshot => {
 
   voterData = snapshot.val() || {};
+  
+  // 🔥 CACHE SAVE
+  localStorage.setItem("voters_cache", JSON.stringify(voterData));
+  
   IS_DATA_LOADING = false;
   processData();
 
@@ -1020,11 +1031,13 @@ if (SHOW_ONLY_NOTED) {
 
   if (!workingList.length) {
 
-  // 🔄 DATA STILL LOADING
-  if (IS_DATA_LOADING) {
+  // ⏳ DATA STILL LOADING (2.3)
+  if (IS_DATA_LOADING && !localStorage.getItem("voters_cache")) {
     resultsDiv.innerHTML = `
       <div id="loadingSkeleton">
-        <p style="text-align:center;opacity:.6">⏳ Loading voters…</p>
+        <p style="text-align:center;opacity:.6">
+          ⏳ Loading voters…
+        </p>
       </div>
     `;
     return;
@@ -1087,7 +1100,26 @@ if (SHOW_ONLY_NOTED) {
 
     const content = document.createElement("div");
     content.className = "house-content";
+   
+    // 🔁 TOGGLE SINGLE HOUSE ON CLICK (ADD HERE)
+header.addEventListener("click", () => {
+  const isCollapsed = content.style.maxHeight === "0px";
 
+  if (isCollapsed) {
+    // 🔼 EXPAND
+    content.style.maxHeight = content.scrollHeight + "px";
+    content.style.opacity = "1";
+    header.querySelector(".collapse-icon")?.classList.remove("rotate");
+  } else {
+    // 🔽 COLLAPSE
+    content.style.maxHeight = "0px";
+    content.style.opacity = "0";
+    header.querySelector(".collapse-icon")?.classList.add("rotate");
+  }
+});
+
+    
+    
     const cardFrag = document.createDocumentFragment();
     housePeople.forEach(p => cardFrag.appendChild(createVoterCard(p)));
     content.appendChild(cardFrag);
