@@ -1170,10 +1170,20 @@ setTimeout(() => {
 // ================================
 const showNotes = localStorage.getItem("sidebar_swNotes") === "1";
 
-document.querySelectorAll(".note-container").forEach(note => {
-  note.style.display = showNotes ? "block" : "none";
-});
+document.querySelectorAll(".note-container").forEach(box => {
+  const body = box.querySelector(".note-body");
+  const btn  = box.querySelector(".note-toggle-btn");
 
+  if (!body || !btn) return;
+
+  if (showNotes) {
+    body.style.display = "block";
+    btn.textContent = "📝 Hide Note";
+  } else {
+    body.style.display = "none";
+    btn.textContent = "📝 Show Note";
+  }
+});
  
 }
 // End Of RenderResult Function 
@@ -1831,9 +1841,10 @@ swUnverifiedMuslimJump?.addEventListener("change", () => {
 // ================================
 
 // default OFF
-document.querySelectorAll(".note-container").forEach(n => {
-  n.style.display = "none";
-});
+
+//document.querySelectorAll(".note-container").forEach(n => {
+  //n.style.display = "none";
+//});
 
 if (swNotes) {
   swNotes.addEventListener("change", () => {
