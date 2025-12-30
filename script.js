@@ -24,6 +24,7 @@ let lastSearchQuery = "";
 
 let lastFilterState = null;
 let isFilterMode = false;
+let IS_DATA_LOADING = true;
 
 
 // 🔁 PAGINATION FEATURE TOGGLE
@@ -33,6 +34,8 @@ let PAGINATION_ENABLED = false;   // 🔴 now OFF
 
 let currentVisibleCard = null;
 let allowAutoHighlight = false;
+
+let SHOW_ONLY_NOTED = false;
 
 // AUTO-FIX: remove duplicate shift popup if exists
 document.addEventListener("DOMContentLoaded", () => {
@@ -55,6 +58,9 @@ const paginationBox = document.getElementById("pagination");
       sw.dispatchEvent(new Event("change"));
     }
   });
+  
+  // 🔁 RESTORE NOTE FILTER STATE
+SHOW_ONLY_NOTED = localStorage.getItem("sidebar_swNotes") === "1";
 
 // 🔁 RESTORE PAGINATION STATE
 const savedPagination = localStorage.getItem("pagination_enabled");
@@ -241,6 +247,7 @@ rptBtn.addEventListener("click", () => {
 onValue(ref(db, "voters"), snapshot => {
 
   voterData = snapshot.val() || {};
+  IS_DATA_LOADING = false;
   processData();
 
   // ⭐ SHOW LAST UPDATED TIME INDIAN TIME
@@ -304,11 +311,12 @@ if (PAGINATION_ENABLED) {
 if (lastSearchQuery) {
 
   const matched = allPeople.filter(p =>
-    p.name.toLowerCase().includes(lastSearchQuery) ||
-    String(p.serial).includes(lastSearchQuery) ||
-    (p.byp || "").toLowerCase().includes(lastSearchQuery) ||
-    p.caste.toLowerCase().includes(lastSearchQuery)
-  );
+  p.name.toLowerCase().includes(lastSearchQuery) ||
+  String(p.serial).includes(lastSearchQuery) ||
+  (p.byp || "").toLowerCase().includes(lastSearchQuery) ||
+  p.caste.toLowerCase().includes(lastSearchQuery) ||
+  (p.note || "").toLowerCase().includes(lastSearchQuery)   // ⭐ NOTE SEARCH
+);
 
   renderResults(matched);
 
@@ -606,6 +614,18 @@ document.getElementById("statUnverifiedMuslim").textContent =
   
   }
 
+
+
+const NOTE_DIVIDER = "───────────────────";
+
+const DEFAULT_NOTE_TEMPLATE = `Online :
+${NOTE_DIVIDER}
+Form Type:
+${NOTE_DIVIDER}
+New house :
+${NOTE_DIVIDER}
+Old house :`;
+
   // ----------------------------
   // CARD BUILDER
   // ----------------------------
@@ -614,6 +634,14 @@ const card = document.createElement("div");
 card.className = "card";
 card.dataset.caste = p.caste;
 card.dataset.verified = p.verified ? "yes" : "no";
+
+
+// ⭐ Highlight card if note exists
+if (p.note && p.note.trim() !== "") {
+  card.style.border = "2px solid #f59e0b";
+  card.style.boxShadow = "0 0 0 3px rgba(245,158,11,.35)";
+}
+
 
 // ✅ GREEN GLOW IF VERIFIED
 if (p.verified === true) {
@@ -720,6 +748,178 @@ if (p.verified === true) {
   actions.appendChild(editBtn);
   actions.appendChild(delBtn);
   
+  // ================= NOTE BOX =================
+const noteBox = document.createElement("div");
+noteBox.classList.add("note-container");
+
+noteBox.style.marginTop = "8px";
+
+noteBox.innerHTML = `
+  <button class="note-toggle-btn"
+    style="
+      margin-bottom:6px;
+      padding:4px 10px;
+      border-radius:999px;
+      border:1px solid #94a3b8;
+      background:#f1f5f9;
+      font-size:12px;
+      cursor:pointer;
+    ">
+    📝 Show Note
+  </button>
+
+  <div class="note-body" style="display:none;">
+    <textarea
+  class="voter-note"
+  style="
+    width:100%;
+    min-height:130px;
+    padding:8px;
+    border-radius:8px;
+    border:1px solid #cbd5e1;
+    font-size:13px;
+    font-family:monospace;
+    line-height:1.4;
+  "
+>${p.note || DEFAULT_NOTE_TEMPLATE}</textarea>
+
+    <button
+      class="save-note-btn"
+      style="
+        margin-top:6px;
+        padding:6px 12px;
+        border-radius:8px;
+        border:none;
+        background:#2563eb;
+        color:#fff;
+        font-size:13px;
+        cursor:pointer;
+      ">
+      💾 Save Note
+    </button>
+    <button
+  class="delete-note-btn"
+  style="
+    margin-top:6px;
+    padding:6px 12px;
+    border-radius:8px;
+    border:1px solid #fecaca;
+    background:#fee2e2;
+    color:#991b1b;
+    font-size:13px;
+    cursor:pointer;
+  ">
+  🗑️ Delete Note
+</button>
+  </div>
+`;
+
+const toggleBtn = noteBox.querySelector(".note-toggle-btn");
+const noteBody  = noteBox.querySelector(".note-body");
+
+toggleBtn.addEventListener("click", () => {
+  const open = noteBody.style.display === "block";
+  noteBody.style.display = open ? "none" : "block";
+  toggleBtn.textContent = open ? "📝 Show Note" : "📝 Hide Note";
+});
+
+
+  
+  const textarea = noteBox.querySelector(".voter-note");
+  
+const saveBtn = noteBox.querySelector(".save-note-btn");
+
+//Auto-repair logic
+
+function repairNoteTemplate(text) {
+
+  const sections = [
+    "Online :",
+    "Form Type :",
+    "New house :",
+    "Old house :"
+  ];
+
+  const lines = [];
+  const divider = NOTE_DIVIDER;
+
+  sections.forEach(label => {
+    // extract user content for this label
+    const regex = new RegExp(label + "[\\s\\S]*?(?=" + sections.join("|") + "|$)", "i");
+    const match = text.match(regex);
+
+    if (match) {
+      lines.push(match[0].trim());
+    } else {
+      lines.push(label);
+    }
+  });
+
+  // 🔥 join with SINGLE divider only
+  return lines.join("\n" + divider + "\n");
+}
+
+
+saveBtn.addEventListener("click", async () => {
+
+  const rawText  = textarea.value;
+const noteText = repairNoteTemplate(rawText);
+
+  await update(
+    ref(db, `voters/${p.house}/${p.key}`),
+    {
+      note: noteText,
+      updatedAt: new Date().toLocaleString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        hour12: true
+      })
+    }
+  );
+  
+  // ✅ ALERT AFTER SAVE
+  alert("✅ Note saved successfully");
+
+  // UI feedback
+  saveBtn.textContent = "✅ Saved";
+  deleteBtn.style.display = "inline-block";
+
+  saveBtn.textContent = "✅ Saved";
+  setTimeout(() => saveBtn.textContent = "💾 Save Note", 1200);
+});
+  
+  const deleteBtn = noteBox.querySelector(".delete-note-btn");
+  
+  // 🔕 Hide delete button if no note exists
+if (!p.note || !p.note.trim()) {
+  deleteBtn.style.display = "none";
+}
+
+deleteBtn.addEventListener("click", async () => {
+
+  if (!confirm("❌ Are you sure you want to delete this note?")) return;
+
+  // reset textarea to default template
+  textarea.value = DEFAULT_NOTE_TEMPLATE;
+
+  // 🔥 remove note from Firebase
+  await update(
+    ref(db, `voters/${p.house}/${p.key}`),
+    {
+      note: "",
+      updatedAt: new Date().toLocaleString("en-IN", {
+        timeZone: "Asia/Kolkata",
+        hour12: true
+      })
+    }
+  );
+
+  // 🔕 remove highlight
+  card.style.border = "";
+  card.style.boxShadow = "";
+
+  alert("🗑️ Note deleted");
+});
+  
   
   
   // ✅ DOUBLE CLICK → TOGGLE VERIFIED (FIREBASE)
@@ -758,6 +958,9 @@ if (PAGINATION_ENABLED) {
 });
   
 
+card.querySelector(".card-content").appendChild(noteBox);
+
+
   return card;
 }
 
@@ -781,6 +984,12 @@ function expandHouseForCard(card) {
   // RENDER RESULTS
   // ----------------------------
   function renderResults(list) {
+  
+  // 📝 SHOW ONLY NOTED VOTERS (SIDEBAR)
+if (SHOW_ONLY_NOTED) {
+  list = list.filter(p => p.note && p.note.trim() !== "");
+}
+
 
   // ⭐ SORT FIRST
   let workingList = [...list];
@@ -810,13 +1019,26 @@ function expandHouseForCard(card) {
   resultsDiv.innerHTML = "";
 
   if (!workingList.length) {
-    resultsDiv.innerHTML = "<p>No results found.</p>";
-    updateStats([]);
-    if (PAGINATION_ENABLED) {
-      window.updatePageInfo?.(0);
-    }
+
+  // 🔄 DATA STILL LOADING
+  if (IS_DATA_LOADING) {
+    resultsDiv.innerHTML = `
+      <div id="loadingSkeleton">
+        <p style="text-align:center;opacity:.6">⏳ Loading voters…</p>
+      </div>
+    `;
     return;
   }
+
+  // ❌ REAL NO RESULT
+  resultsDiv.innerHTML = "<p>No results found.</p>";
+  updateStats([]);
+
+  if (PAGINATION_ENABLED) {
+    window.updatePageInfo?.(0);
+  }
+  return;
+}
 
   updateStats(workingList);
 
@@ -942,6 +1164,16 @@ setTimeout(() => {
     observer.observe(card);
   });
 }, 100);
+
+// ================================
+// 🔁 APPLY NOTE VISIBILITY AFTER RENDER
+// ================================
+const showNotes = localStorage.getItem("sidebar_swNotes") === "1";
+
+document.querySelectorAll(".note-container").forEach(note => {
+  note.style.display = showNotes ? "block" : "none";
+});
+
  
 }
 // End Of RenderResult Function 
@@ -1369,7 +1601,7 @@ const swStats     = document.getElementById("swStats");
 const swFilters      = document.getElementById("swFilters");
 const swHouseToggle  = document.getElementById("swHouseToggle");
 const swShowMissing  = document.getElementById("swShowMissing");
-
+const swNotes = document.getElementById("swNotes");
 
 
 const filterArea     = document.getElementById("filterToggleArea");
@@ -1594,6 +1826,41 @@ swUnverifiedMuslimJump?.addEventListener("change", () => {
 
 
 
+// ================================
+// 📝 NOTES SHOW / HIDE (SIDEBAR)
+// ================================
+
+// default OFF
+document.querySelectorAll(".note-container").forEach(n => {
+  n.style.display = "none";
+});
+
+if (swNotes) {
+  swNotes.addEventListener("change", () => {
+
+    SHOW_ONLY_NOTED = swNotes.checked;
+
+    localStorage.setItem(
+      "sidebar_swNotes",
+      SHOW_ONLY_NOTED ? "1" : "0"
+    );
+
+    // 🔥 IMPORTANT RESET
+    currentPage = 1;
+
+    if (SHOW_ONLY_NOTED) {
+      // only noted voters
+      renderResults(allPeople);
+    } else {
+      // 🔁 FULL RESET (original order)
+      isFilterMode = false;
+      lastFilterState = null;
+      lastSearchQuery = "";
+      renderResults(allPeople);
+    }
+
+  });
+}
 
 // ===== FILTER BAR ONE BY ONE CONTROL =====
 
