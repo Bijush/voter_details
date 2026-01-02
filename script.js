@@ -1,5 +1,4 @@
 
-
 // ✅ FIREBASE IMPORT (TOP OF FILE)
 import { ref, onValue, push, update, remove,get}
 from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
@@ -36,6 +35,39 @@ let currentVisibleCard = null;
 let allowAutoHighlight = false;
 
 let SHOW_ONLY_NOTED = false;
+let dupSerialIndex = 0;
+let IS_PROGRAMMATIC_JUMP = false;
+let dupCardIndexMap = {}; // 🔥 track per BYP card index
+// 🔁 BULK MODE STATE
+let BULK_MODE_ON = false;
+
+// 🔄 SPINNER STATE
+let CANCEL_BULK_MOVE = false;
+
+function showSpinner(show){
+  const sp = document.getElementById("globalSpinner");
+  if (sp) sp.style.display = show ? "flex" : "none";
+}
+
+function updateSpinner(done, total, startTime){
+  const text = document.getElementById("spinnerText");
+  const bar = document.getElementById("spinnerBar");
+  const eta = document.getElementById("spinnerEta");
+
+  if (text) text.textContent = `${done} / ${total} voters moved`;
+  if (bar) bar.style.width = `${Math.round((done / total) * 100)}%`;
+
+  if (eta && done > 0){
+    const elapsed = (Date.now() - startTime) / 1000;
+    const avg = elapsed / done;
+    const remaining = Math.max(0, Math.round(avg * (total - done)));
+    eta.textContent = `⏱️ ~${remaining}s remaining`;
+  }
+}
+
+
+
+
 
 // AUTO-FIX: remove duplicate shift popup if exists
 document.addEventListener("DOMContentLoaded", () => {
@@ -248,6 +280,12 @@ rptBtn.addEventListener("click", () => {
   let voterData = {};
   let allPeople = [];
   let colors = {};
+  
+  // ===============================
+// 🔲 MULTIPLE VOTER SELECTION STORE
+// ===============================
+let selectedVoters = {};
+
   let duplicateBYPs = new Set();
 
   let dupCycle = [];     // one-by-one cycle list
@@ -299,11 +337,11 @@ onValue(ref(db, "voters"), snapshot => {
   });
 });
 });
-
+     detectDuplicateSerials();   // ⭐ ADD THIS LINE
     generateColors();
     findDuplicateBYP();
-   
-  
+
+
 // 🔥 RESET PAGE ONLY IF NO SAVED PAGE
 
 if (
@@ -392,6 +430,8 @@ isLiveUpdate = false;   // 🔁 reset flag
     restoreSidebarState();
   }, 50);
   }
+  
+  // End Of ProcessData Function
 
   function normalizeGender(g) {
     if (!g) return "";
@@ -409,6 +449,27 @@ isLiveUpdate = false;   // 🔁 reset flag
     });
     duplicateBYPs = new Set(Object.keys(map).filter(b => map[b] > 1));
   }
+  
+  function detectDuplicateSerials() {
+
+  // 🔁 reset first
+  allPeople.forEach(p => {
+    p.duplicateSerial = false;
+  });
+
+  const map = {};
+
+  allPeople.forEach(p => {
+    if (!p.serial) return;
+    map[p.serial] = (map[p.serial] || 0) + 1;
+  });
+
+  allPeople.forEach(p => {
+    if (map[p.serial] > 1) {
+      p.duplicateSerial = true;
+    }
+  });
+}
 
   function sortHouseASC(a, b) {
     return parseInt(a.replace("house_", "")) - parseInt(b.replace("house_", ""));
@@ -634,6 +695,9 @@ document.getElementById("statVerifiedMuslim").textContent =
 
 document.getElementById("statUnverifiedMuslim").textContent =
   list.filter(p => p.caste === "Muslim" && !p.verified).length;
+  // ⭐ DUPLICATE SERIAL COUNT
+  const dupSerialCount = list.filter(p => p.duplicateSerial).length;
+  document.getElementById("statDupSerial").textContent = dupSerialCount;
   
   }
 
@@ -655,8 +719,47 @@ Old house :`;
   function createVoterCard(p) {
 const card = document.createElement("div");
 card.className = "card";
+card.style.position = "relative";
+
+// ===============================
+// 🔲 MULTI SELECT CHECKBOX (STEP-3)
+// ===============================
+const selectBox = document.createElement("input");
+selectBox.type = "checkbox";
+selectBox.className = "voter-select";
+/*
+selectBox.style.cssText = `
+  position:absolute;
+  top:6px;
+  left:6px;
+  width:18px;
+  height:18px;
+  z-index:9999;
+  background:#fff;
+  border-radius:4px;
+  box-shadow:0 0 3px rgba(0,0,0,.4);
+`;
+*/
+selectBox.style.display = "none"; // 🔒 DEFAULT HIDE
+
+selectBox.addEventListener("change", () => {
+  if (selectBox.checked) {
+    selectedVoters[p.key] = p;
+  } else {
+    delete selectedVoters[p.key];
+  }
+});
+
+
+
+
+
+
 card.dataset.caste = p.caste;
 card.dataset.verified = p.verified ? "yes" : "no";
+if (p.duplicateSerial) {
+  card.dataset.dupserial = "yes";
+}
 
 
 // ⭐ Highlight card if note exists
@@ -696,6 +799,7 @@ if (p.verified === true) {
     <span class="name-text">
       ${p.name}
       <span class="pill">#${p.serial}</span>
+      ${p.duplicateSerial ? `<span class="dup-badge">DUP SERIAL</span>` : ""}
       ${p.verified ? `<span class="verified-badge">✔ Verified</span>` : ""}
     </span>
   </div>
@@ -742,8 +846,13 @@ if (p.verified === true) {
       <div class="card-actions" style="display:flex;gap:10px;margin-top:10px;"></div>
     </div>
   `;
+  card.appendChild(selectBox);
 
   const img = card.querySelector(".voter-photo");
+img.style.position = "relative";
+img.style.zIndex = "1";
+img.style.marginTop = "12px";
+
   img.addEventListener("click", () => openPhoto(photoPath));
 
   const actions = card.querySelector(".card-actions");
@@ -1002,9 +1111,61 @@ function expandHouseForCard(card) {
     arrow && arrow.classList.remove("rotate");
   }
 }
+// ===============================
+// 🔁 DUPLICATE SERIAL JUMP BUTTON
+// ===============================
+
+const dupSerialBtn     = document.getElementById("dupSerialJumpBtn");
+const dupSerialCounter = document.getElementById("dupSerialCounter");
+
+function updateDupSerialUI() {
+  const cards = getDuplicateSerialCards();
+
+  // ⭐ RESET INDEX (IMPORTANT)
+  dupSerialIndex = 0;
+
+  if (!cards.length) {
+    if (dupSerialBtn) dupSerialBtn.style.display = "none";
+    if (dupSerialCounter) dupSerialCounter.style.display = "none";
+    return;
+  }
+
+  if (dupSerialBtn) dupSerialBtn.style.display = "block";
+}
+
+
+setTimeout(updateDupSerialUI, 600); // after render
+
+if (dupSerialBtn) {
+  dupSerialBtn.onclick = () => {
+    const cards = getDuplicateSerialCards();
+    if (!cards.length) return;
+
+    if (dupSerialIndex >= cards.length) dupSerialIndex = 0;
+
+    const card = cards[dupSerialIndex];
+
+    expandHouseForCard(card);
+
+    // highlight
+    card.style.boxShadow = "0 0 0 4px #f97316";
+    setTimeout(() => card.style.boxShadow = "", 1200);
+
+    card.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    // 🔢 floating counter
+    if (dupSerialCounter) {
+      dupSerialCounter.style.display = "block";
+      dupSerialCounter.textContent =
+        `${dupSerialIndex + 1} / ${cards.length}`;
+    }
+
+    dupSerialIndex++;
+  };
+}
 
   // ----------------------------
-  // RENDER RESULTS
+  // RENDER RESULTS START HERE
   // ----------------------------
   function renderResults(list) {
   
@@ -1074,6 +1235,14 @@ if (SHOW_ONLY_NOTED) {
     const frag = document.createDocumentFragment();
     displayList.forEach(p => frag.appendChild(createVoterCard(p)));
     resultsDiv.appendChild(frag);
+    // ===============================
+// 🔁 APPLY BULK MODE AFTER RENDER
+// ===============================
+document.querySelectorAll(".voter-select").forEach(cb => {
+  cb.style.display = BULK_MODE_ON ? "block" : "none";
+});
+    
+    
 
     if (PAGINATION_ENABLED) {
       window.updatePageInfo?.(workingList.length);
@@ -1208,6 +1377,14 @@ setTimeout(() => {
     observer.observe(card);
   });
 }, 100);
+
+// 🔁 UPDATE DUPLICATE SERIAL BUTTON AFTER EVERY RENDER
+setTimeout(updateDupSerialUI, 100);
+// 🔁 UPDATE DUPLICATE SYSTEM AFTER EVERY RENDER
+setTimeout(() => {
+  buildDuplicateCycle();   // ⭐ ADD THIS
+}, 100);
+
 
 // ================================
 // 🔁 APPLY NOTE VISIBILITY AFTER RENDER
@@ -1562,43 +1739,81 @@ window.addEventListener("scroll", () => {
   // 🔁 DUPLICATE SYSTEM — FINAL FIXED VERSION
   // ----------------------------------------------------
   function buildDuplicateCycle() {
-    dupCycle = [...duplicateBYPs];
-    dupIndex = 0;
-    dupBtn.style.display = dupCycle.length ? "block" : "none";
-  }
+  const map = {};
 
-  dupBtn.addEventListener("click", () => {
-    if (!dupCycle.length) return;
-
-    const bypID = dupCycle[dupIndex];
-    scrollToDuplicate(bypID);
-
-    dupIndex = (dupIndex + 1) % dupCycle.length;
+  allPeople.forEach(p => {
+    if (!p.byp) return;
+    map[p.byp] = (map[p.byp] || 0) + 1;
   });
 
+  dupCycle = Object.keys(map).filter(b => map[b] > 1);
+
+  // 🔁 RESET per-BYP card index safely
+  dupCardIndexMap = {};
+
+  if (dupBtn) {
+    dupBtn.style.display = dupCycle.length ? "block" : "none";
+  }
+}
+  
+
+  dupBtn.addEventListener("click", () => {
+  if (!dupCycle.length) return;
+
+  IS_PROGRAMMATIC_JUMP = true; // 🔒 guard ON
+
+  const bypID = dupCycle[dupIndex];
+  scrollToDuplicate(bypID);
+
+  dupIndex = (dupIndex + 1) % dupCycle.length;
+
+  setTimeout(() => {
+    IS_PROGRAMMATIC_JUMP = false; // 🔓 guard OFF
+  }, 400);
+});
+
   function scrollToDuplicate(bypID) {
-    const cards = [...document.querySelectorAll(".card")].filter(card => {
-      const bypField = card.querySelector(".byp-field");
-      if (!bypField) return false;
 
-      const text = bypField.innerText.replace("BYP:", "").trim().toLowerCase();
-      return text === String(bypID).toLowerCase();
-    });
+  const cards = [...document.querySelectorAll(".card")].filter(card => {
+    const bypField = card.querySelector(".byp-field");
+    if (!bypField) return false;
 
-    if (!cards.length) return;
+    const text = bypField.innerText.replace("BYP:", "").trim().toLowerCase();
+    return text === String(bypID).toLowerCase();
+  });
 
-    cards.forEach(card => {
-      card.style.boxShadow = "0 0 0 4px #ff8800";
-      setTimeout(() => card.style.boxShadow = "", 1500);
-    });
+  if (!cards.length) return;
 
-    cards[0].scrollIntoView({
-      behavior: "smooth",
-      block: "center"
-    });
+  // 🔥 per-BYP index
+  if (dupCardIndexMap[bypID] == null) {
+    dupCardIndexMap[bypID] = 0;
   }
 
+  const i = dupCardIndexMap[bypID];
+  const card = cards[i];
+
+  // next index
+  dupCardIndexMap[bypID] = (i + 1) % cards.length;
+
+  // ⭐ AUTO EXPAND HOUSE
+  expandHouseForCard(card);
+
+  // highlight all duplicates
+  cards.forEach(c => {
+    c.style.boxShadow = "0 0 0 4px #ff8800";
+    setTimeout(() => c.style.boxShadow = "", 1500);
+  });
+
+  card.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
   document.addEventListener("click", e => {
+    // 🚫 ignore clicks triggered by button jump
+  if (IS_PROGRAMMATIC_JUMP) return;
+
     const card = e.target.closest(".card");
     if (!card) return;
 
@@ -2534,15 +2749,15 @@ window.closeEditVoter = function () {
 
 window.saveEditVoter = async function () {
 
-  const serial  = Number(evSerial.value);
-  const name    = evName.value.trim();
-  const father  = evFather.value.trim();
-  const mother = evMother.value.trim();
-  const husband = evHusband.value.trim();
-  const age     = Number(evAge.value);
-  const gender  = evGender.value.trim();
-  const byp     = evBYP.value.trim();
-  const mobile  = evMobile.value.trim();
+  const serial   = Number(evSerial.value);
+  const name     = evName.value.trim();
+  const father   = evFather.value.trim();
+  const mother   = evMother.value.trim();
+  const husband  = evHusband.value.trim();
+  const age      = Number(evAge.value);
+  const gender   = evGender.value.trim();
+  const byp      = evBYP.value.trim();
+  const mobile   = evMobile.value.trim();
   const newHouse = evHouse.value.trim();   // ⭐ NEW HOUSE VALUE
 
   if (!serial || !name) {
@@ -2550,14 +2765,10 @@ window.saveEditVoter = async function () {
     return;
   }
 
-  // Duplicate serial check
-  const duplicate = allPeople.some(p =>
+  // ✅ SOFT duplicate serial detect (DO NOT BLOCK)
+  const duplicateSerial = allPeople.some(p =>
     Number(p.serial) === serial && p.key !== editKey
   );
-  if (duplicate) {
-    alert("❌ Serial already exists!");
-    return;
-  }
 
   // -----------------------------
   // ⭐ CHECK IF HOUSE CHANGED
@@ -2566,18 +2777,40 @@ window.saveEditVoter = async function () {
   const oldPath  = `voters/${editHouse}/${editKey}`;
   const newPath  = `voters/house_${newHouse}/${editKey}`;
 
+  const payload = {
+    serial,
+    name,
+    father,
+    mother,
+    husband,
+    age,
+    gender,
+    byp,
+    mobile,
+
+    // ⭐ DUPLICATE SERIAL FLAG
+    duplicateSerial: duplicateSerial ? true : false,
+
+    updatedAt: new Date().toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour12: true
+    })
+  };
+
   if (oldHouse !== newHouse) {
 
     // 1️⃣ Remove from OLD house
     await remove(ref(db, oldPath));
 
     // 2️⃣ Add to NEW house
-    await update(ref(db, newPath), {
-      serial, name, father,mother, husband, age, gender, byp, mobile,
-      updatedAt: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", hour12: true })
-    });
+    await update(ref(db, newPath), payload);
 
-    alert("🏠 House updated & voter moved successfully!");
+    alert(
+      duplicateSerial
+        ? "⚠️ Voter moved with DUPLICATE serial"
+        : "🏠 House updated & voter moved successfully!"
+    );
+
     document.getElementById("editVoterPopup").style.display = "none";
     return;
   }
@@ -2585,12 +2818,14 @@ window.saveEditVoter = async function () {
   // -----------------------------
   // ⭐ IF HOUSE SAME → NORMAL UPDATE
   // -----------------------------
-  update(ref(db, oldPath), {
-    serial, name, father,mother, husband, age, gender, byp, mobile,
-    updatedAt: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", hour12: true })
-  });
+  await update(ref(db, oldPath), payload);
 
-  alert("✅ Voter updated successfully");
+  alert(
+    duplicateSerial
+      ? "⚠️ Voter updated with DUPLICATE serial"
+      : "✅ Voter updated successfully"
+  );
+
   document.getElementById("editVoterPopup").style.display = "none";
 };
 // ✅ OPEN ADD VOTER POPUP (MAIN GREEN BUTTON)
@@ -2657,6 +2892,47 @@ window.saveAddVoter = function () {
 
   alert("✅ Voter added with Serial #" + serial);
 };
+
+// ===============================
+// 🔁 SHIFT VOTER WITH HISTORY (STEP 1)
+// ===============================
+async function moveVoterWithHistory(voter, newHouseNumber) {
+
+  const oldHouse = voter.house;
+  const key = voter.key;
+
+  const time = new Date().toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+    hour12: true
+  });
+
+  // 🔹 পুরনো history থাকলে রাখো
+  const history = voter.shiftHistory || [];
+
+  history.push({
+    from: oldHouse,
+    to: `house_${newHouseNumber}`,
+    time
+  });
+
+  // 🔹 নতুন house এ add
+  await update(
+    ref(db, `voters/house_${newHouseNumber}/${key}`),
+    {
+      ...voter,
+      house: `house_${newHouseNumber}`,
+      shiftHistory: history,
+      updatedAt: time
+    }
+  );
+
+  // 🔹 পুরনো house থেকে remove
+  await remove(
+    ref(db, `voters/${oldHouse}/${key}`)
+  );
+
+  
+}
 
 // 🔥 SECURE DELETE + MOVE TO DELETED LIST
 window.deleteVoter = async function (house, key) {
@@ -2817,3 +3093,149 @@ function getActiveList() {
     ? lastRenderedList
     : allPeople;
 }
+function isDuplicateSerial(serial, currentKey = null) {
+  return allPeople.some(p =>
+    Number(p.serial) === Number(serial) &&
+    (!currentKey || p.key !== currentKey)
+  );
+}
+function getDuplicateSerialCards() {
+  return [...document.querySelectorAll(".card")]
+    .filter(card => card.dataset.dupserial === "yes");
+}
+// ===============================
+// 🔁 FLOATING BULK MOVE BUTTON ACTION
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+
+  const bulkBtn = document.getElementById("bulkMoveBtnFloating");
+  if (!bulkBtn) return;
+
+  bulkBtn.addEventListener("click", async () => {
+
+  const voters = Object.values(selectedVoters);
+
+  if (!voters.length) {
+    alert("⚠️ No voters selected");
+    return;
+  }
+
+  // 🔎 Present house (default)
+  let presentHouse = "";
+  if (voters[0].house) {
+    presentHouse = voters[0].house.replace("house_", "");
+  }
+
+  const newHouse = prompt(
+    `Move ${voters.length} selected voters to which house number?`,
+    presentHouse
+  );
+
+  if (!newHouse) return;
+  if (!confirm(`Confirm move to house ${newHouse}?`)) return;
+
+  // 🔒 UI LOCK + INIT
+  bulkBtn.disabled = true;
+  CANCEL_BULK_MOVE = false;
+
+  const total = voters.length;
+  let done = 0;
+  const startTime = Date.now();
+
+  showSpinner(true);
+  updateSpinner(0, total, startTime);
+
+  try {
+    for (const v of voters) {
+
+      // ⛔ Cancel support
+      if (CANCEL_BULK_MOVE) break;
+
+      await moveVoterWithHistory(v, newHouse);
+      done++;
+      updateSpinner(done, total, startTime);
+    }
+  } finally {
+    // 🔓 UI UNLOCK
+    showSpinner(false);
+    bulkBtn.disabled = false;
+  }
+
+  // 🔄 clear selection
+  selectedVoters = {};
+  document.querySelectorAll(".voter-select")
+    .forEach(cb => cb.checked = false);
+
+  if (CANCEL_BULK_MOVE) {
+    alert(`⛔ Cancelled after ${done} / ${total} voters`);
+  } else {
+    alert("✅ Selected voters moved successfully");
+  }
+});
+
+});
+// ===============================
+// 🔀 BULK MOVE MODE TOGGLE
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+
+  const swBulk = document.getElementById("swBulkMove");
+  const bulkBtn = document.getElementById("bulkMoveBtnFloating");
+
+  function applyBulkMode(on) {
+BULK_MODE_ON = on;
+    // 🔲 Checkbox show / hide
+    document.querySelectorAll(".voter-select").forEach(cb => {
+      cb.style.display = on ? "block" : "none";
+      if (!on) cb.checked = false;
+    });
+
+    // 🔁 Move button show / hide
+    if (bulkBtn) {
+      bulkBtn.style.display = on ? "block" : "none";
+    }
+
+    // 🔄 clear selected voters when OFF
+    if (!on) {
+      selectedVoters = {};
+    }
+  }
+
+  // default OFF
+  applyBulkMode(false);
+  
+  // ===============================
+// 🔁 RESTORE BULK MOVE STATE
+// ===============================
+const savedBulk = localStorage.getItem("sidebar_swBulkMove") === "1";
+
+if (swBulk) {
+  swBulk.checked = savedBulk;
+  BULK_MODE_ON = savedBulk;
+  applyBulkMode(savedBulk);
+}
+  
+
+  if (swBulk) {
+  swBulk.addEventListener("change", () => {
+
+    // 🔐 SAVE STATE
+    localStorage.setItem(
+      "sidebar_swBulkMove",
+      swBulk.checked ? "1" : "0"
+    );
+
+    applyBulkMode(swBulk.checked);
+  });
+}
+
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const cancelBtn = document.getElementById("spinnerCancel");
+  if (cancelBtn) {
+    cancelBtn.onclick = () => {
+      CANCEL_BULK_MOVE = true;
+    };
+  }
+});

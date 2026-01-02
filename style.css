@@ -1170,3 +1170,205 @@ margin:8px 0;
 
   box-shadow:0 2px 6px rgba(0,0,0,.35);
 }
+/* ================= PRINT / PDF ================= */
+/*
+@media print {
+
+  /* hide buttons, inputs, sidebar */
+  /*
+  button,
+  .tool-btn,
+  .houses-btn,
+  .top-action-bar,
+  .sidebar,
+  .pending-btn{
+    display:none !important;
+  }
+
+  body{
+    background:#fff;
+    color:#000;
+  }
+
+  /* card layout flatten */
+  /*
+  .card,
+  .house-section{
+    box-shadow:none !important;
+    border:1px solid #000;
+  }
+
+  /* page margin */
+  /*
+  @page{
+    margin:12mm;
+  }
+
+  /* force page break after each house */
+  /*
+  .house-section{
+    page-break-after: always;
+    break-after: page;
+  }
+
+  /* header style */
+  /*
+  .house-title{
+    font-size:18px;
+    font-weight:800;
+    margin-bottom:8px;
+    border-bottom:2px solid #000;
+    padding-bottom:4px;
+  }
+
+  /* voter row clean */
+  
+  /*
+  .card{
+    font-size:13px;
+    padding:6px;
+  }
+}
+*/
+
+/* ================= PRINT MODE ================= */
+@media print {
+
+  body {
+    background: #fff !important;
+  }
+
+  /* hide heavy UI */
+  .sidebar,
+  .top-action-bar,
+  .tool-btn,
+  .name-marquee,
+  .stats-bar,
+  .filter-bar,
+  .card-actions,
+  .note-container,
+  #backToTop,
+  #dupJumpBtn,
+  #muslimJumpBtn,
+  #unverifiedMuslimJumpBtn,
+  #photoViewer,
+  canvas {
+    display: none !important;
+  }
+  #backToTop{
+  z-index:1000;
+}
+
+  /* simplify cards */
+  .card {
+    box-shadow: none !important;
+    border: 1px solid #000 !important;
+    page-break-inside: avoid;
+  }
+
+  .voter-photo {
+    display: none !important;
+  }
+
+  .house-content {
+    max-height: none !important;
+    opacity: 1 !important;
+  }
+
+  .house-section {
+    page-break-before: always;
+  }
+}
+/* ===============================
+   FLOATING BUTTON STACK ORDER
+================================ */
+
+#backToTop{
+  bottom: 20px;
+  z-index: 900;
+}
+
+#bulkMoveBtnFloating{
+  bottom: 70px;        /* ⬆ BackToTop এর উপরে */
+  z-index: 950;
+}
+
+#dupJumpBtn{
+  bottom: 130px;
+  z-index: 940;
+}
+
+#muslimJumpBtn{
+  bottom: 190px;
+  z-index: 930;
+}
+
+#unverifiedMuslimJumpBtn{
+  bottom: 250px;
+  z-index: 920;
+}
+/* ===============================
+   VOTER CHECKBOX CLEAN LOOK
+================================ */
+.voter-select{
+  position:absolute;
+  top:10px;
+  left:10px;
+  width:18px;
+  height:18px;
+  accent-color:#2563eb;
+  background:#fff;
+  border-radius:4px;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+  z-index:10;
+}
+/* ===============================
+   FLOATING BUTTON CLEAN STACK
+================================ */
+
+#backToTop{
+  bottom:20px;
+  right:20px;
+  z-index:900;
+}
+
+#bulkMoveBtnFloating{
+  bottom:80px;
+  right:20px;
+  z-index:850;
+}
+
+#dupJumpBtn{
+  bottom:140px;
+  right:20px;
+  z-index:840;
+}
+.bulk-mode-on .card{
+  outline:2px dashed #2563eb33;
+  background:#f8fbff;
+}
+.card-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+/* ===============================
+   CLEAN CHECKBOX DESIGN
+================================ */
+.card{
+  position:relative;
+}
+
+.voter-select{
+  position:absolute;
+  top:10px;
+  left:10px;
+  width:18px;
+  height:18px;
+  accent-color:#2563eb;
+  background:#fff;
+  border-radius:5px;
+  box-shadow:0 3px 8px rgba(0,0,0,.18);
+  z-index:5;
+}

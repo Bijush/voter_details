@@ -63,6 +63,10 @@
   <input type="checkbox" id="swNotes">
   <span>Show Notes</span>
 </label>
+<label class="toggle-item">
+  <input type="checkbox" id="swBulkMove">
+  <span>Bulk Move Mode</span>
+</label>
 
     <label class="toggle-item">
       <input type="checkbox" id="swShowMissing">
@@ -160,6 +164,7 @@
   ">
   🚪 Logout
 </button>
+
 </aside>
 
 
@@ -175,10 +180,10 @@
     <strong>90</strong>
   </div>
   <a href="pending.html" class="pending-btn" id="pendingBtn">
-  ⏳ Pending Voters
+  ⏳ Pending
   <span id="pendingCount" class="pending-count">0</span>
 </a>
- 
+
 </div>
 <!-- 🔢 ONLY TOTAL -->
 <div class="total-bar">
@@ -187,6 +192,9 @@
     <span id="statTotal" class="value" data-last="0">0</span>
     <span id="totalArrow" class="total-arrow"></span>
   </div>
+   <button id="exportPDFBtn" class="tool-btn">
+  🖨 Export PDF
+</button>
 </div>
 <!-- ✅ NEW MARQUEE LINE -->
 <div class="name-marquee">
@@ -344,7 +352,9 @@
   ☪️ Unverified:
   <span id="statUnverifiedMuslim" class="value">0</span>
 </div>
-          
+          <div class="stat-chip">
+  Dup Serial: <span id="statDupSerial">0</span>
+</div>
         </div>
 
 
@@ -603,6 +613,133 @@ align-items:center;justify-content:center;z-index:99999;">
   ">
   1/1
 </div>
+<!-- 🔁 DUPLICATE SERIAL JUMP BUTTON -->
+<button id="dupSerialJumpBtn"
+  style="
+    position:fixed;
+    bottom:110px;
+    right:14px;
+    padding:10px 14px;
+    border-radius:999px;
+    border:none;
+    background:#f97316;
+    color:#fff;
+    font-weight:700;
+    cursor:pointer;
+    display:none;
+    z-index:9999;
+  ">
+  🔁 Dup Serial
+</button>
+
+<!-- 🔢 DUPLICATE SERIAL COUNTER -->
+<div id="dupSerialCounter"
+  style="
+    position:fixed;
+    bottom:110px;
+    right:14px;
+    padding:6px 12px;
+    border-radius:999px;
+    background:#f97316;
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+    display:none;
+    z-index:9999;
+  ">
+  1 / 1
+</div>
+<!-- 🔁 FLOATING BULK MOVE BUTTON -->
+<button id="bulkMoveBtnFloating"
+  style="
+    position:fixed;
+    
+    right:20px;
+    padding:14px 16px;
+    border-radius:999px;
+    border:none;
+    background:#2563eb;
+    color:#fff;
+    font-size:16px;
+    font-weight:700;
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+    z-index:500;
+  ">
+  🔁 Move
+</button>
+
+
+<!-- 🔄 GLOBAL SPINNER WITH PROGRESS BAR -->
+<div id="globalSpinner" style="
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.4);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:2000;
+">
+  <div style="
+    background:#fff;
+    padding:24px 28px;
+    border-radius:16px;
+    text-align:center;
+    min-width:240px;
+  ">
+
+    <!-- Spinner -->
+    <div style="
+      width:42px;
+      height:42px;
+      margin:0 auto 12px;
+      border:5px solid #e5e7eb;
+      border-top:5px solid #2563eb;
+      border-radius:50%;
+      animation:spin 1s linear infinite;
+    "></div>
+
+    <!-- Text -->
+    <div id="spinnerText"
+      style="font-size:14px;font-weight:600;margin-bottom:8px;">
+      Processing...
+    </div>
+
+    <!-- Progress bar -->
+    <div style="height:8px;background:#e5e7eb;border-radius:999px;overflow:hidden;">
+      <div id="spinnerBar" style="
+        height:100%;
+        width:0%;
+        background:#2563eb;
+        transition:width .3s;
+      "></div>
+    </div>
+
+    <!-- ETA -->
+    <div id="spinnerEta"
+      style="font-size:12px;color:#555;margin-top:6px;">
+      Estimating time…
+    </div>
+
+    <!-- Cancel -->
+    <button id="spinnerCancel"
+      style="
+        margin-top:12px;
+        padding:6px 14px;
+        border-radius:999px;
+        border:1px solid #dc2626;
+        background:#fff;
+        color:#dc2626;
+        font-weight:600;
+      ">
+      Cancel
+    </button>
+
+  </div>
+</div>
+
+<style>
+@keyframes spin{ to{ transform:rotate(360deg); } }
+</style>
 
 <script>
 function openPhoto(src){
@@ -624,10 +761,12 @@ function closePhoto(){
 <footer class="app-footer">
   © 2025 • Polling Station 90 • Developed by Bijush Kumar Roy
 </footer>
+<!--
 <script>
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("sw.js");
 }
 </script>
+-->
 </body>
 </html>
