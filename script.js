@@ -49,6 +49,76 @@ function showSpinner(show){
   if (sp) sp.style.display = show ? "flex" : "none";
 }
 
+
+function calculateAgeFromYear(year) {
+  if (!year) return "—";
+  return new Date().getFullYear() - Number(year);
+}
+
+function syncAgeWithBirthYear(data) {
+  let changed = false;
+
+  Object.values(data).forEach(house => {
+    Object.values(house).forEach(p => {
+      if (!p.birthYear) return;
+
+      const correctAge = calculateAgeFromYear(p.birthYear);
+
+      if (p.age !== correctAge) {
+        p.age = correctAge;
+        changed = true;
+      }
+    });
+  });
+
+  if (changed) {
+    console.log("✅ Age auto-synced from birthYear");
+  }
+}
+
+// ===============================
+// 🔁 ONE-TIME CONVERT OLD AGE (2025) → BIRTH YEAR
+// ===============================
+function convertAgeToBirthYear_2025(data) {
+  const BASE_YEAR = 2025;
+  const convertedList = [];
+
+  Object.entries(data).forEach(([house, voters]) => {
+    Object.entries(voters).forEach(([key, p]) => {
+
+      if (p.birthYear) return;
+      if (!p.age) return;
+
+      const birthYear = BASE_YEAR - Number(p.age);
+      const newAge = calculateAgeFromYear(birthYear);
+
+      convertedList.push({
+        house,
+        key,
+        birthYear,
+        age: newAge
+      });
+
+      // TEMP memory update only
+      p.birthYear = birthYear;
+      p.age = newAge;
+    });
+  });
+
+  return convertedList; // ⭐ ONLY RETURN
+}
+
+async function commitConvertedBirthYear(list) {
+  for (const item of list) {
+    const { house, key, birthYear, age } = item;
+
+    await update(
+      ref(db, `voters/${house}/${key}`),
+      { birthYear, age }
+    );
+  }
+}
+
 function updateSpinner(done, total, startTime){
   const text = document.getElementById("spinnerText");
   const bar = document.getElementById("spinnerBar");
@@ -89,16 +159,6 @@ const paginationBox = document.getElementById("pagination");
       popups[i].remove();
     }
   }
-  
- 
- //document.querySelectorAll(".sidebar input[type='checkbox']").forEach(sw => {
-   // const saved = localStorage.getItem("sidebar_" + sw.id);
-   // if (saved !== null) {
-     // sw.checked = saved === "1";
-      //sw.dispatchEvent(new Event("change"));
-   // }
-  //});
-  
   
   // 🔁 RESTORE NOTE FILTER STATE
 SHOW_ONLY_NOTED = localStorage.getItem("sidebar_swNotes") === "1";
@@ -274,9 +334,6 @@ rptBtn.addEventListener("click", () => {
     }
 });
 
-
-
-
   let voterData = {};
   let allPeople = [];
   let colors = {};
@@ -292,30 +349,73 @@ let selectedVoters = {};
   let dupIndex = 0;      // pointer
   
   
-  
-
-
   // ----------------------------
 // ✅ LOAD DATA FROM FIREBASE (LIVE)
 // ----------------------------
+let CONVERSION_IN_PROGRESS = false;
+
 onValue(ref(db, "voters"), snapshot => {
 
+  if (CONVERSION_IN_PROGRESS) return; // 🔒 HARD BLOCK
+
   voterData = snapshot.val() || {};
+
+  // ===============================
+  // 🔁 ONE-TIME CONVERSION CHECK
+  // ===============================
   
-  // 🔥 CACHE SAVE
+  if (!localStorage.getItem("age2025Committed")) {
+
+    const convertedList = convertAgeToBirthYear_2025(voterData);
+
+    if (convertedList.length > 0) {
+
+      const ok = confirm(
+        `⚠️ IMPORTANT DATA UPDATE\n\n` +
+        `Old Age → Birth Year conversion detected.\n\n` +
+        `Total voters to update: ${convertedList.length}\n\n` +
+        `Do you want to COMMIT these changes permanently?`
+      );
+
+      if (ok) {
+        CONVERSION_IN_PROGRESS = true; // 🔒 lock
+        localStorage.setItem("age2025Committed", "1"); // ⭐ FIRST
+
+        commitConvertedBirthYear(convertedList).then(() => {
+          alert("✅ Data successfully committed!");
+          CONVERSION_IN_PROGRESS = false;
+        });
+
+        return; // ⛔ stop further processing now
+      } else {
+        alert("❌ Update cancelled. No data was saved.");
+        location.reload();
+        return;
+      }
+    } else {
+      localStorage.setItem("age2025Committed", "1");
+    }
+  }
+  
+  
+
+  // ===============================
+  // 🔁 NORMAL FLOW
+  // ===============================
+  syncAgeWithBirthYear(voterData);
+
   localStorage.setItem("voters_cache", JSON.stringify(voterData));
-  
+
   IS_DATA_LOADING = false;
   processData();
 
-  // ⭐ SHOW LAST UPDATED TIME INDIAN TIME
   const now = new Date().toLocaleString("en-IN", {
     timeZone: "Asia/Kolkata",
     hour12: true
   });
 
-  document.getElementById("lastUpdated").textContent =
-    "Last Updated: " + now;
+  const el = document.getElementById("lastUpdated");
+  if (el) el.textContent = "Last Updated: " + now;
 });
 
 
@@ -880,6 +980,20 @@ img.style.marginTop = "12px";
   actions.appendChild(editBtn);
   actions.appendChild(delBtn);
   
+  if (p.shiftHistory && p.shiftHistory.length) {
+
+  const historyBtn = document.createElement("button");
+  historyBtn.textContent = "📜 History";
+  historyBtn.style.cssText =
+    "flex:1;padding:6px;border-radius:8px;border:1px solid #a78bfa;background:#ede9fe;cursor:pointer;";
+
+  historyBtn.onclick = () => {
+    openMoveHistory(p);
+  };
+
+  actions.appendChild(historyBtn);
+}
+  
   // ================= NOTE BOX =================
 const noteBox = document.createElement("div");
 noteBox.classList.add("note-container");
@@ -1076,13 +1190,23 @@ if (PAGINATION_ENABLED) {
 
   const newStatus = !p.verified;
 
-  await update(ref(db, `voters/${house}/${key}`), {
-    verified: newStatus,
-    updatedAt: new Date().toLocaleString("en-IN", {
-      timeZone: "Asia/Kolkata",
-      hour12: true
-    })
-  });
+  // 🔥 age auto-sync (if birthYear exists)
+const updates = {
+  verified: newStatus,
+  updatedAt: new Date().toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+    hour12: true
+  })
+};
+
+if (p.birthYear) {
+  updates.age = calculateAgeFromYear(p.birthYear);
+}
+
+await update(
+  ref(db, `voters/${house}/${key}`),
+  updates
+);
 
   setTimeout(() => {
     isLiveUpdate = false;
@@ -2705,7 +2829,7 @@ function loadEditForm(voter) {
   evFather.value = voter.father || "";
   evMother.value = voter.mother || ""; 
   evHusband.value = voter.husband || "";
-  evAge.value    = voter.age;
+  evBirthYear.value = voter.birthYear || "";
   evGender.value = voter.gender;
   evBYP.value    = voter.byp;
   evMobile.value = voter.mobile || "";
@@ -2754,7 +2878,7 @@ window.saveEditVoter = async function () {
   const father   = evFather.value.trim();
   const mother   = evMother.value.trim();
   const husband  = evHusband.value.trim();
-  const age      = Number(evAge.value);
+  const birthYear = Number(evBirthYear.value);
   const gender   = evGender.value.trim();
   const byp      = evBYP.value.trim();
   const mobile   = evMobile.value.trim();
@@ -2783,7 +2907,8 @@ window.saveEditVoter = async function () {
     father,
     mother,
     husband,
-    age,
+    birthYear, 
+    age: calculateAgeFromYear(birthYear), // ✅ FIX
     gender,
     byp,
     mobile,
@@ -2846,14 +2971,14 @@ window.saveAddVoter = function () {
   const name    = avName.value.trim();
   const father  = avFather.value.trim();
   const husband = avHusband.value.trim();
-  const age     = Number(avAge.value) || 0;
+  const birthYear = Number(avBirthYear.value); // ⭐ ADDED
   const gender  = avGender.value.trim();
   const byp     = avBYP.value.trim();
   const mobile  = avMobile.value.trim();
 
   // ✅ BASIC VALIDATION
-  if (!serial || !house || !name) {
-    alert("Serial, House & Name are required");
+  if (!serial || !house || !name || !birthYear) {
+    alert("Serial, House, Name & Birth Year are required");
     return;
   }
 
@@ -2866,16 +2991,20 @@ window.saveAddVoter = function () {
 
   // ✅ PUSH TO FIREBASE
   push(ref(db, "voters/house_" + house), {
-  serial,
-  name,
-  father: father || "",
-  husband: husband || "",
-  age,
-  gender,
-  byp,
-  mobile,
-  updatedAt: new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata", hour12: true })
-});
+    serial,
+    name,
+    father: father || "",
+    husband: husband || "",
+    birthYear,
+    age: calculateAgeFromYear(birthYear), // ⭐ AUTO AGE
+    gender,
+    byp,
+    mobile,
+    updatedAt: new Date().toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour12: true
+    })
+  });
 
   // ✅ CLEAR FORM
   avSerial.value = "";
@@ -2883,15 +3012,15 @@ window.saveAddVoter = function () {
   avName.value = "";
   avFather.value = "";
   avHusband.value = "";
-  avAge.value = "";
+  avBirthYear.value = ""; // ⭐ ADDED
   avGender.value = "";
   avBYP.value = "";
   avMobile.value = "";
 
   closeAddVoter();
-
   alert("✅ Voter added with Serial #" + serial);
 };
+
 
 // ===============================
 // 🔁 SHIFT VOTER WITH HISTORY (STEP 1)
@@ -3239,3 +3368,38 @@ document.addEventListener("DOMContentLoaded", () => {
     };
   }
 });
+window.openMoveHistory = function (voter) {
+
+  const box = document.getElementById("moveHistoryList");
+  box.innerHTML = "";
+
+  if (!voter.shiftHistory || !voter.shiftHistory.length) {
+    box.innerHTML = "<p>No move history found.</p>";
+  } else {
+
+    voter.shiftHistory.forEach((h, i) => {
+      const div = document.createElement("div");
+      div.style.padding = "8px";
+      div.style.marginBottom = "8px";
+      div.style.border = "1px solid #e5e7eb";
+      div.style.borderRadius = "8px";
+      div.style.background = "#f8fafc";
+
+      div.innerHTML = `
+        <b>#${i + 1}</b><br>
+        🏠 <b>${h.from.replace("house_", "")}</b>
+        ➡️
+        <b>${h.to.replace("house_", "")}</b><br>
+        🕒 <small>${h.time}</small>
+      `;
+
+      box.appendChild(div);
+    });
+  }
+
+  document.getElementById("moveHistoryPopup").style.display = "flex";
+};
+
+window.closeMoveHistory = function () {
+  document.getElementById("moveHistoryPopup").style.display = "none";
+};

@@ -45,7 +45,10 @@ onValue(ref(db, "pendingVoters"), snap => {
         <div><b>Father:</b> ${p.father || "—"}</div>
         <div><b>Mother:</b> ${p.mother || "—"}</div>
         <div><b>Husband:</b> ${p.husband || "—"}</div>
-        <div><b>Age:</b> ${p.age || "—"}</div>
+      <div>
+      <b>Age:</b>
+  ${p.birthYear ? (new Date().getFullYear() - p.birthYear) : "—"}
+
         <div><b>Caste:</b> ${p.caste || "General"}</div>
         <div><b>Mobile:</b> ${p.mobile || "—"}</div>
       </div>
@@ -74,7 +77,7 @@ window.savePendingVoter = () => {
     father: pvFather.value.trim(),
     mother: pvMother.value.trim(),
     husband: pvHusband.value.trim(),
-    age: Number(pvAge.value) || "",
+    birthYear: Number(pvBirthYear.value) || "",
     caste: pvCaste.value.trim() || "General",
     mobile: pvMobile.value.trim(),
     createdAt: Date.now()
@@ -120,18 +123,26 @@ window.confirmMove = () => {
 
   // add to main voter list
   push(ref(db, "voters/" + moveData.house), {
-    serial,
-    byp,
-    name: moveData.name,
-    father: moveData.father || "",
-    mother: moveData.mother || "",
-    husband: moveData.husband || "",
-    age: moveData.age || "",
-    caste: moveData.caste || "General",
-    mobile: moveData.mobile || "",
-    verified: false,
-    addedAt: Date.now()
-  });
+  serial,
+  byp,
+  name: moveData.name,
+  father: moveData.father || "",
+  mother: moveData.mother || "",
+  husband: moveData.husband || "",
+
+  // ⭐ Birth Year is master
+  birthYear: moveData.birthYear || "",
+
+  // ⭐ Age auto-calculated from birthYear
+  age: moveData.birthYear
+    ? (new Date().getFullYear() - Number(moveData.birthYear))
+    : "",
+
+  caste: moveData.caste || "General",
+  mobile: moveData.mobile || "",
+  verified: false,
+  addedAt: Date.now()
+});
 
   // remove from pending
   remove(ref(db, "pendingVoters/" + moveKey));

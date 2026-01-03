@@ -173,7 +173,12 @@ function renderList() {
 
     <div class="line">🏠 <b>House:</b> ${v.house?.replace("house_","")}</div>
     <div class="line">🆔 <b>BYP:</b> ${v.byp || "-"}</div>
-    <div class="line">🎂 <b>Age:</b> ${v.age || "-"}</div>
+<div class="line">
+  🎂 <b>Age:</b>
+  ${v.birthYear
+    ? (new Date().getFullYear() - Number(v.birthYear))
+    : (v.age || "-")}
+</div>
     <div class="line">🚻 <b>Gender:</b> ${v.gender || "-"}</div>
     <div class="line">✔️ <b>Verified:</b> ${v.verified ? "Yes" : "No"}</div>
 
@@ -204,10 +209,35 @@ function renderList() {
 
     // ♻️ RESTORE
     div.querySelector(".restoreBtn").onclick = async () => {
-      if (!confirm("Restore this voter?")) return;
-      await set(ref(db, `voters/${v.house}/${v.originalKey || key}`), v);
-      await remove(ref(db, `deleted_voters/${key}`));
-    };
+  if (!confirm("Restore this voter?")) return;
+
+  // ⭐ Rebuild voter object safely
+  const restoredVoter = {
+    ...v,
+
+    // 🔑 Age always synced from birthYear
+    age: v.birthYear
+      ? (new Date().getFullYear() - Number(v.birthYear))
+      : v.age || "",
+
+    // (optional) mark restored time
+    restoredAt: new Date().toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour12: true
+    })
+  };
+
+  // 🔁 Restore to main voters
+  await set(
+    ref(db, `voters/${v.house}/${v.originalKey || key}`),
+    restoredVoter
+  );
+
+  // 🗑️ Remove from deleted list
+  await remove(ref(db, `deleted_voters/${key}`));
+
+  alert("✅ Voter restored successfully");
+};
 
     // ❌ PERMANENT DELETE
     div.querySelector(".permBtn").onclick = async () => {
