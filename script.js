@@ -24,6 +24,7 @@ let lastSearchQuery = "";
 let lastFilterState = null;
 let isFilterMode = false;
 let IS_DATA_LOADING = true;
+let lastScroll = 0;
 
 
 // 🔁 PAGINATION FEATURE TOGGLE
@@ -315,6 +316,7 @@ const deletedListBtn = document.getElementById("deletedBtn");
 const rptBtn = document.getElementById("toggleReportBtn");
 const rptBox = document.getElementById("reportSection");
 
+const topBar = document.querySelector(".top-action-bar");
 
 
 // ⭐ REPORT SECTION TOGGLE
@@ -1784,6 +1786,7 @@ window.addEventListener("scroll", () => {
 });
 
 
+
   if (backToTop) {
     backToTop.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -1791,6 +1794,25 @@ window.addEventListener("scroll", () => {
 
 window.addEventListener("scroll", () => {
   allowAutoHighlight = true;
+});
+
+// ===============================
+// 🔽 TOP BAR SHRINK ON SCROLL
+// ===============================
+
+
+window.addEventListener("scroll", () => {
+  const current = window.scrollY;
+
+  if (current > 80 && current > lastScroll) {
+    // 🔽 scrolling down → shrink
+    topBar?.classList.add("shrink");
+  } else {
+    // 🔼 scrolling up → normal
+    topBar?.classList.remove("shrink");
+  }
+
+  lastScroll = current;
 });
   // ----------------------------
   // BREADCRUMB UPDATE
@@ -1970,13 +1992,69 @@ window.addEventListener("scroll", () => {
     });
   });
 
+
+
+
+// print and voterList code from HERE
+
+// ================================
+// 🗳️ SIDEBAR VOTER TOOLS BUTTONS
+// ================================
+
+// 📤 Upload Voter List PDF
+const sidebarUploadPdfBtn = document.getElementById("sidebarUploadPdfBtn");
+if (sidebarUploadPdfBtn) {
+  sidebarUploadPdfBtn.addEventListener("click", () => {
+    window.open(
+      "https://voterlist.onrender.com",
+      "_blank"
+    );
+  });
+}
+
+// 🖨 Print / Export PDF (reuse existing logic)
+const sidebarPrintBtn = document.getElementById("sidebarPrintBtn");
+const exportPDFBtn   = document.getElementById("exportPDFBtn");
+
+if (sidebarPrintBtn && exportPDFBtn) {
+  sidebarPrintBtn.addEventListener("click", () => {
+    exportPDFBtn.click(); // 🔥 same window.print()
+  });
+}
+
+
+
   // 😘😘😘 SIDE BAR CODE START FROM HERE
   //-----------++++------------+++++
   
+  
+  
+  
+  // open sidebar
   toggleSidebarBtn.addEventListener("click", () => {
     sidebar.classList.add("open");
     sidebarOverlay.style.display = "block";
+    // 🔥 hide top bar
+  topBar?.classList.add("hide");
   });
+  // close SideBar
+  sidebarCloseBtn.addEventListener("click", () => {
+    sidebar.classList.remove("open");
+    sidebarOverlay.style.display = "none";
+    topBar?.classList.remove("hide");
+  });
+  
+  
+  sidebarOverlay.addEventListener("click", () => {
+    sidebar.classList.remove("open");
+    sidebarOverlay.style.display = "none";
+    topBar?.classList.remove("hide");
+  });
+  
+  
+  
+  
+  
   
   document.querySelectorAll(".sidebar input[type='checkbox']").forEach(sw => {
   sw.addEventListener("change", () => {
@@ -2212,10 +2290,8 @@ swUnverifiedMuslimJump?.addEventListener("change", () => {
   unverifiedMuslimJumpBtn.style.display =
     swUnverifiedMuslimJump.checked ? "block" : "none";
 });
- sidebarCloseBtn.addEventListener("click", () => {
-    sidebar.classList.remove("open");
-    sidebarOverlay.style.display = "none";
-  });
+
+ 
 
 
 
@@ -2338,10 +2414,7 @@ if (pageInput) {
   });
 }
 
-  sidebarOverlay.addEventListener("click", () => {
-    sidebar.classList.remove("open");
-    sidebarOverlay.style.display = "none";
-  });
+  
 
   sortBy.addEventListener("change", () => {
   sortMode = sortBy.value;

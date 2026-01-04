@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Polling Station 87</title>
+<title>Polling Station 90</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -58,6 +58,9 @@
       <input type="checkbox" id="swFilters">
       <span>Filters</span>
     </label>
+    
+    
+    
     
     <label class="toggle-item">
   <input type="checkbox" id="swNotes">
@@ -148,8 +151,56 @@
   <input type="checkbox" id="swReport">
   <span>Report Button</span>
 </label>
+
 <hr class="sb-divider">
 
+<div class="sidebar-group">
+  <h4 style="
+    margin:8px 0;
+    font-size:14px;
+    color:#334155;
+    font-weight:700;
+  ">
+    🗳️ Voter Tools
+  </h4>
+
+  <!-- 📤 Upload Voter List PDF -->
+  <button id="sidebarUploadPdfBtn"
+    style="
+      width:100%;
+      padding:10px;
+      border-radius:10px;
+      border:1px solid #93c5fd;
+      background:#dbeafe;
+      color:#1e3a8a;
+      font-size:14px;
+      font-weight:600;
+      cursor:pointer;
+      margin-bottom:8px;
+    ">
+    📤 Upload Voter List PDF
+  </button>
+
+  <!-- 🖨 Print / Export PDF -->
+  <button id="sidebarPrintBtn"
+    style="
+      width:100%;
+      padding:10px;
+      border-radius:10px;
+      border:1px solid #86efac;
+      background:#16a34a;
+      color:#fff;
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+    ">
+    🖨 Print / Export PDF
+  </button>
+</div>
+
+
+
+<hr class="sb-divider">
 <button id="logoutBtn"
   style="
     width:100%;
@@ -176,7 +227,7 @@
 
   <div class="ps-header">
     <i class="bi bi-geo-alt-fill"></i>
-    <span>Polling Station</span>
+    <span>PS</span>
     <strong>90</strong>
   </div>
   <a href="pending.html" class="pending-btn" id="pendingBtn">
@@ -185,6 +236,8 @@
 </a>
 
 </div>
+
+
 <!-- 🔢 ONLY TOTAL -->
 <div class="total-bar">
   <div class="stat-chip total-chip">
@@ -192,7 +245,7 @@
     <span id="statTotal" class="value" data-last="0">0</span>
     <span id="totalArrow" class="total-arrow"></span>
   </div>
-   <button id="exportPDFBtn" class="tool-btn">
+   <button id="exportPDFBtn" style="display:none;" class="tool-btn">
   🖨 Export PDF
 </button>
 </div>
@@ -518,7 +571,14 @@ align-items:center;justify-content:center;z-index:99999;">
     <input id="avName" placeholder="Name" style="width:100%;margin-bottom:6px">
     <input id="avFather" placeholder="Father Name" style="width:100%;margin-bottom:6px">
     <input id="avHusband" placeholder="Husband Name" style="width:100%;margin-bottom:6px">
-    <input id="avAge" placeholder="Age" type="number" style="width:100%;margin-bottom:6px">
+    
+    <input id="avBirthYear"
+       placeholder="Birth Year (e.g. 1988)"
+       type="number"
+       min="1900"
+       max="2026"
+       style="width:100%;margin-bottom:6px">
+    
     <input id="avGender" placeholder="Gender (Male/Female)" style="width:100%;margin-bottom:6px">
     <input id="avBYP" placeholder="BYP" style="width:100%;margin-bottom:6px">
     <input id="avMobile" placeholder="Mobile Number" style="width:100%;margin-bottom:10px">
@@ -562,10 +622,15 @@ align-items:center;justify-content:center;z-index:99999;">
     <label style="font-size:13px;font-weight:600;color:#374151;">Husband Name</label>
     <input id="evHusband" placeholder="Husband Name"
            style="width:100%;margin-bottom:8px">
-
-    <label style="font-size:13px;font-weight:600;color:#374151;">Age</label>
-    <input id="evAge" type="number" placeholder="Age"
-           style="width:100%;margin-bottom:8px">
+<label style="font-size:13px;font-weight:600;color:#374151;">
+  Birth Year
+</label>
+<input id="evBirthYear"
+       type="number"
+       placeholder="Birth Year (e.g. 1988)"
+       min="1900"
+       max="2026"
+       style="width:100%;margin-bottom:8px">
 
     <label style="font-size:13px;font-weight:600;color:#374151;">Gender</label>
     <input id="evGender" placeholder="Male / Female"
@@ -736,7 +801,44 @@ align-items:center;justify-content:center;z-index:99999;">
 
   </div>
 </div>
+<!-- 📜 MOVE HISTORY POPUP -->
+<div id="moveHistoryPopup"
+  style="
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.5);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:999999;
+  ">
 
+  <div style="
+    background:#fff;
+    padding:20px;
+    border-radius:16px;
+    width:90%;
+    max-width:420px;
+  ">
+    <h3 style="margin-bottom:10px;">📜 Voter Move History</h3>
+
+    <div id="moveHistoryList"
+      style="max-height:300px;overflow:auto;margin-top:10px;">
+    </div>
+
+    <button onclick="closeMoveHistory()"
+      style="
+        margin-top:12px;
+        padding:8px 14px;
+        border-radius:10px;
+        border:none;
+        background:#e5e7eb;
+        width:100%;
+      ">
+      Close
+    </button>
+  </div>
+</div>
 <style>
 @keyframes spin{ to{ transform:rotate(360deg); } }
 </style>
