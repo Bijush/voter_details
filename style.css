@@ -630,8 +630,8 @@ margin:8px 0;
 /* 🔥 FULL-WIDTH STICKY HEADER (FIXED) */
 .sticky-header{
   position: sticky;
-  top: 0;
-  z-index: 50;
+  top: 64px;
+  z-index: 100;
 
   width: 100vw;
   margin-left: calc(50% - 50vw);
