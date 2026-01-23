@@ -1,31 +1,62 @@
-const CACHE_NAME = "voter-app-cache-v1";
+// ===============================
+// 📦 CACHE CONFIG
+// ===============================
+const CACHE_NAME = "voter-app-cache-v2";
 
 const FILES_TO_CACHE = [
   "./",
   "./index.html",
   "./style.css",
-  "./script.js",
 
-  "./pending.html",
-  "./pending.js",
-  "./pending-indicator.js",
+  "./main.js",
+  "./ui.js",
+  "./render_result.js",
+  "./card.js",
+  "./pagination.js",
+  "./sidebar.js",
+  "./spinner.js",
+  "./report.js",
+
+  "./dup_muslim.js",
+  "./breadcum_confetti.js",
+  "./address_move_voter.js",
+  "./add_delete.js",
+  "./year.js",
+  "./fss.js",
+  "./caste.js",
+
+  "./offline_json_loader.js",
 
   "./login.html",
   "./deleted.html",
   "./deleted.css",
   "./deleted.js",
+
+  "./pending.html",
+  "./pending.js",
+  "./pending-indicator.js",
+
   "./manifest.json"
 ];
 
+// ===============================
+// 🔧 INSTALL
+// ===============================
 self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(FILES_TO_CACHE);
+    caches.open(CACHE_NAME).then(async cache => {
+      for (const file of FILES_TO_CACHE) {
+        try {
+          await cache.add(file);
+        } catch {}
+      }
     })
   );
-  self.skipWaiting();
 });
 
+// ===============================
+// 🔁 ACTIVATE
+// ===============================
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -34,13 +65,23 @@ self.addEventListener("activate", event => {
       )
     )
   );
-  self.clients.claim();
 });
 
+// ===============================
+// 🌐 FETCH
+// ===============================
 self.addEventListener("fetch", event => {
+
+  if (event.request.method !== "GET") return;
+
+  if (
+    event.request.url.includes("firebaseio.com") ||
+    event.request.url.includes("gstatic.com")
+  ) {
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request).then(res => {
-      return res || fetch(event.request);
-    })
+    caches.match(event.request).then(res => res || fetch(event.request))
   );
 });

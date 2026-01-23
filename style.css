@@ -30,7 +30,7 @@ body{
 .page{
   max-width:1200px;
   margin:auto;
-  padding:10px;
+  padding:5px;
   display:flex;
   gap:10px;
   align-items:flex-start;
@@ -1442,3 +1442,135 @@ margin:8px 0;
   padding: 4px 10px;
   font-size: 13px;
 }
+#debugBox{
+  display:none;
+}
+/* ===============================
+   📝 NOTE CONTAINER FIX
+=============================== */
+
+.note-container {
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5f5;
+}
+
+.note-toggle-btn {
+  background: #eef2ff;
+  color: #3730a3;
+  border: 1px solid #c7d2fe;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.note-body {
+  margin-top: 8px;
+}
+
+.note-body textarea.voter-note {
+  width: 100%;
+  min-height: 70px;
+  resize: vertical;
+  border-radius: 8px;
+  padding: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+.note-body .save-note-btn,
+.note-body .delete-note-btn {
+  margin-top: 8px;
+  margin-right: 6px;
+  padding: 6px 10px;
+  font-size: 13px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Save Note */
+.note-body .save-note-btn {
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  color: #166534;
+}
+
+/* Delete Note */
+.note-body .delete-note-btn {
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+/* Prevent note buttons inheriting card action styles */
+.card-actions button {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+/* Explicitly exclude note buttons */
+.note-container button {
+  box-shadow: none;
+}
+/* ===============================
+   📝 NOTE TEXTAREA – BIG & LINED
+=============================== */
+
+.note-body textarea.voter-note {
+  width: 100%;
+  min-height: 140px;              /* 🔥 আগের মতো বড় */
+  resize: vertical;
+
+  padding: 10px 12px;
+  font-size: 14px;
+  line-height: 24px;              /* 🔥 line spacing */
+
+  border-radius: 10px;
+  border: 1px solid #c7d2fe;
+
+  /* 🔥 LINE EFFECT */
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      #ffffff,
+      #ffffff 23px,
+      #e5e7eb 24px
+    );
+
+  font-family: "Segoe UI", system-ui, sans-serif;
+}.tool-input{
+  width:100%;
+  padding:10px 14px;
+  border-radius:12px;
+  border:1px solid #cbd5e1;
+  margin:8px 0;
+}
+.tool-btn{
+  width:100%;
+  padding:10px 14px;
+  margin:6px 0;
+  border-radius:12px;
+  border:1px solid #cbd5e1;
+  background:#f8fafc;
+  font-weight:600;
+}
+.tool-btn.danger{
+  background:#ef4444;
+  color:#fff;
+  border:none;
+}
+.tool-card{
+  background:#fff;
+  border-radius:14px;
+  padding:10px;
+  margin:8px 0;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+#filterHouseToggle{
+  display:none !important;
+}
+
