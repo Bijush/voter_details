@@ -1,11 +1,12 @@
 // ===============================
 // 📦 CACHE CONFIG
 // ===============================
-const CACHE_NAME = "voter-app-cache-v2";
+const CACHE_NAME = "voter-app-cache-v3";
 
-const FILES_TO_CACHE = [
+const STATIC_ASSETS = [
   "./",
   "./index.html",
+  "./offline.html",
   "./style.css",
 
   "./main.js",
@@ -43,14 +44,10 @@ const FILES_TO_CACHE = [
 // 🔧 INSTALL
 // ===============================
 self.addEventListener("install", event => {
+  console.log("📦 SW installing...");
+  
   event.waitUntil(
-    caches.open(CACHE_NAME).then(async cache => {
-      for (const file of FILES_TO_CACHE) {
-        try {
-          await cache.add(file);
-        } catch {}
-      }
-    })
+    caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS))
   );
 });
 
@@ -58,12 +55,16 @@ self.addEventListener("install", event => {
 // 🔁 ACTIVATE
 // ===============================
 self.addEventListener("activate", event => {
+  console.log("⚡ SW activating...");
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
-      )
-    )
+    Promise.all([
+      caches.keys().then(keys =>
+        Promise.all(
+          keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+        )
+      ),
+      self.clients.claim() // 🔥 control open tabs
+    ])
   );
 });
 
@@ -71,17 +72,44 @@ self.addEventListener("activate", event => {
 // 🌐 FETCH
 // ===============================
 self.addEventListener("fetch", event => {
-
   if (event.request.method !== "GET") return;
 
+  const req = event.request;
+
+  // ❌ Never cache Firebase / CDN
   if (
-    event.request.url.includes("firebaseio.com") ||
-    event.request.url.includes("gstatic.com")
+    req.url.includes("firebaseio.com") ||
+    req.url.includes("gstatic.com") ||
+    req.url.includes("googleapis.com")
   ) {
     return;
   }
 
+  // 🌐 HTML → Network First
+  if (req.headers.get("accept")?.includes("text/html")) {
+    event.respondWith(
+      fetch(req)
+        .then(res => {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then(c => c.put(req, clone));
+          return res;
+        })
+        .catch(() => caches.match(req).then(r => r || caches.match("./offline.html")))
+    );
+    return;
+  }
+
+  // 📦 JS / CSS / Others → Cache First
   event.respondWith(
-    caches.match(event.request).then(res => res || fetch(event.request))
+    caches.match(req).then(res => res || fetch(req))
   );
+});
+// ===============================
+// 🔔 SKIP WAITING ON USER ACTION
+// ===============================
+self.addEventListener("message", event => {
+  if (event.data?.action === "SKIP_WAITING") {
+    console.log("⚡ Skip waiting received");
+    self.skipWaiting();
+  }
 });

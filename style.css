@@ -140,16 +140,12 @@ body{
   padding:12px 12px 20px;
   border-radius:18px;
   box-shadow:0 6px 18px rgba(0,0,0,.08);
+  margin-top: 0 !important;
+
 }
 
 h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
 .subtitle{text-align:center;font-size:12px;color:#6b7280;margin-bottom:6px;}
-
-
-/* ============================================
-   STICKY SEARCH / HEADER
-============================================ */
-
 
 #search{
   width:100%;
@@ -163,8 +159,6 @@ h1{text-align:center;margin:0 0 4px;font-size:22px;font-weight:700;}
   border-color:var(--accent);
   box-shadow:0 0 0 2px rgba(37,99,235,.18);
 }
-
-
 /* ============================================
    FILTER BAR
 ============================================ */
@@ -542,7 +536,7 @@ margin:8px 0;
   display:flex;
   align-items:center;
   width:100%;
-  margin-bottom:10px;
+ /* margin-bottom:10px;*/
   position: relative;
   z-index: 10001; 
 }
@@ -641,6 +635,7 @@ margin:8px 0;
   backdrop-filter: blur(14px);
   border: 1px solid rgba(148,163,184,.45);
   border-radius: 0;
+  
 }
 /* 🔥 CENTER CONTENT INSIDE FULL-WIDTH HEADER */
 .sticky-inner{
@@ -716,6 +711,8 @@ margin:8px 0;
   margin-bottom: 0;
   border-bottom-left-radius: 14px;
   border-bottom-right-radius: 14px;
+  border-top: none !important;
+  margin-top: -6px;
 }
 /* 🔥 KILL EMPTY SPACE INSIDE STICKY HEADER */
 .compact-toolbar,
@@ -837,6 +834,7 @@ margin:8px 0;
   display:flex;
   justify-content:center;   /* ✅ CENTER FIX */
   margin:6px 0 6px;
+  margin-bottom: 0 !important;
 }
 
 .name-marquee marquee{
@@ -1570,7 +1568,56 @@ margin:8px 0;
   margin:8px 0;
   box-shadow:0 4px 12px rgba(0,0,0,.08);
 }
-#filterHouseToggle{
-  display:none !important;
+.offline-banner {
+  position: fixed;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #dc2626; /* red */
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 0 0 12px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 9999;
+  box-shadow: 0 6px 20px rgba(0,0,0,.25);
+  transition: top 0.35s ease;
 }
 
+/* show state */
+.offline-banner.show {
+  top: 0;
+}
+
+/* optional: online success flash */
+.offline-banner.online {
+  background: #16a34a; /* green */
+}
+
+.offline-inline{
+  display:none;
+  width:100%;
+  margin:6px auto;
+  padding:8px 14px;
+  border-radius:999px;
+
+  background:#fee2e2;
+  color:#7f1d1d;
+
+  font-size:13px;
+  font-weight:700;
+  text-align:center;
+
+  box-shadow:0 4px 12px rgba(220,38,38,.25);
+  border:1px solid #fecaca;
+}
+
+.offline-inline.show{
+  display:block;
+}
+
+.offline-inline.online{
+  background:#dcfce7;
+  color:#166534;
+  border-color:#86efac;
+}

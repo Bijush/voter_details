@@ -1,23 +1,24 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+  <meta charset="utf-8" />
 <title>Polling Station 90</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+rel="stylesheet"
+/>
 
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css" />
 
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#2563eb">
-
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#2563eb" />
 </head>
 
-
 <body>
-  <!--
+<!--
 <script>
   if(localStorage.getItem("isAdmin") !== "1"){
     location.href = "login.html";
@@ -26,530 +27,574 @@
 -->
 
 <div class="page">
+<!-- Overlay for mobile -->
+<div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-  <!-- Overlay for mobile -->
-  <div id="sidebarOverlay" class="sidebar-overlay">
-    
-  </div>
+<!-- SIDEBAR -->
+<aside class="sidebar">
+<button class="sidebar-close-btn">✖</button>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-  <button class="sidebar-close-btn">✖</button>
+<h2 class="sidebar-title">Controls Panel</h2>
 
-  <h2 class="sidebar-title">Controls Panel</h2>
-
-  <div class="sidebar-controls">
-
-    <label class="toggle-item">
-      <input type="checkbox" id="swFilters">
-      <span>Filters</span>
-    </label>
-    <label class="toggle-item">
-  <input type="checkbox" id="swNotes">
-  <span>Show Notes</span>
+<div class="sidebar-controls">
+<label class="toggle-item">
+<input type="checkbox" id="swFilters" />
+<span>Filters</span>
 </label>
 <label class="toggle-item">
-  <input type="checkbox" id="swBulkMove">
-  <span>Bulk Move Mode</span>
+<input type="checkbox" id="swNotes" />
+<span>Show Notes</span>
 </label>
-
-    <label class="toggle-item">
-      <input type="checkbox" id="swShowMissing">
-      <span>Missing Serials</span>
-    </label>
-    
 <label class="toggle-item">
-  <input type="checkbox" id="swHouseViewBtn">
-  <span>House View Button</span>
-</label>
-  </div>
-  <label class="toggle-item">
-  <input type="checkbox" id="swSearch">
-  <span>Search</span>
+<input type="checkbox" id="swBulkMove" />
+<span>Bulk Move Mode</span>
 </label>
 
 <label class="toggle-item">
-  <input type="checkbox" id="swAge">
-  <span>Age Filter</span>
+<input type="checkbox" id="swShowMissing" />
+<span>Missing Serials</span>
 </label>
 
 <label class="toggle-item">
-  <input type="checkbox" id="swHouse">
-  <span>House Filter</span>
+<input type="checkbox" id="swHouseViewBtn" />
+<span>House View Button</span>
+</label>
+</div>
+<label class="toggle-item">
+<input type="checkbox" id="swSearch" />
+<span>Search</span>
 </label>
 
 <label class="toggle-item">
-  <input type="checkbox" id="swMobile">
-  <span>Mobile Filter</span>
+<input type="checkbox" id="swAge" />
+<span>Age Filter</span>
 </label>
 
 <label class="toggle-item">
-  <input type="checkbox" id="swVerified">
-  <span>Verified Filter</span>
+<input type="checkbox" id="swHouse" />
+<span>House Filter</span>
 </label>
 
 <label class="toggle-item">
-  <input type="checkbox" id="swSort">
-  <span>Sort</span>
+<input type="checkbox" id="swMobile" />
+<span>Mobile Filter</span>
 </label>
 
 <label class="toggle-item">
-  <input type="checkbox" id="swAddVoter">
-  <span>Add Voter</span>
+<input type="checkbox" id="swVerified" />
+<span>Verified Filter</span>
 </label>
 
 <label class="toggle-item">
-  <input type="checkbox" id="swDeletedList">
-  <span>VIEW DELETED LIST</span>
+<input type="checkbox" id="swSort" />
+<span>Sort</span>
 </label>
 
 <label class="toggle-item">
-  <input type="checkbox" id="swStats">
-  <span>Stats</span>
+<input type="checkbox" id="swAddVoter" />
+<span>Add Voter</span>
 </label>
 
 <label class="toggle-item">
-  <input type="checkbox" id="swMuslimJump">
-  <span>Muslim Jump</span>
+<input type="checkbox" id="swDeletedList" />
+<span>VIEW DELETED LIST</span>
 </label>
 
 <label class="toggle-item">
-  <input type="checkbox" id="swUnverifiedMuslimJump">
-  <span>Unverified Muslim</span>
-</label>
-
-
-<label class="toggle-item">
-  <input type="checkbox" id="swReset">
-  <span>Reset Button</span>
+<input type="checkbox" id="swStats" />
+<span>Stats</span>
 </label>
 
 <label class="toggle-item">
-  <input type="checkbox" id="swPagination">
-  <span>Pagination</span>
+<input type="checkbox" id="swMuslimJump" />
+<span>Muslim Jump</span>
 </label>
 
 <label class="toggle-item">
-  <input type="checkbox" id="swReport">
-  <span>Report Button</span>
+<input type="checkbox" id="swUnverifiedMuslimJump" />
+<span>Unverified Muslim</span>
 </label>
 
-<hr class="sb-divider">
+<label class="toggle-item">
+<input type="checkbox" id="swReset" />
+<span>Reset Button</span>
+</label>
+
+<label class="toggle-item">
+<input type="checkbox" id="swPagination" />
+<span>Pagination</span>
+</label>
+
+<label class="toggle-item">
+<input type="checkbox" id="swReport" />
+<span>Report Button</span>
+</label>
+
+<hr class="sb-divider" />
 
 <div class="sidebar-group">
-  <h4 style="
-    margin:8px 0;
-    font-size:14px;
-    color:#334155;
-    font-weight:700;
-  ">
-    🗳️ Voter Tools
-  </h4>
+<h4
+style="
+margin: 8px 0;
+font-size: 14px;
+color: #334155;
+font-weight: 700;
+"
+>
+🗳️ Voter Tools
+</h4>
 
-  <!-- 📤 Upload Voter List PDF -->
-  <button id="sidebarUploadPdfBtn"
-    style="
-      width:100%;
-      padding:10px;
-      border-radius:10px;
-      border:1px solid #93c5fd;
-      background:#dbeafe;
-      color:#1e3a8a;
-      font-size:14px;
-      font-weight:600;
-      cursor:pointer;
-      margin-bottom:8px;
-    ">
-    📤 Upload Voter List PDF
-  </button>
-  <hr class="sb-divider">
-<button id="sidebarHolding"
-  style="
-    width:100%;
-    padding:10px;
-    border-radius:10px;
-    border:1px solid #fbbf24;
-    background:#fef3c7;
-    color:#92400e;
-    font-size:14px;
-    font-weight:700;
-    cursor:pointer;
-    margin-top:8px;
-  ">
-  🏠 Go Holding
+<!-- 📤 Upload Voter List PDF -->
+<button
+id="sidebarUploadPdfBtn"
+style="
+width: 100%;
+padding: 10px;
+border-radius: 10px;
+border: 1px solid #93c5fd;
+background: #dbeafe;
+color: #1e3a8a;
+font-size: 14px;
+font-weight: 600;
+cursor: pointer;
+margin-bottom: 8px;
+"
+>
+📤 Upload Voter List PDF
 </button>
-<hr class="sb-divider">
-  <!-- 🖨 Print / Export PDF -->
-  <button id="sidebarPrintBtn"
-    style="
-      width:100%;
-      padding:10px;
-      border-radius:10px;
-      border:1px solid #86efac;
-      background:#16a34a;
-      color:#fff;
-      font-size:14px;
-      font-weight:700;
-      cursor:pointer;
-    ">
-    🖨 Print / Export PDF
-  </button>
-<hr class="sb-divider">
+<hr class="sb-divider" />
+<button
+id="sidebarHolding"
+style="
+width: 100%;
+padding: 10px;
+border-radius: 10px;
+border: 1px solid #fbbf24;
+background: #fef3c7;
+color: #92400e;
+font-size: 14px;
+font-weight: 700;
+cursor: pointer;
+margin-top: 8px;
+"
+>
+🏠 Go Holding
+</button>
+<hr class="sb-divider" />
+<!-- 🖨 Print / Export PDF -->
+<button
+id="sidebarPrintBtn"
+style="
+width: 100%;
+padding: 10px;
+border-radius: 10px;
+border: 1px solid #86efac;
+background: #16a34a;
+color: #fff;
+font-size: 14px;
+font-weight: 700;
+cursor: pointer;
+"
+>
+🖨 Print / Export PDF
+</button>
+<hr class="sb-divider" />
 
-<button id="clearOfflineCacheBtn"
-  style="
-    width:100%;
-    padding:10px;
-    border-radius:12px;
-    border:1px solid #fecaca;
-    background:#fee2e2;
-    color:#7f1d1d;
-    font-size:14px;
-    font-weight:700;
-    cursor:pointer;
-  ">
-  🧹 Clear Offline Cache
+<button
+id="clearOfflineCacheBtn"
+style="
+width: 100%;
+padding: 10px;
+border-radius: 12px;
+border: 1px solid #fecaca;
+background: #fee2e2;
+color: #7f1d1d;
+font-size: 14px;
+font-weight: 700;
+cursor: pointer;
+"
+>
+🧹 Clear Offline Cache
 </button>
-<hr class="sb-divider">
-<button id="updateAllAddressBtn"
-  style="
-    width:100%;
-    padding:10px;
-    border-radius:10px;
-    border:1px solid #fbbf24;
-    background:#fef3c7;
-    color:#92400e;
-    font-size:14px;
-    font-weight:700;
-    cursor:pointer;
-    margin-top:8px;
-  ">
-  🏠 Update Address (All Voters)
+<hr class="sb-divider" />
+<button
+id="updateAllAddressBtn"
+style="
+width: 100%;
+padding: 10px;
+border-radius: 10px;
+border: 1px solid #fbbf24;
+background: #fef3c7;
+color: #92400e;
+font-size: 14px;
+font-weight: 700;
+cursor: pointer;
+margin-top: 8px;
+"
+>
+🏠 Update Address (All Voters)
 </button>
-<hr class="sb-divider">
-<button id="fixSelectedAddressBtn"
-  style="
-    width:100%;
-    padding:10px;
-    border-radius:10px;
-    border:1px solid #0ea5e9;
-    background:#e0f2fe;
-    color:#075985;
-    font-size:14px;
-    font-weight:700;
-    cursor:pointer;
-    margin-top:8px;
-  ">
-  🏠 Fix Address (Selected)
+<hr class="sb-divider" />
+<button
+id="fixSelectedAddressBtn"
+style="
+width: 100%;
+padding: 10px;
+border-radius: 10px;
+border: 1px solid #0ea5e9;
+background: #e0f2fe;
+color: #075985;
+font-size: 14px;
+font-weight: 700;
+cursor: pointer;
+margin-top: 8px;
+"
+>
+🏠 Fix Address (Selected)
 </button>
 </div>
-<hr class="sb-divider">
-<button id="logoutBtn"
-  style="
-    width:100%;
-    padding:12px;
-    border-radius:12px;
-    border:none;
-    background:#dc2626;
-    color:#fff;
-    font-size:15px;
-    font-weight:700;
-    cursor:pointer;
-  ">
-  🚪 Logout
+<hr class="sb-divider" />
+<button
+id="logoutBtn"
+style="
+width: 100%;
+padding: 12px;
+border-radius: 12px;
+border: none;
+background: #dc2626;
+color: #fff;
+font-size: 15px;
+font-weight: 700;
+cursor: pointer;
+"
+>
+🚪 Logout
 </button>
-
 </aside>
 
+<!-- Toggle -->
+<div class="top-action-bar">
+<button id="toggleSidebarBtn" class="houses-btn">☰ Houses</button>
 
-  <!-- Toggle -->
-  <div class="top-action-bar">
-  <button id="toggleSidebarBtn" class="houses-btn">
-    ☰ Houses
-  </button>
-
-  <div class="ps-header">
-    <i class="bi bi-geo-alt-fill"></i>
-    <span>PS</span>
-    <strong>90</strong>
-  </div>
-  <a href="pending.html" class="pending-btn" id="pendingBtn">
-  ⏳ Pending
-  <span id="pendingCount" class="pending-count">0</span>
-</a>
-
+<div class="ps-header">
+<i class="bi bi-geo-alt-fill"></i>
+<span>PS</span>
+<strong>90</strong>
 </div>
-
+<a href="pending.html" class="pending-btn" id="pendingBtn">
+⏳ Pending
+<span id="pendingCount" class="pending-count">0</span>
+</a>
+</div>
+<!-- ✅ OFFLINE BANNER HERE -->
+<div id="offlineBanner" class="offline-inline"></div>
 
 <!-- 🔢 ONLY TOTAL -->
 <div class="total-bar">
-  <div class="stat-chip total-chip">
-    Total:
-    <span id="statTotal" class="value" data-last="0">0</span>
-    <span id="totalArrow" class="total-arrow"></span>
-  </div>
-   <button id="exportPDFBtn" style="display:none;" class="tool-btn">
-  🖨 Export PDF
+<div class="stat-chip total-chip">
+Total:
+<span id="statTotal" class="value" data-last="0">0</span>
+<span id="totalArrow" class="total-arrow"></span>
+</div>
+<button id="exportPDFBtn" style="display: none" class="tool-btn">
+🖨 Export PDF
 </button>
 </div>
 <!-- ✅ NEW MARQUEE LINE -->
 <div class="name-marquee">
-  <marquee behavior="scroll" direction="left" scrollamount="4">
-    ✨ BIJUSH KUMAR ROY ✨
-  </marquee>
+<marquee behavior="scroll" direction="left" scrollamount="4">
+✨ MR BIJUSH KUMAR ROY ✨
+</marquee>
 </div>
-  <!-- MAIN -->
-  <main class="main">
-    <div class="card-main">
-     <!-- ⭐ STICKY GLASS HEADER (ALL INSIDE HERE) -->
-      <div class="sticky-header">
-           <div class="sticky-inner">
-
-        <!-- BREADCRUMB -->
-        <div id="breadcrumb" class="breadcrumb">
-          <i class="bi bi-house-door-fill"></i><span>Home</span>
-          <i class="bi bi-chevron-right"></i>
-          <i class="bi bi-geo-alt-fill"></i><span>Polling Station</span>
-          <i class="bi bi-chevron-right"></i>
-          <i class="bi bi-houses-fill"></i>
-          <strong id="breadcrumbHouse">All Houses</strong>
-        </div>
-        
-        
-        
-        <div class="compact-toolbar">
-
-  <div class="toolbar-row">
-
-  <button id="openAddVoter"
-    class="tool-btn"
-    style="background:#22c55e;color:#fff;">
-    ➕ Add Voter
-  </button>
-
-  <button id="deletedBtn" class="tool-btn danger">
-    🗑️ VIEW DELETED LIST
-  </button>
-
+<!-- MAIN -->
+<main class="main">
+<div class="card-main">
+<!-- ⭐ STICKY GLASS HEADER (ALL INSIDE HERE) -->
+<div class="sticky-header">
+<div class="sticky-inner">
+<!-- BREADCRUMB -->
+<div id="breadcrumb" class="breadcrumb">
+<i class="bi bi-house-door-fill"></i><span>Home</span>
+<i class="bi bi-chevron-right"></i>
+<i class="bi bi-geo-alt-fill"></i><span>Polling Station</span>
+<i class="bi bi-chevron-right"></i>
+<i class="bi bi-houses-fill"></i>
+<strong id="breadcrumbHouse">All Houses</strong>
 </div>
 
-  <select id="filterHouseToggle" class="tool-select" style="display:none;">
-    <option value="">House View</option>
-    <option value="off">Off All Houses</option>
-    <option value="on">On All Houses</option>
-  </select>
+<div class="compact-toolbar">
+<div class="toolbar-row">
+<button
+id="openAddVoter"
+class="tool-btn"
+style="background: #22c55e; color: #fff"
+>
+➕ Add Voter
+</button>
 
+<button id="deletedBtn" class="tool-btn danger">
+🗑️ VIEW DELETED LIST
+</button>
 </div>
-        
-       <!-- FILTERS -->
-        <div class="filter-bar" id="filterBar">
-    <select id="filterAge">
-      <option value="">Age</option>
-      <option value="18-25">18–25</option>
-      <option value="26-40">26–40</option>
-      <option value="41-60">41–60</option>
-      <option value="60-200">60+</option>
-    </select>
 
-    <input id="filterHouse" placeholder="House (e.g. 1-30)" 
-       style="flex:1 1 120px;min-width:110px;padding:7px 9px;
-              border-radius:999px;border:1px solid #d1d5db;
-              background:#f9fafb;font-size:12px;">
+<select
+id="filterHouseToggle"
+class="tool-select"
+style="display: none"
+>
+<option value="">House View</option>
+<option value="off">Off All Houses</option>
+<option value="on">On All Houses</option>
+</select>
+</div>
 
-    <select id="filterMobile">
-      <option value="">Mobile</option>
-      <option value="has">Has Mobile</option>
-      <option value="none">No Mobile</option>
-    </select>
-    
-    
-    <select id="filterVerified">
-  <option value="">Verified</option>
-  <option value="yes">Verified Only</option>
-  <option value="no">Unverified Only</option>
+<!-- FILTERS -->
+<div class="filter-bar" id="filterBar">
+<select id="filterAge">
+<option value="">Age</option>
+<option value="18-25">18–25</option>
+<option value="26-40">26–40</option>
+<option value="41-60">41–60</option>
+<option value="60-200">60+</option>
 </select>
 
-    <!-- ⭐ NEW: SORT DROPDOWN -->
-    <select id="sortBy">
-      <option value="default">Default</option>
+<input
+id="filterHouse"
+placeholder="House (e.g. 1-30)"
+style="
+flex: 1 1 120px;
+min-width: 110px;
+padding: 7px 9px;
+border-radius: 999px;
+border: 1px solid #d1d5db;
+background: #f9fafb;
+font-size: 12px;
+"
+/>
+
+<select id="filterMobile">
+<option value="">Mobile</option>
+<option value="has">Has Mobile</option>
+<option value="none">No Mobile</option>
+</select>
+
+<select id="filterVerified">
+<option value="">Verified</option>
+<option value="yes">Verified Only</option>
+<option value="no">Unverified Only</option>
+</select>
+
+<!-- ⭐ NEW: SORT DROPDOWN -->
+<select id="sortBy">
+<option value="default">Default</option>
 <option value="serial-asc">Serial: Low → High</option>
 <option value="serial-desc">Serial: High → Low</option>
-    </select>
+</select>
 </div>
 
-       
 <!-- 🔽 TOGGLE AREA START -->
 
-<div id="filterToggleArea" style="display:none;">
-    
-    
-    
-        <!-- SEARCH -->
-        <input id="search" type="text" placeholder="Search by name / house / serial / BYP…">
-        
-        
-        
-        
-        <!-- Report Showing buttong -->
-        
-        <button id="toggleReportBtn" 
-        style="margin-top:10px;padding:8px 12px;
-        border-radius:8px;border:1px solid #444;">
+<div id="filterToggleArea" style="display: none">
+<!-- SEARCH -->
+<input
+id="search"
+type="text"
+placeholder="Search by name / house / serial / BYP…"
+/>
+
+<!-- Report Showing buttong -->
+
+<button
+id="toggleReportBtn"
+style="
+margin-top: 10px;
+padding: 8px 12px;
+border-radius: 8px;
+border: 1px solid #444;
+"
+>
 📊 Show Report
 </button>
 
-
 <!-- For hide some time  -->
 
-
-<button onclick="showMissingSerials()" 
-        style="padding:8px 12px;border-radius:8px;border:1px solid #888;margin:6px 0;" id="showMissing">
-  🔍 Show Missing Serials
+<button
+onclick="showMissingSerials()"
+style="
+padding: 8px 12px;
+border-radius: 8px;
+border: 1px solid #888;
+margin: 6px 0;
+"
+id="showMissing"
+>
+🔍 Show Missing Serials
 </button>
 
-
-       
-
-        <!-- STATS -->
-        <div class="stats-bar">
-          
-          <div class="stat-chip">Male: <span id="statMale" class="value">0</span></div>
-          <div class="stat-chip">Female: <span id="statFemale" class="value">0</span></div>
-          
-<div class="stat-chip">Houses: <span id="statHouses" class="value">0</span></div>
-          <div class="stat-chip">SC: <span id="statSC" class="value">0</span></div>
-          <div class="stat-chip">OBC: <span id="statOBC" class="value">0</span></div>
-          
-          <div class="stat-chip stat-st" >ST: <span id="statST" class="value">0</span></div>
-          
-          <div class="stat-chip">
-  General: <span id="statGeneral" class="value">0</span>
+<!-- STATS -->
+<div class="stats-bar">
+<div class="stat-chip">
+Male: <span id="statMale" class="value">0</span>
 </div>
-          <div class="stat-chip">Muslim: <span id="statMuslim" class="value">0</span></div>
+<div class="stat-chip">
+Female: <span id="statFemale" class="value">0</span>
+</div>
 
-          <div class="stat-chip stat-dup">Duplicate: <span id="statDup" class="value">0</span></div>
-          
-          <div class="stat-chip stat-verified">
-  Verified: <span id="statVerified" class="value">0</span>
+<div class="stat-chip">
+Houses: <span id="statHouses" class="value">0</span>
+</div>
+<div class="stat-chip">
+SC: <span id="statSC" class="value">0</span>
+</div>
+<div class="stat-chip">
+OBC: <span id="statOBC" class="value">0</span>
+</div>
+
+<div class="stat-chip stat-st">
+ST: <span id="statST" class="value">0</span>
+</div>
+
+<div class="stat-chip">
+General: <span id="statGeneral" class="value">0</span>
+</div>
+<div class="stat-chip">
+Muslim: <span id="statMuslim" class="value">0</span>
+</div>
+
+<div class="stat-chip stat-dup">
+Duplicate: <span id="statDup" class="value">0</span>
+</div>
+
+<div class="stat-chip stat-verified">
+Verified: <span id="statVerified" class="value">0</span>
 </div>
 
 <div class="stat-chip stat-unverified">
-  Unverified: <span id="statUnverified" class="value">0</span>
+Unverified: <span id="statUnverified" class="value">0</span>
 </div>
 <div class="stat-chip stat-vmuslim">
-  ☪️ Verified-Muslim:
-  <span id="statVerifiedMuslim" class="value">0</span>
+☪️ Verified-Muslim:
+<span id="statVerifiedMuslim" class="value">0</span>
 </div>
 
 <div class="stat-chip stat-umuslim">
-  ☪️ Unverified:
-  <span id="statUnverifiedMuslim" class="value">0</span>
+☪️ Unverified:
+<span id="statUnverifiedMuslim" class="value">0</span>
 </div>
-          <div class="stat-chip">
-  Dup Serial: <span id="statDupSerial">0</span>
+<div class="stat-chip">
+Dup Serial: <span id="statDupSerial">0</span>
 </div>
-        </div>
+</div>
 
-
-<button id="resetFiltersBtn"
-        style="margin-top:8px;padding:8px 14px;border-radius:10px;
-        background:#f87171;color:#fff;border:none;cursor:pointer;">
-  🔄 Reset Filters
+<button
+id="resetFiltersBtn"
+style="
+margin-top: 8px;
+padding: 8px 14px;
+border-radius: 10px;
+background: #f87171;
+color: #fff;
+border: none;
+cursor: pointer;
+"
+>
+🔄 Reset Filters
 </button>
-
 </div>
 </div>
 <!-- 🔼 TOGGLE AREA END -->
-
 </div>
 
+<!-- ⭐ / sticky-header ends -->
 
-      
-      <!-- ⭐ / sticky-header ends -->
-      
-      <div id="lastUpdated"
-     style="font-size:13px;color:#2563eb;margin-top:6px;font-weight:600;">
+<div
+id="lastUpdated"
+style="
+font-size: 13px;
+color: #2563eb;
+margin-top: 6px;
+font-weight: 600;
+"
+></div>
+
+<!-- ⭐ REPORT SECTION -->
+<div id="reportSection" style="display: none">
+<!-- 📊 Survey Report Box -->
+<div id="surveyReportBox" class="report-card">
+<h3 class="report-title">
+📊 Survey Report
+<span class="report-icons">
+<i class="bi bi-pencil-square"></i>
+<i class="bi bi-trash3"></i>
+</span>
+</h3>
+
+<ul class="report-list">
+<li>🏠 Total Houses: <strong id="rptHouse">0</strong></li>
+<li>🧑‍🤝‍🧑 Total Voters: <strong id="rptVoters">0</strong></li>
+<li>🆕 New Voters Today: <strong id="rptNew">0</strong></li>
+<li>🔄 Shift Voters: <strong id="rptShift">0</strong></li>
+</ul>
+
+<h3 class="report-subtitle">🆕 Daily New Voter List</h3>
+<ul id="dailyReportList" class="styled-list"></ul>
 </div>
-      
-      <!-- ⭐ REPORT SECTION -->
-<div id="reportSection" style="display:none;">
 
-  <!-- 📊 Survey Report Box -->
-  <div id="surveyReportBox" class="report-card">
-    <h3 class="report-title">
-      📊 Survey Report
-      <span class="report-icons">
-        <i class="bi bi-pencil-square"></i>
-        <i class="bi bi-trash3"></i>
-      </span>
-    </h3>
+<!-- ➕ Add New Voter Button -->
+<button id="addNewVoterBtn" class="styled-add-btn">
+➕ Add New Voter
+</button>
 
-    <ul class="report-list">
-      <li>🏠 Total Houses: <strong id="rptHouse">0</strong></li>
-      <li>🧑‍🤝‍🧑 Total Voters: <strong id="rptVoters">0</strong></li>
-      <li>🆕 New Voters Today: <strong id="rptNew">0</strong></li>
-      <li>🔄 Shift Voters: <strong id="rptShift">0</strong></li>
-    </ul>
+<!-- 🔁 Shift Voter Section -->
+<h3 class="report-subtitle" style="margin-top: 15px">
+🔁 Daily Shift Voter List
+</h3>
 
-    <h3 class="report-subtitle">🆕 Daily New Voter List</h3>
-    <ul id="dailyReportList" class="styled-list"></ul>
-  </div>
+<ul id="dailyShiftList" class="styled-list shift-list"></ul>
 
-  <!-- ➕ Add New Voter Button -->
-  <button id="addNewVoterBtn" class="styled-add-btn">
-    ➕ Add New Voter
-  </button>
+<!-- ➕ Add Shift Voter Button -->
+<button id="addShiftVoterBtn" class="styled-add-btn">
+➕ Add Shift Voter
+</button>
 
-  <!-- 🔁 Shift Voter Section -->
-  <h3 class="report-subtitle" style="margin-top:15px;">
-    🔁 Daily Shift Voter List
-  </h3>
+<h3 class="report-subtitle" style="margin-top: 20px">
+📊 Voter Charts
+</h3>
 
-  <ul id="dailyShiftList" class="styled-list shift-list"></ul>
+<canvas id="genderChart" style="margin-top: 20px"></canvas>
+<canvas id="ageChart" style="margin-top: 20px"></canvas>
 
-  <!-- ➕ Add Shift Voter Button -->
-  <button id="addShiftVoterBtn" class="styled-add-btn">
-    ➕ Add Shift Voter
-  </button>
-
-<h3 class="report-subtitle" style="margin-top:20px;">📊 Voter Charts</h3>
-
-<canvas id="genderChart" style="margin-top:20px;"></canvas>
-<canvas id="ageChart" style="margin-top:20px;"></canvas>
-
-<canvas id="casteChart" style="margin-top:20px;"></canvas>
+<canvas id="casteChart" style="margin-top: 20px"></canvas>
 </div>
-      <!-- RESULTS -->
-      <div id="loadingSkeleton" class="loading-skeleton">
-  Loading voters...
+<!-- RESULTS -->
+<div id="loadingSkeleton" class="loading-skeleton">
+Loading voters...
 </div>
 
 <div id="results"></div>
 
-
-<div id="pagination" style="text-align:center;margin:20px 0;">
-  <button id="prevPage" type="button">⬅ Prev</button>
-  <span id="pageInfo"></span>
-  <button id="nextPage" type="button">Next ➡</button>
-  <input
-  type="number"
-  id="pageInput"
-  min="1"
-  placeholder="Page"
-  style="
-    width:70px;
-    padding:6px;
-    border-radius:6px;
-    border:1px solid #cbd5e1;
-    text-align:center;
-  "
+<div id="pagination" style="text-align: center; margin: 20px 0">
+<button id="prevPage" type="button">⬅ Prev</button>
+<span id="pageInfo"></span>
+<button id="nextPage" type="button">Next ➡</button>
+<input
+type="number"
+id="pageInput"
+min="1"
+placeholder="Page"
+style="
+width: 70px;
+padding: 6px;
+border-radius: 6px;
+border: 1px solid #cbd5e1;
+text-align: center;
+"
 />
 
 <button id="goPageBtn">Go</button>
 </div>
-      
-    </div>
-  </main>
+</div>
+</main>
 </div>
 
 <!-- Back buttons -->
@@ -560,430 +605,854 @@
 
 <!-- Photo viewer -->
 <div id="photoViewer" onclick="closePhoto()">
-  <img id="fullPhoto">
+<img id="fullPhoto" />
 </div>
 
+<div
+id="newVoterPopup"
+style="
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0, 0, 0, 0.5);
+display: none;
+justify-content: center;
+align-items: center;
+z-index: 999999;
+"
+>
+<div
+style="
+background: #fff;
+padding: 20px;
+border-radius: 12px;
+width: 85%;
+max-width: 400px;
+"
+>
+<h3>Add New Voter</h3>
 
-<div id="newVoterPopup" style="
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  background:rgba(0,0,0,.5);display:none;justify-content:center;align-items:center;z-index:999999;">
-  
-  <div style="background:#fff;padding:20px;border-radius:12px;width:85%;max-width:400px;">
-    <h3>Add New Voter</h3>
+<input
+id="nvName"
+placeholder="Name"
+style="width: 100%; margin-bottom: 6px; padding: 8px"
+/>
+<input
+id="nvHouse"
+placeholder="House Number"
+style="width: 100%; margin-bottom: 6px; padding: 8px"
+/>
+<input
+id="nvFather"
+placeholder="Father / Husband Name"
+style="width: 100%; margin-bottom: 6px; padding: 8px"
+/>
 
-    <input id="nvName" placeholder="Name" style="width:100%;margin-bottom:6px;padding:8px;">
-    <input id="nvHouse" placeholder="House Number" style="width:100%;margin-bottom:6px;padding:8px;">
-    <input id="nvFather" placeholder="Father / Husband Name" style="width:100%;margin-bottom:6px;padding:8px;">
-
-    <button onclick="saveNewVoter()" 
-    style="padding:10px;width:100%;border-radius:8px;background:#2563eb;color:#fff;">
-      Save
-    </button>
-  </div>
-
+<button
+onclick="saveNewVoter()"
+style="
+padding: 10px;
+width: 100%;
+border-radius: 8px;
+background: #2563eb;
+color: #fff;
+"
+>
+Save
+</button>
 </div>
 </div>
 
 <!-- SHIFT VOTER POPUP -->
 <div id="shiftVoterPopup" class="popup-overlay">
-  <div class="popup-box">
-    <h3>Add Shift Voter</h3>
-    <input id="svName" type="text" placeholder="Enter name" class="popup-input">
-    <div class="popup-actions">
-      <button class="popup-btn" onclick="saveShiftVoter()">Save</button>
-      <button class="popup-btn close" onclick="document.getElementById('shiftVoterPopup').style.display='none'">Cancel</button>
-    </div>
-  </div>
+<div class="popup-box">
+<h3>Add Shift Voter</h3>
+<input
+id="svName"
+type="text"
+placeholder="Enter name"
+class="popup-input"
+/>
+<div class="popup-actions">
+<button class="popup-btn" onclick="saveShiftVoter()">Save</button>
+<button
+class="popup-btn close"
+onclick="document.getElementById('shiftVoterPopup').style.display='none'"
+>
+Cancel
+</button>
+</div>
+</div>
 </div>
 
 <!-- Add voters popup -->
 
-<div id="addVoterPopup" style="
-display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);
-align-items:center;justify-content:center;z-index:99999;">
+<div
+id="addVoterPopup"
+style="
+display: none;
+position: fixed;
+inset: 0;
+background: rgba(0, 0, 0, 0.5);
+align-items: center;
+justify-content: center;
+z-index: 99999;
+"
+>
+<div
+style="
+background: #fff;
+padding: 20px;
+border-radius: 16px;
+width: 320px;
+"
+>
+<h3 style="margin-bottom: 10px">➕ Add New Voter</h3>
 
-  <div style="background:#fff;padding:20px;border-radius:16px;width:320px;">
-    <h3 style="margin-bottom:10px;">➕ Add New Voter</h3>
-    
-<input id="avSerial" placeholder="Serial Number" type="number"
-       style="width:100%;margin-bottom:6px">
-    <input id="avHouse" placeholder="House Number" style="width:100%;margin-bottom:6px">
-    <input id="avName" placeholder="Name" style="width:100%;margin-bottom:6px">
-    <input id="avFather" placeholder="Father Name" style="width:100%;margin-bottom:6px">
-    <input id="avHusband" placeholder="Husband Name" style="width:100%;margin-bottom:6px">
-    
-    <input id="avBirthYear"
-       placeholder="Birth Year (e.g. 1988)"
-       type="number"
-       min="1900"
-       max="2026"
-       style="width:100%;margin-bottom:6px">
-    
-    <input id="avGender" placeholder="Gender (Male/Female)" style="width:100%;margin-bottom:6px">
-    <input id="avBYP" placeholder="BYP" style="width:100%;margin-bottom:6px">
-    <input id="avMobile" placeholder="Mobile Number" style="width:100%;margin-bottom:10px">
+<input
+id="avSerial"
+placeholder="Serial Number"
+type="number"
+style="width: 100%; margin-bottom: 6px"
+/>
+<input
+id="avHouse"
+placeholder="House Number"
+style="width: 100%; margin-bottom: 6px"
+/>
+<input
+id="avName"
+placeholder="Name"
+style="width: 100%; margin-bottom: 6px"
+/>
+<input
+id="avFather"
+placeholder="Father Name"
+style="width: 100%; margin-bottom: 6px"
+/>
+<input
+id="avMother"
+placeholder="Mother Name"
+style="width: 100%; margin-bottom: 6px"
+/>
+<input
+id="avHusband"
+placeholder="Husband Name"
+style="width: 100%; margin-bottom: 6px"
+/>
 
-    <div style="display:flex;gap:10px;">
-      <button onclick="saveAddVoter()" style="flex:1;background:#22c55e;color:#fff;border:none;padding:8px;border-radius:10px;">Save</button>
-      <button onclick="closeAddVoter()" style="flex:1;background:#e5e7eb;border:none;padding:8px;border-radius:10px;">Cancel</button>
-    </div>
-  </div>
+<input
+id="avBirthYear"
+placeholder="Birth Year (e.g. 1988)"
+type="number"
+min="1900"
+max="2026"
+style="width: 100%; margin-bottom: 6px"
+/>
+
+<select
+id="avGender"
+style="width: 100%; margin-bottom: 6px"
+>
+<option value="">Select Gender</option>
+<option value="Male">Male</option>
+<option value="Female">Female</option>
+</select>
+
+<input
+id="avBYP"
+placeholder="BYP"
+style="width: 100%; margin-bottom: 6px"
+/>
+<input
+id="avMobile"
+placeholder="Mobile Number"
+style="width: 100%; margin-bottom: 10px"
+/>
+
+<div style="display: flex; gap: 10px">
+<button
+onclick="saveAddVoter()"
+style="
+flex: 1;
+background: #22c55e;
+color: #fff;
+border: none;
+padding: 8px;
+border-radius: 10px;
+"
+>
+Save
+</button>
+<button
+onclick="closeAddVoter()"
+style="
+flex: 1;
+background: #e5e7eb;
+border: none;
+padding: 8px;
+border-radius: 10px;
+"
+>
+Cancel
+</button>
+</div>
+</div>
 </div>
 
 <!-- EDIT VOTER POPUP -->
 
-<div id="editVoterPopup" style="
-display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);
-align-items:center;justify-content:center;z-index:99999;">
+<div
+id="editVoterPopup"
+style="
+display: none;
+position: fixed;
+inset: 0;
+background: rgba(0, 0, 0, 0.5);
+align-items: center;
+justify-content: center;
+z-index: 99999;
+"
+>
+<div
+style="
+background: #fff;
+padding: 20px;
+border-radius: 16px;
+width: 320px;
+"
+>
+<h3 style="margin-bottom: 10px">✏️ Edit Voter</h3>
 
-  <div style="background:#fff;padding:20px;border-radius:16px;width:320px;">
-    <h3 style="margin-bottom:10px;">✏️ Edit Voter</h3>
+<label style="font-size: 13px; font-weight: 600; color: #374151"
+>Serial Number</label
+>
+<input
+id="evSerial"
+type="number"
+placeholder="Serial Number"
+style="width: 100%; margin-bottom: 8px"
+/>
 
+<label style="font-size: 13px; font-weight: 600; color: #374151"
+>House Number</label
+>
+<input
+id="evHouse"
+placeholder="House Number"
+style="width: 100%; margin-bottom: 8px"
+/>
 
-    <label style="font-size:13px;font-weight:600;color:#374151;">Serial Number</label>
-    <input id="evSerial" type="number" placeholder="Serial Number"
-           style="width:100%;margin-bottom:8px">
+<label style="font-size: 13px; font-weight: 600; color: #374151"
+>Full Name</label
+>
+<input
+id="evName"
+placeholder="Name"
+style="width: 100%; margin-bottom: 8px"
+/>
 
-    <label style="font-size:13px;font-weight:600;color:#374151;">House Number</label>
-    <input id="evHouse" placeholder="House Number"
-           style="width:100%;margin-bottom:8px">
+<label style="font-size: 13px; font-weight: 600; color: #374151"
+>Father Name</label
+>
+<input
+id="evFather"
+placeholder="Father Name"
+style="width: 100%; margin-bottom: 8px"
+/>
+<label style="font-size: 13px; font-weight: 600; color: #374151"
+>Mother Name</label
+>
+<input
+id="evMother"
+placeholder="Mother Name"
+style="width: 100%; margin-bottom: 8px"
+/>
 
-    <label style="font-size:13px;font-weight:600;color:#374151;">Full Name</label>
-    <input id="evName" placeholder="Name"
-           style="width:100%;margin-bottom:8px">
-
-    <label style="font-size:13px;font-weight:600;color:#374151;">Father Name</label>
-    <input id="evFather" placeholder="Father Name"
-           style="width:100%;margin-bottom:8px">
-           <label style="font-size:13px;font-weight:600;color:#374151;">Mother Name</label>
-<input id="evMother" placeholder="Mother Name"
-       style="width:100%;margin-bottom:8px">
-
-    <label style="font-size:13px;font-weight:600;color:#374151;">Husband Name</label>
-    <input id="evHusband" placeholder="Husband Name"
-           style="width:100%;margin-bottom:8px">
-<label style="font-size:13px;font-weight:600;color:#374151;">
-  Birth Year
+<label style="font-size: 13px; font-weight: 600; color: #374151"
+>Husband Name</label
+>
+<input
+id="evHusband"
+placeholder="Husband Name"
+style="width: 100%; margin-bottom: 8px"
+/>
+<label style="font-size: 13px; font-weight: 600; color: #374151">
+Birth Year
 </label>
-<input id="evBirthYear"
-       type="number"
-       placeholder="Birth Year (e.g. 1988)"
-       min="1900"
-       max="2026"
-       style="width:100%;margin-bottom:8px">
+<input
+id="evBirthYear"
+type="number"
+placeholder="Birth Year (e.g. 1988)"
+min="1900"
+max="2026"
+style="width: 100%; margin-bottom: 8px"
+/>
 
-    <label style="font-size:13px;font-weight:600;color:#374151;">Gender</label>
-    <input id="evGender" placeholder="Male / Female"
-           style="width:100%;margin-bottom:8px">
+<label style="font-size: 13px; font-weight: 600; color: #374151"
+>Gender</label
+>
+<select
+id="evGender"
+style="width: 100%; margin-bottom: 8px"
+>
+<option value="">Select Gender</option>
+<option value="Male">Male</option>
+<option value="Female">Female</option>
+</select>
 
-    <label style="font-size:13px;font-weight:600;color:#374151;">BYP Number</label>
-    <input id="evBYP" placeholder="BYP"
-           style="width:100%;margin-bottom:8px">
+<label style="font-size: 13px; font-weight: 600; color: #374151"
+>BYP Number</label
+>
+<input
+id="evBYP"
+placeholder="BYP"
+style="width: 100%; margin-bottom: 8px"
+/>
 
-    <label style="font-size:13px;font-weight:600;color:#374151;">Mobile Number</label>
-    <input id="evMobile" placeholder="Mobile Number"
-           style="width:100%;margin-bottom:12px">
+<label style="font-size: 13px; font-weight: 600; color: #374151"
+>Mobile Number</label
+>
+<input
+id="evMobile"
+placeholder="Mobile Number"
+style="width: 100%; margin-bottom: 12px"
+/>
 
-    <div style="display:flex;gap:10px;">
-      <button onclick="saveEditVoter()" 
-        style="flex:1;background:#2563eb;color:#fff;border:none;padding:8px;border-radius:10px;">
-        Update
-      </button>
+<div style="display: flex; gap: 10px">
+<button
+onclick="saveEditVoter()"
+style="
+flex: 1;
+background: #2563eb;
+color: #fff;
+border: none;
+padding: 8px;
+border-radius: 10px;
+"
+>
+Update
+</button>
 
-      <button onclick="closeEditVoter()" 
-        style="flex:1;background:#e5e7eb;border:none;padding:8px;border-radius:10px;">
-        Cancel
-      </button>
-    </div>
-
-  </div>
+<button
+onclick="closeEditVoter()"
+style="
+flex: 1;
+background: #e5e7eb;
+border: none;
+padding: 8px;
+border-radius: 10px;
+"
+>
+Cancel
+</button>
+</div>
+</div>
 </div>
 
-
-<div id="muslimFloatCounter"
-  style="
-    position:fixed;
-    right:16px;
-    bottom:190px;
-    background:#0f172a;
-    color:#fff;
-    padding:6px 12px;
-    border-radius:999px;
-    font-size:13px;
-    font-weight:600;
-    box-shadow:0 8px 20px rgba(0,0,0,.35);
-    z-index:10000;
-    display:none;
-    transition:all .25s ease;
-  ">
-  1/1
+<div
+id="muslimFloatCounter"
+style="
+position: fixed;
+right: 16px;
+bottom: 190px;
+background: #0f172a;
+color: #fff;
+padding: 6px 12px;
+border-radius: 999px;
+font-size: 13px;
+font-weight: 600;
+box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+z-index: 10000;
+display: none;
+transition: all 0.25s ease;
+"
+>
+1/1
 </div>
 <!-- 🔁 DUPLICATE SERIAL JUMP BUTTON -->
-<button id="dupSerialJumpBtn"
-  style="
-    position:fixed;
-    bottom:110px;
-    right:14px;
-    padding:10px 14px;
-    border-radius:999px;
-    border:none;
-    background:#f97316;
-    color:#fff;
-    font-weight:700;
-    cursor:pointer;
-    display:none;
-    z-index:9999;
-  ">
-  🔁 Dup Serial
+<button
+id="dupSerialJumpBtn"
+style="
+position: fixed;
+bottom: 110px;
+right: 14px;
+padding: 10px 14px;
+border-radius: 999px;
+border: none;
+background: #f97316;
+color: #fff;
+font-weight: 700;
+cursor: pointer;
+display: none;
+z-index: 9999;
+"
+>
+🔁 Dup Serial
 </button>
 
 <!-- 🔢 DUPLICATE SERIAL COUNTER -->
-<div id="dupSerialCounter"
-  style="
-    position:fixed;
-    bottom:110px;
-    right:14px;
-    padding:6px 12px;
-    border-radius:999px;
-    background:#f97316;
-    color:#fff;
-    font-size:13px;
-    font-weight:600;
-    display:none;
-    z-index:9999;
-  ">
-  1 / 1
+<div
+id="dupSerialCounter"
+style="
+position: fixed;
+bottom: 110px;
+right: 14px;
+padding: 6px 12px;
+border-radius: 999px;
+background: #f97316;
+color: #fff;
+font-size: 13px;
+font-weight: 600;
+display: none;
+z-index: 9999;
+"
+>
+1 / 1
 </div>
 <!-- 🔁 FLOATING BULK MOVE BUTTON -->
-<button id="bulkMoveBtnFloating"
-  style="
-    position:fixed;
-    
-    right:20px;
-    padding:14px 16px;
-    border-radius:999px;
-    border:none;
-    background:#2563eb;
-    color:#fff;
-    font-size:16px;
-    font-weight:700;
-    box-shadow:0 10px 25px rgba(0,0,0,.25);
-    z-index:500;
-  ">
-  🔁 Move
+<button
+id="bulkMoveBtnFloating"
+style="
+position: fixed;
+
+right: 20px;
+padding: 14px 16px;
+border-radius: 999px;
+border: none;
+background: #2563eb;
+color: #fff;
+font-size: 16px;
+font-weight: 700;
+box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+z-index: 500;
+"
+>
+🔁 Move
 </button>
 
-
 <!-- 🔄 GLOBAL SPINNER WITH PROGRESS BAR -->
-<div id="globalSpinner" style="
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.4);
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:2000;
-">
-  <div style="
-    background:#fff;
-    padding:24px 28px;
-    border-radius:16px;
-    text-align:center;
-    min-width:240px;
-  ">
+<div
+id="globalSpinner"
+style="
+position: fixed;
+inset: 0;
+background: rgba(0, 0, 0, 0.4);
+display: none;
+align-items: center;
+justify-content: center;
+z-index: 2000;
+"
+>
+<div
+style="
+background: #fff;
+padding: 24px 28px;
+border-radius: 16px;
+text-align: center;
+min-width: 240px;
+"
+>
+<!-- Spinner -->
+<div
+style="
+width: 42px;
+height: 42px;
+margin: 0 auto 12px;
+border: 5px solid #e5e7eb;
+border-top: 5px solid #2563eb;
+border-radius: 50%;
+animation: spin 1s linear infinite;
+"
+></div>
 
-    <!-- Spinner -->
-    <div style="
-      width:42px;
-      height:42px;
-      margin:0 auto 12px;
-      border:5px solid #e5e7eb;
-      border-top:5px solid #2563eb;
-      border-radius:50%;
-      animation:spin 1s linear infinite;
-    "></div>
+<!-- Text -->
+<div
+id="spinnerText"
+style="font-size: 14px; font-weight: 600; margin-bottom: 8px"
+>
+Processing...
+</div>
 
-    <!-- Text -->
-    <div id="spinnerText"
-      style="font-size:14px;font-weight:600;margin-bottom:8px;">
-      Processing...
-    </div>
+<!-- Progress bar -->
+<div
+style="
+height: 8px;
+background: #e5e7eb;
+border-radius: 999px;
+overflow: hidden;
+"
+>
+<div
+id="spinnerBar"
+style="
+height: 100%;
+width: 0%;
+background: #2563eb;
+transition: width 0.3s;
+"
+></div>
+</div>
 
-    <!-- Progress bar -->
-    <div style="height:8px;background:#e5e7eb;border-radius:999px;overflow:hidden;">
-      <div id="spinnerBar" style="
-        height:100%;
-        width:0%;
-        background:#2563eb;
-        transition:width .3s;
-      "></div>
-    </div>
+<!-- ETA -->
+<div
+id="spinnerEta"
+style="font-size: 12px; color: #555; margin-top: 6px"
+>
+Estimating time…
+</div>
 
-    <!-- ETA -->
-    <div id="spinnerEta"
-      style="font-size:12px;color:#555;margin-top:6px;">
-      Estimating time…
-    </div>
-
-    <!-- Cancel -->
-    <button id="spinnerCancel"
-      style="
-        margin-top:12px;
-        padding:6px 14px;
-        border-radius:999px;
-        border:1px solid #dc2626;
-        background:#fff;
-        color:#dc2626;
-        font-weight:600;
-      ">
-      Cancel
-    </button>
-
-  </div>
+<!-- Cancel -->
+<button
+id="spinnerCancel"
+style="
+margin-top: 12px;
+padding: 6px 14px;
+border-radius: 999px;
+border: 1px solid #dc2626;
+background: #fff;
+color: #dc2626;
+font-weight: 600;
+"
+>
+Cancel
+</button>
+</div>
 </div>
 <!-- 📜 MOVE HISTORY POPUP -->
-<div id="moveHistoryPopup"
-  style="
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.5);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:999999;
-  ">
+<div
+id="moveHistoryPopup"
+style="
+position: fixed;
+inset: 0;
+background: rgba(0, 0, 0, 0.5);
+display: none;
+align-items: center;
+justify-content: center;
+z-index: 999999;
+"
+>
+<div
+style="
+background: #fff;
+padding: 20px;
+border-radius: 16px;
+width: 90%;
+max-width: 420px;
+"
+>
+<h3 style="margin-bottom: 10px">📜 Voter Move History</h3>
 
-  <div style="
-    background:#fff;
-    padding:20px;
-    border-radius:16px;
-    width:90%;
-    max-width:420px;
-  ">
-    <h3 style="margin-bottom:10px;">📜 Voter Move History</h3>
+<div
+id="moveHistoryList"
+style="max-height: 300px; overflow: auto; margin-top: 10px"
+></div>
 
-    <div id="moveHistoryList"
-      style="max-height:300px;overflow:auto;margin-top:10px;">
-    </div>
-
-    <button onclick="closeMoveHistory()"
-      style="
-        margin-top:12px;
-        padding:8px 14px;
-        border-radius:10px;
-        border:none;
-        background:#e5e7eb;
-        width:100%;
-      ">
-      Close
-    </button>
-  </div>
+<button
+onclick="closeMoveHistory()"
+style="
+margin-top: 12px;
+padding: 8px 14px;
+border-radius: 10px;
+border: none;
+background: #e5e7eb;
+width: 100%;
+"
+>
+Close
+</button>
+</div>
 </div>
 
 <!-- 🏠 FIX ADDRESS POPUP -->
-<div id="fixAddressPopup" style="
-display:none;position:fixed;inset:0;
-background:rgba(0,0,0,.5);
-align-items:center;justify-content:center;
-z-index:999999;">
+<div
+id="fixAddressPopup"
+style="
+display: none;
+position: fixed;
+inset: 0;
+background: rgba(0, 0, 0, 0.5);
+align-items: center;
+justify-content: center;
+z-index: 999999;
+"
+>
+<div
+style="
+background: #fff;
+padding: 20px;
+border-radius: 16px;
+width: 320px;
+"
+>
+<h3>🏠 Fix Address (Selected)</h3>
 
-  <div style="background:#fff;padding:20px;border-radius:16px;width:320px;">
-    <h3>🏠 Fix Address (Selected)</h3>
+<input
+id="addrVillage"
+placeholder="Village"
+style="width: 100%; margin-bottom: 6px"
+/>
+<input
+id="addrPO"
+placeholder="Post Office"
+style="width: 100%; margin-bottom: 6px"
+/>
+<input
+id="addrPIN"
+placeholder="PIN"
+style="width: 100%; margin-bottom: 6px"
+/>
+<input
+id="addrDist"
+placeholder="District"
+style="width: 100%; margin-bottom: 6px"
+/>
+<input
+id="addrPart"
+placeholder="Part"
+style="width: 100%; margin-bottom: 10px"
+/>
 
-    <input id="addrVillage" placeholder="Village" style="width:100%;margin-bottom:6px">
-    <input id="addrPO" placeholder="Post Office" style="width:100%;margin-bottom:6px">
-    <input id="addrPIN" placeholder="PIN" style="width:100%;margin-bottom:6px">
-    <input id="addrDist" placeholder="District" style="width:100%;margin-bottom:6px">
-    <input id="addrPart" placeholder="Part" style="width:100%;margin-bottom:10px">
+<div style="display: flex; gap: 10px">
+<!-- ✅ IMPORTANT: type="button" -->
+<button
+type="button"
+onclick="applyFixSelectedAddress(event)"
+style="
+flex: 1;
+background: #0ea5e9;
+color: #fff;
+border: none;
+padding: 8px;
+border-radius: 10px;
+"
+>
+✅ Update
+</button>
 
-    <div style="display:flex;gap:10px;">
-      <!-- ✅ IMPORTANT: type="button" -->
-      <button
-        type="button"
-        onclick="applyFixSelectedAddress(event)"
-        style="flex:1;background:#0ea5e9;color:#fff;border:none;padding:8px;border-radius:10px;">
-        ✅ Update
-      </button>
-
-      <button
-        type="button"
-        onclick="document.getElementById('fixAddressPopup').style.display='none'"
-        style="flex:1;background:#e5e7eb;border:none;padding:8px;border-radius:10px;">
-        Cancel
-      </button>
-    </div>
-  </div>
+<button
+type="button"
+onclick="document.getElementById('fixAddressPopup').style.display='none'"
+style="
+flex: 1;
+background: #e5e7eb;
+border: none;
+padding: 8px;
+border-radius: 10px;
+"
+>
+Cancel
+</button>
+</div>
+</div>
 </div>
 <style>
-@keyframes spin{ to{ transform:rotate(360deg); } }
+@keyframes spin {
+to {
+transform: rotate(360deg);
+}
+}
 </style>
+<!-- 🔔 UPDATE TOAST -->
+<div
+id="updateToast"
+style="
+position: fixed;
+bottom: 20px;
+left: 50%;
+transform: translateX(-50%);
+background: #0f172a;
+color: #fff;
+padding: 12px 18px;
+border-radius: 14px;
+display: none;
+gap: 12px;
+align-items: center;
+z-index: 999999;
+"
+>
+<span>🆕 New update available</span>
+<button
+onclick="reloadApp()"
+style="
+background: #22c55e;
+color: #fff;
+border: none;
+padding: 6px 12px;
+border-radius: 999px;
+"
+>
+Reload
+</button>
+</div>
 
+<!-- 🐞 DEBUG PANEL -->
+<div
+id="debugPanel"
+style="
+position: fixed;
+bottom: 20px;
+left: 20px;
+background: #0f172a;
+color: #fff;
+padding: 12px 14px;
+border-radius: 14px;
+font-size: 13px;
+font-family: monospace;
+box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+z-index: 999999;
+min-width: 220px;
+display: none;
+"
+>
+<div style="font-weight: 700; margin-bottom: 6px">
+🐞 Debug Panel
+</div>
+
+<div>
+Real voters: <b id="dbgReal">0</b>
+</div>
+<div>
+Offline fake: <b id="dbgFake">0</b>
+</div>
+<div>
+Total cards: <b id="dbgTotal">0</b>
+</div>
+<div>
+Dup serial: <b id="dbgDup">0</b>
+</div>
+<div>
+Muslim: <b id="dbgMuslim">0</b>
+</div>
+
+<button
+onclick="toggleDebugPanel()"
+style="
+margin-top: 8px;
+padding: 4px 10px;
+border-radius: 999px;
+border: none;
+background: #22c55e;
+color: #000;
+font-weight: 700;
+cursor: pointer;
+"
+>
+Hide
+</button>
+</div>
+
+<!-- 🐞 DEBUG TOGGLE BUTTON -->
+<button
+onclick="toggleDebugPanel()"
+style="
+position: fixed;
+bottom: 20px;
+left: 20px;
+padding: 8px 12px;
+border-radius: 999px;
+border: none;
+background: #22c55e;
+color: #000;
+font-weight: 700;
+z-index: 999998;
+"
+>
+🐞 Debug
+</button>
+<!-- 🗑️ Delete Reason Popup -->
 
 <script>
-function openPhoto(src){
-  fullPhoto.src=src;
-  photoViewer.style.display="flex";
+function openPhoto(src) {
+fullPhoto.src = src
+photoViewer.style.display = 'flex'
 }
-function closePhoto(){
-  photoViewer.style.display="none";
+function closePhoto() {
+photoViewer.style.display = 'none'
 }
 </script>
-
 
 <script type="module" src="js/main.js"></script>
 
 <footer class="app-footer">
-  © 2025 • Polling Station 90 • Developed by Bijush Kumar Roy
+© 2025 • Polling Station 90 • Developed by Bijush Kumar Roy
 </footer>
 
 <script>
-if ("serviceWorker" in navigator) {
+if ('serviceWorker' in navigator) {
+window.addEventListener('load', async () => {
+try {
+const reg = await navigator.serviceWorker.register('./sw.js', {
+scope: './'
+})
 
-  window.addEventListener("load", async () => {
-    try {
-      const reg = await navigator.serviceWorker.register("./sw.js", {
-        scope: "./"
-      });
+console.log('✅ Service Worker registered')
 
-      console.log("✅ Service Worker registered:", reg.scope);
-
-      // 🔁 Detect updates
-      reg.addEventListener("updatefound", () => {
-        const newWorker = reg.installing;
-        console.log("🔄 New Service Worker found");
-
-        newWorker.addEventListener("statechange", () => {
-          if (
-            newWorker.state === "installed" &&
-            navigator.serviceWorker.controller
-          ) {
-            console.log("🆕 New version available → reloading");
-            location.reload();
-          }
-        });
-      });
-
-      // 🔁 Background Sync trigger if pending
-      if ("SyncManager" in window) {
-        reg.sync.register("sync-voter-actions")
-          .then(() => {
-            console.log("🔁 Background sync registered");
-          })
-          .catch(() => {});
-      }
-
-    } catch (err) {
-      console.error("❌ Service Worker registration failed:", err);
-    }
-  });
-
-  // 🔄 Reload page when SW takes control
-  navigator.serviceWorker.addEventListener("controllerchange", () => {
-    console.log("🔄 Service Worker controller changed");
-  });
+// 🔔 Update detect + auto reload
+reg.addEventListener('updatefound', () => {
+const newWorker = reg.installing
+newWorker.addEventListener('statechange', () => {
+if (
+newWorker.state === 'installed' &&
+navigator.serviceWorker.controller
+) {
+console.log('🆕 New version available → reloading')
+location.reload()
+}
+})
+})
+} catch (e) {
+console.error('❌ SW registration failed', e)
+}
+})
 }
 </script>
+<!-- 🗑️ Delete Reason Popup (TOP LEVEL — DO NOT MOVE) -->
+<div
+id="deleteReasonPopup"
+style="
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,0.55);
+align-items:center;
+justify-content:center;
+z-index:2147483647;
+"
+>
+<div
+style="
+background:#fff;
+padding:18px;
+border-radius:14px;
+width:90%;
+max-width:320px;
+"
+>
+<h3>🗑️ Delete Voter</h3>
 
+<div style="font-size:13px;margin-bottom:10px">
+Serial: <b id="delSerial">—</b><br />
+Age: <b id="delAge">—</b><br />
+BYP: <b id="delBYP">—</b>
+</div>
 
+<label>Reason</label>
+<select id="deleteReasonSelect">
+<option value="">-- Select reason --</option>
+<option value="Shifted">Shifted</option>
+<option value="Dead">Dead</option>
+<option value="Duplicate">Duplicate</option>
+<option value="Wrong entry">Wrong entry</option>
+</select>
+
+<div style="margin-top:12px;text-align:right">
+<button onclick="closeDeletePopup()">Cancel</button>
+<button onclick="confirmDeleteVoter()">Delete</button>
+</div>
+</div>
+</div>
 </body>
 </html>
