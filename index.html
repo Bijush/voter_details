@@ -18,6 +18,49 @@ rel="stylesheet"
 </head>
 
 <body>
+
+<div id="installTopBar" style="
+position:fixed;
+top:0;
+left:0;
+right:0;
+background:linear-gradient(90deg,#2563eb,#1e40af);
+color:#fff;
+padding:10px 14px;
+display:none;
+align-items:center;
+justify-content:space-between;
+z-index:999999;
+font-size:14px;
+box-shadow:0 6px 16px rgba(0,0,0,.25);
+">
+<span>📲 App install করো — Offline এ fast চলবে</span>
+
+<div style="display:flex;gap:8px;">
+<button id="installNowBtn"
+style="
+background:#22c55e;
+color:#000;
+border:none;
+padding:6px 12px;
+border-radius:999px;
+font-weight:700;
+">
+Install
+</button>
+
+<button id="installCloseBtn"
+style="
+background:transparent;
+color:#fff;
+border:none;
+font-size:18px;
+line-height:1;
+">
+✖
+</button>
+</div>
+</div>
 <!--
 <script>
   if(localStorage.getItem("isAdmin") !== "1"){
@@ -1454,5 +1497,57 @@ BYP: <b id="delBYP">—</b>
 </div>
 </div>
 </div>
+
+<script>
+let deferredPrompt;
+const bar = document.getElementById("installTopBar");
+
+// 🔹 Helper: today key
+function todayKey() {
+const d = new Date();
+return d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate();
+}
+
+// 🔒 If already installed → never show
+if (
+window.matchMedia("(display-mode: standalone)").matches ||
+localStorage.getItem("appInstalled") === "1"
+) {
+// do nothing
+} else {
+
+window.addEventListener("beforeinstallprompt", e => {
+e.preventDefault();
+deferredPrompt = e;
+
+// 🔕 If user closed today → don't show again today
+if (localStorage.getItem("installHideDate") === todayKey()) return;
+
+bar.style.display = "flex";
+});
+}
+
+// 📲 Install click
+document.getElementById("installNowBtn").onclick = async () => {
+if (!deferredPrompt) return;
+
+deferredPrompt.prompt();
+const choice = await deferredPrompt.userChoice;
+
+if (choice.outcome === "accepted") {
+// ✅ Mark as installed permanently
+localStorage.setItem("appInstalled", "1");
+}
+
+deferredPrompt = null;
+bar.style.display = "none";
+};
+
+// ❌ Close click (hide for today only)
+document.getElementById("installCloseBtn").onclick = () => {
+localStorage.setItem("installHideDate", todayKey());
+bar.style.display = "none";
+};
+</script>
 </body>
 </html>
