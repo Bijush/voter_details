@@ -103,6 +103,8 @@ export function renderResults(list) {
     }
 
     setTimeout(() => window.observeCards?.(), 0);
+    // 🐞 update debug panel
+window.updateDebugPanel?.();
     return;
   }
 
@@ -208,6 +210,8 @@ export function renderResults(list) {
     body.style.display = showNotes ? "block" : "none";
     btn.textContent = showNotes ? "📝 Hide Note" : "📝 Show Note";
   });
+  // 🐞 update debug panel
+window.updateDebugPanel?.();
 }
 
 // 🔓 🔥 VERY IMPORTANT FOR pagination.js

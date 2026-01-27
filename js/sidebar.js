@@ -8,6 +8,8 @@ let IS_RESTORING_SIDEBAR = false;
 // ✅ DEFAULT: house collapse ENABLED
 window.HOUSE_COLLAPSE_ENABLED =
   window.HOUSE_COLLAPSE_ENABLED ?? true;
+  window.MUSLIM_JUMP_ENABLED = false;
+window.UNVERIFIED_MUSLIM_JUMP_ENABLED = false;
 
 // ===============================
 // 📦 SIDEBAR ELEMENTS
@@ -225,6 +227,18 @@ swBulk?.addEventListener("change", () => {
 swAddVoter?.addEventListener("change", () => {
   addVoterBtn.style.display = swAddVoter.checked ? "block" : "none";
 });
+swMuslimJump?.addEventListener("change", () => {
+  const on = swMuslimJump.checked;
+
+  window.MUSLIM_JUMP_ENABLED = on;
+  muslimJumpBtn.style.display = on ? "block" : "none";
+});
+swUnverifiedMuslimJump?.addEventListener("change", () => {
+  const on = swUnverifiedMuslimJump.checked;
+
+  window.UNVERIFIED_MUSLIM_JUMP_ENABLED = on;
+  unverifiedMuslimJumpBtn.style.display = on ? "block" : "none";
+});
 
 // ===============================
 // 🗑️ DELETED LIST BUTTON
@@ -232,6 +246,7 @@ swAddVoter?.addEventListener("change", () => {
 swDeletedList?.addEventListener("change", () => {
   deletedBtn.style.display = swDeletedList.checked ? "block" : "none";
 });
+
 
 // ===============================
 // 🏠 HOUSE VIEW (SAFE FIX)
